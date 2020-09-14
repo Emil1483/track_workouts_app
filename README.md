@@ -3,7 +3,7 @@
 ## todos
 
 - [x] fetch workouts from api
-- [ ] add proper error handling
+- [x] add proper error handling
 - [ ] create infinite listView that automatically loads more data
 - [ ] create ui
     - [ ] build root route ui

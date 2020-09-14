@@ -12,6 +12,10 @@ main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemNavigationBarColor: AppColors.black900,
+  ));
+
   runApp(MyApp());
 }
 

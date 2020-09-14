@@ -4,6 +4,7 @@ ThemeData get appTheme => ThemeData(
       primaryColor: AppColors.primary,
       scaffoldBackgroundColor: AppColors.black500,
       fontFamily: 'Proxima',
+      accentColor: AppColors.accent,
     );
 
 class AppColors {

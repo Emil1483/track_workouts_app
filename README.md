@@ -4,7 +4,7 @@
 
 - [x] fetch workouts from api
 - [x] add proper error handling
-- [ ] create infinite listView that automatically loads more data
+- [x] create infinite listView that automatically loads more data
 - [ ] create ui
     - [ ] build root route ui
     - [ ] build details route ui

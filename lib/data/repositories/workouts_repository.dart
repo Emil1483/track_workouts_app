@@ -9,11 +9,17 @@ class WorkoutsRepository {
   WorkoutsRepository(this.workoutsApiService);
 
   Future<List<Workout>> getWorkouts({DateTime toDate}) async {
-    return await ErrorHandler.catchCommonErrors(() async{
+    return await ErrorHandler.catchCommonErrors(() async {
+      final workoutsData = await getWorkoutsData(toDate: toDate);
+      return List<Workout>.from(workoutsData.workouts);
+    });
+  }
+
+  Future<WorkoutsData> getWorkoutsData({DateTime toDate}) async {
+    return await ErrorHandler.catchCommonErrors(() async {
       final to = toDate ?? DateTime.now();
       final response = await workoutsApiService.getWorkoutsData(to.toIso8601String());
-      final workoutsData = WorkoutsDataSerializer.fromMap(response.body);
-      return workoutsData.workouts;
+      return WorkoutsDataSerializer.fromMap(response.body);
     });
   }
 }

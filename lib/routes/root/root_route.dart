@@ -15,12 +15,11 @@ class RootRoute extends StatelessWidget {
         appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.h1))),
         body: model.loading
             ? Center(
-                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent)),
+                child: CircularProgressIndicator(),
               )
             : RefreshIndicator(
                 onRefresh: () async => model.getWorkouts(startLoading: false),
                 backgroundColor: AppColors.primary,
-                color: AppColors.accent,
                 child: _WorkoutsWidget(),
               ),
       ),
@@ -38,26 +37,32 @@ class _WorkoutsWidget extends StatelessWidget {
       );
     }
     return ListView.builder(
-      itemCount: model.workouts.length + 1,
+      itemCount: model.workouts.length + (model.loadedAll ? 0 : 1),
       itemBuilder: (context, index) {
         if (index >= model.workouts.length) {
-          print('load more please 👍');
-          return Container();
+          model.loadMoreWorkouts();
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
 
         final workout = model.workouts[index];
-        return Column(
-          children: [
-            Text(
-              workout.date.toString(),
-              style: getTextStyle(TextStyles.body1),
-            ),
-            Text(
-              'number of exercises: ${workout.exercises.length}',
-              style: getTextStyle(TextStyles.body1),
-            ),
-            SizedBox(height: 12.0),
-          ],
+        return Container(
+          color: AppColors.primary,
+          margin: EdgeInsets.only(bottom: 12.0),
+          padding: EdgeInsets.symmetric(vertical: 6.0),
+          child: Column(
+            children: [
+              Text(
+                workout.date.toString(),
+                style: getTextStyle(TextStyles.body1),
+              ),
+              Text(
+                'number of exercises: ${workout.exercises.length}',
+                style: getTextStyle(TextStyles.body1),
+              ),
+            ],
+          ),
         );
       },
     );

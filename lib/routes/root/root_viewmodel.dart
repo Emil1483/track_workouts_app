@@ -15,15 +15,21 @@ class RootViewmodel extends BaseModel {
   List<FormattedWorkout> get workouts => _workoutsService.workouts.map((workout) => FormattedWorkout.from(workout)).toList();
   Failure get error => _failure.copy();
   bool get hasError => _failure != null;
+  bool get loadedAll => _workoutsService.loadedAll;
 
   Future<void> getWorkouts({bool startLoading = true}) async {
     if (startLoading) setLoading(true);
     await ErrorHandler.handleErrors<void>(
-      run: _workoutsService.loadWorkouts,
+      run: _workoutsService.loadInitialWorkouts,
       onFailure: (failure) => _failure = failure,
       onSuccess: (_) => _failure = null,
     );
     setLoading(false);
+  }
+
+  Future<void> loadMoreWorkouts() async {
+    await _workoutsService.loadMoreWorkouts();
+    notifyListeners();
   }
 }
 

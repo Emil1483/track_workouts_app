@@ -1,29 +1,53 @@
+import 'package:flutter/cupertino.dart';
+import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
 class RootViewmodel extends BaseModel {
-  final List<Workout> _workouts = [];
+  final WorkoutsService _workoutsApiService;
 
-  List<Workout> get workouts => List.generate(_workouts.length, (index) => _workouts[index].copy());
+  RootViewmodel(this._workoutsApiService);
+
+  List<FormattedWorkout> get workouts => _workoutsApiService.workouts.map((workout) => FormattedWorkout.from(workout)).toList();
 
   Future<void> getWorkouts() async {
     setLoading(true);
-    await Future.delayed(Duration(seconds: 1));
+    await _workoutsApiService.loadWorkouts();
     setLoading(false);
   }
 }
 
-class Workout {
+class FormattedWorkout {
   final DateTime date;
-  final List<Exercise> exercises;
+  final List<FormattedExercise> exercises;
+  final String id;
 
-  Workout(this.date, this.exercises);
+  FormattedWorkout({
+    @required this.date,
+    @required this.exercises,
+    @required this.id,
+  });
 
-  Workout copy() => Workout(date, exercises);
+  @override
+  String toString() => 'date = $date, id = $id, exercises = $exercises';
+
+  factory FormattedWorkout.from(Workout workout) {
+    final List<FormattedExercise> exercises = [];
+    workout.exercises.forEach((name, sets) => exercises.add(FormattedExercise(name, sets)));
+    return FormattedWorkout(
+      date: workout.date,
+      id: workout.id,
+      exercises: exercises,
+    );
+  }
 }
 
-class Exercise {
+class FormattedExercise {
   final String name;
   final List<Map<String, double>> sets;
 
-  Exercise(this.name, this.sets);
+  FormattedExercise(this.name, this.sets);
+
+  @override
+  String toString() => 'name = $name, sets = $sets';
 }

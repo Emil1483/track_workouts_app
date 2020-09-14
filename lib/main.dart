@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:track_workouts/style/theme.dart';
 
+import 'handlers/provider_setup.dart';
 import 'handlers/router.dart';
 
 main() {
@@ -16,11 +18,15 @@ main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: Router.navigatorKey,
-      theme: appTheme,
-      initialRoute: Router.rootRoute,
-      onGenerateRoute: Router.generateRoute,
+    return MultiProvider(
+      providers: getProviders(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        navigatorKey: Router.navigatorKey,
+        theme: appTheme,
+        initialRoute: Router.rootRoute,
+        onGenerateRoute: Router.generateRoute,
+      ),
     );
   }
 }

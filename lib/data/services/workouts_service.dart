@@ -19,8 +19,10 @@ class WorkoutsService {
       );
 
   Future<void> loadInitialWorkouts() async {
-    _workouts = await _workoutsRepository.getWorkouts();
-    _loadedAll = false;
+    final workoutsData = await _workoutsRepository.getWorkoutsData();
+    final workouts = workoutsData.workouts;
+    _workouts = List<Workout>.from(workoutsData.workouts);
+    _loadedAll = workouts.length < workoutsData.options.limit;
   }
 
   Future<void> loadMoreWorkouts() async {
@@ -35,9 +37,7 @@ class WorkoutsService {
     final workoutsData = await _workoutsRepository.getWorkoutsData(toDate: toDate);
     final moreWorkouts = workoutsData.workouts;
 
-    if (moreWorkouts.length < workoutsData.options.limit) {
-      _loadedAll = true;
-    }
+    _loadedAll = moreWorkouts.length < workoutsData.options.limit;
 
     _workouts.addAll(moreWorkouts);
 

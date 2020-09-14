@@ -21,30 +21,46 @@ class RootRoute extends StatelessWidget {
                 onRefresh: () async => model.getWorkouts(startLoading: false),
                 backgroundColor: AppColors.primary,
                 color: AppColors.accent,
-                child: ListView(children: model.hasError ? _buildErrorWidgets(context) : _buildWorkoutWidgets(context)),
+                child: _WorkoutsWidget(),
               ),
-        // : model.hasError ? _ErrorWidget() : _WorkoutsList(),
       ),
     );
   }
+}
 
-  List<Widget> _buildWorkoutWidgets(BuildContext context) {
+class _WorkoutsWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     final model = Provider.of<RootViewmodel>(context);
-    return model.workouts
-        .map((workout) => Column(
-              children: [
-                Text(
-                  workout.date.toString(),
-                  style: getTextStyle(TextStyles.body1),
-                ),
-                Text(
-                  'number of exercises: ${workout.exercises.length}',
-                  style: getTextStyle(TextStyles.body1),
-                ),
-                SizedBox(height: 12.0),
-              ],
-            ))
-        .toList();
+    if (model.hasError) {
+      return ListView(
+        children: _buildErrorWidgets(context),
+      );
+    }
+    return ListView.builder(
+      itemCount: model.workouts.length + 1,
+      itemBuilder: (context, index) {
+        if (index >= model.workouts.length) {
+          print('load more please 👍');
+          return Container();
+        }
+
+        final workout = model.workouts[index];
+        return Column(
+          children: [
+            Text(
+              workout.date.toString(),
+              style: getTextStyle(TextStyles.body1),
+            ),
+            Text(
+              'number of exercises: ${workout.exercises.length}',
+              style: getTextStyle(TextStyles.body1),
+            ),
+            SizedBox(height: 12.0),
+          ],
+        );
+      },
+    );
   }
 
   List<Widget> _buildErrorWidgets(BuildContext context) {

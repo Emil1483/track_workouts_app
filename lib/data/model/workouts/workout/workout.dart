@@ -20,7 +20,7 @@ List<Map<String, double>> _getSetsFromDynamic(dynamic sets) {
 
 Map<String, double> _getSetFromDynamic(dynamic setElement) {
   return Map<String, dynamic>.from(setElement).map(
-    (setField, setValue) => MapEntry(setField, (setValue as int) + 0.0),
+    (setField, setValue) => MapEntry(setField, (setValue as num) + 0.0),
   );
 }
 

@@ -11,6 +11,8 @@ class ErrorHandler {
 
   static const String unknownError = 'an error has occurred';
 
+  static const String couldNotConnect = 'could not connect to the server';
+
   static Future catchCommonErrors(Function function, {bool checkInternet = true}) async {
     if (checkInternet && !await DataConnectionChecker().hasConnection) throw Failure(ErrorHandler.noInternet);
     try {
@@ -18,7 +20,7 @@ class ErrorHandler {
     } on Failure catch (failure) {
       throw (failure);
     } on SocketException {
-      throw Failure(ErrorHandler.noInternet);
+      throw Failure(ErrorHandler.couldNotConnect);
     } catch (e, stacktrace) {
       print('error: $e');
       print(stacktrace);

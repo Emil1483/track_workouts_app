@@ -18,7 +18,7 @@ class _$WorkoutsApiService extends WorkoutsApiService {
 
   @override
   Future<Response<dynamic>> getWorkoutsData(String untilDate) {
-    final $url = '/workouts123';
+    final $url = '/workouts';
     final $params = <String, dynamic>{'to': untilDate};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);

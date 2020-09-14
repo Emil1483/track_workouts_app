@@ -16,12 +16,12 @@ class RootViewmodel extends BaseModel {
   Failure get error => _failure.copy();
   bool get hasError => _failure != null;
 
-  Future<void> getWorkouts() async {
-    setLoading(true);
+  Future<void> getWorkouts({bool startLoading = true}) async {
+    if (startLoading) setLoading(true);
     await ErrorHandler.handleErrors<void>(
       run: _workoutsService.loadWorkouts,
       onFailure: (failure) => _failure = failure,
-      onSuccess: (_) {},
+      onSuccess: (_) => _failure = null,
     );
     setLoading(false);
   }

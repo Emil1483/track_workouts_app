@@ -19,11 +19,11 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
 }
 
-enum TextStyles { H1, BODY1 }
+enum TextStyles { h1, body1, caption }
 
 TextStyle getTextStyle(TextStyles textStyle) {
   switch (textStyle) {
-    case TextStyles.H1:
+    case TextStyles.h1:
       return TextStyle(
         fontSize: 24,
         color: AppColors.white,
@@ -31,11 +31,18 @@ TextStyle getTextStyle(TextStyles textStyle) {
         fontStyle: FontStyle.italic,
         letterSpacing: 1,
       );
-    case TextStyles.BODY1:
+    case TextStyles.body1:
       return TextStyle(
         fontSize: 14,
         color: AppColors.white,
         letterSpacing: 0.5,
+      );
+    case TextStyles.caption:
+      return TextStyle(
+        fontSize: 16.0,
+        color: AppColors.white,
+        letterSpacing: 0.7,
+        fontWeight: FontWeight.w600,
       );
   }
   return null;

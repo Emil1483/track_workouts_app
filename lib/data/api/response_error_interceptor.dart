@@ -9,6 +9,7 @@ class ResponseMobileInterceptor implements ResponseInterceptor {
     if (!response.isSuccessful) {
       final errorText = (response.body ?? {})['error'];
       if (errorText != null) throw Failure(errorText);
+      print([response.statusCode, response.body]);
       throw Failure();
     }
     return response;

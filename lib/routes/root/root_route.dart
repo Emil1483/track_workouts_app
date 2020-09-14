@@ -12,31 +12,52 @@ class RootRoute extends StatelessWidget {
       model: RootViewmodel(Provider.of<WorkoutsService>(context)),
       onModelReady: (model) => model.getWorkouts(),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.H1))),
+        appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.h1))),
         body: model.loading
-            ? Center(child: CircularProgressIndicator())
-            : model.hasError
-                ? Center(child: Text(model.error.toString()))
-                : ListView(
-                    children: model.workouts.map(_buildWorkoutWidget).toList(),
-                  ),
+            ? Center(
+                child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.accent)),
+              )
+            : RefreshIndicator(
+                onRefresh: () async => model.getWorkouts(startLoading: false),
+                backgroundColor: AppColors.primary,
+                color: AppColors.accent,
+                child: ListView(children: model.hasError ? _buildErrorWidgets(context) : _buildWorkoutWidgets(context)),
+              ),
+        // : model.hasError ? _ErrorWidget() : _WorkoutsList(),
       ),
     );
   }
 
-  Widget _buildWorkoutWidget(FormattedWorkout workout) {
-    return Column(
-      children: [
-        Text(
-          workout.date.toString(),
-          style: getTextStyle(TextStyles.BODY1),
-        ),
-        Text(
-          'number of exercises: ${workout.exercises.length}',
-          style: getTextStyle(TextStyles.BODY1),
-        ),
-        SizedBox(height: 12.0),
-      ],
-    );
+  List<Widget> _buildWorkoutWidgets(BuildContext context) {
+    final model = Provider.of<RootViewmodel>(context);
+    return model.workouts
+        .map((workout) => Column(
+              children: [
+                Text(
+                  workout.date.toString(),
+                  style: getTextStyle(TextStyles.body1),
+                ),
+                Text(
+                  'number of exercises: ${workout.exercises.length}',
+                  style: getTextStyle(TextStyles.body1),
+                ),
+                SizedBox(height: 12.0),
+              ],
+            ))
+        .toList();
+  }
+
+  List<Widget> _buildErrorWidgets(BuildContext context) {
+    final model = Provider.of<RootViewmodel>(context);
+    return [
+      SizedBox(height: 64.0),
+      Center(child: Image.asset('assets/images/error.png', width: 128.0)),
+      SizedBox(height: 32.0),
+      Text(
+        model.error.toString(),
+        style: getTextStyle(TextStyles.caption),
+        textAlign: TextAlign.center,
+      ),
+    ];
   }
 }

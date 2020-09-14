@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'workouts_api_repository.dart';
+part of 'workouts_api_service.dart';
 
 // **************************************************************************
 // ChopperGenerator
 // **************************************************************************
 
 // ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
-class _$WorkoutsApiRepository extends WorkoutsApiRepository {
-  _$WorkoutsApiRepository([ChopperClient client]) {
+class _$WorkoutsApiService extends WorkoutsApiService {
+  _$WorkoutsApiService([ChopperClient client]) {
     if (client == null) return;
     this.client = client;
   }
 
   @override
-  final definitionType = WorkoutsApiRepository;
+  final definitionType = WorkoutsApiService;
 
   @override
   Future<Response<dynamic>> getWorkoutsData(String untilDate) {
-    final $url = '/workouts';
+    final $url = '/workouts123';
     final $params = <String, dynamic>{'to': untilDate};
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);

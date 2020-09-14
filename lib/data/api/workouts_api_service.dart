@@ -1,10 +1,11 @@
 import 'package:chopper/chopper.dart';
 import 'package:track_workouts/constants/api_info.dart';
+import 'package:track_workouts/data/api/response_error_interceptor.dart';
 
-part 'workouts_api_repository.chopper.dart';
+part 'workouts_api_service.chopper.dart';
 
 @ChopperApi(baseUrl: '/workouts')
-abstract class WorkoutsApiRepository extends ChopperService {
+abstract class WorkoutsApiService extends ChopperService {
   @Get()
   Future<Response> getWorkoutsData(@Query('to') String untilDate);
 
@@ -16,14 +17,15 @@ abstract class WorkoutsApiRepository extends ChopperService {
     @Body() Map<String, dynamic> body,
   );
 
-  static WorkoutsApiRepository create() {
+  static WorkoutsApiService create() {
     final client = ChopperClient(
       baseUrl: ApiInfo.API_PATH,
       services: [
-        _$WorkoutsApiRepository(),
+        _$WorkoutsApiService(),
       ],
       converter: JsonConverter(),
+      interceptors: [ResponseMobileInterceptor()],
     );
-    return _$WorkoutsApiRepository(client);
+    return _$WorkoutsApiService(client);
   }
 }

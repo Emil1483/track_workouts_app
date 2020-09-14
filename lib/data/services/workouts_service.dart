@@ -1,13 +1,12 @@
-import 'package:track_workouts/data/api/workouts_api_repository.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
-import 'package:track_workouts/data/model/workouts/workouts_data/workouts_data.dart';
+import 'package:track_workouts/data/repositories/workouts_repository.dart';
 
 class WorkoutsService {
-  final WorkoutsApiRepository _workoutsApiRepository;
+  final WorkoutsRepository _workoutsRepository;
 
-  final List<Workout> _workouts = [];
+  List<Workout> _workouts;
 
-  WorkoutsService(this._workoutsApiRepository);
+  WorkoutsService(this._workoutsRepository);
 
   List<Workout> get workouts => List.generate(
         _workouts.length,
@@ -15,13 +14,10 @@ class WorkoutsService {
       );
 
   Future<void> loadWorkouts({DateTime toDate}) async {
-    final to = toDate ?? DateTime.now();
-    final response = await _workoutsApiRepository.getWorkoutsData(to.toIso8601String());
-    final data = WorkoutsDataSerializer.fromMap(response.body);
-    _workouts.addAll(data.workouts);
+    _workouts = await _workoutsRepository.getWorkouts();
   }
 
   void dispose() {
-    _workoutsApiRepository.client.dispose();
+    _workoutsRepository.workoutsApiService.dispose();
   }
 }

@@ -1,18 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
+import 'package:track_workouts/handlers/error/error_handler.dart';
+import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
 class RootViewmodel extends BaseModel {
-  final WorkoutsService _workoutsApiService;
+  final WorkoutsService _workoutsService;
 
-  RootViewmodel(this._workoutsApiService);
+  Failure _failure;
 
-  List<FormattedWorkout> get workouts => _workoutsApiService.workouts.map((workout) => FormattedWorkout.from(workout)).toList();
+  RootViewmodel(this._workoutsService);
+
+  List<FormattedWorkout> get workouts => _workoutsService.workouts.map((workout) => FormattedWorkout.from(workout)).toList();
+  Failure get error => _failure.copy();
+  bool get hasError => _failure != null;
 
   Future<void> getWorkouts() async {
     setLoading(true);
-    await _workoutsApiService.loadWorkouts();
+    await ErrorHandler.handleErrors<void>(
+      run: _workoutsService.loadWorkouts,
+      onFailure: (failure) => _failure = failure,
+      onSuccess: (_) {},
+    );
     setLoading(false);
   }
 }

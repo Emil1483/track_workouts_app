@@ -12,6 +12,8 @@ dependencies:
   provider: ^4.3.2+2
   chopper: ^3.0.3
   angel_serialize: ^2.2.3+3
+  data_connection_checker: ^0.3.4
+  dartz: ^0.9.1
 
   cupertino_icons: ^0.1.2
 

@@ -15,9 +15,11 @@ class RootRoute extends StatelessWidget {
         appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.H1))),
         body: model.loading
             ? Center(child: CircularProgressIndicator())
-            : ListView(
-                children: model.workouts.map(_buildWorkoutWidget).toList(),
-              ),
+            : model.hasError
+                ? Center(child: Text(model.error.toString()))
+                : ListView(
+                    children: model.workouts.map(_buildWorkoutWidget).toList(),
+                  ),
       ),
     );
   }

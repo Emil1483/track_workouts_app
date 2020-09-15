@@ -24,8 +24,8 @@ class WorkoutsListViewmodel extends BaseModel {
   Failure get error => _failure.copy();
   bool get hasError => _failure != null;
 
-  Future<void> getWorkouts() async {
-    setLoading(true);
+  Future<void> getWorkouts({bool updateLoading = true}) async {
+    if (updateLoading) setLoading(true);
     await ErrorHandler.handleErrors<void>(
       run: () => workoutsService.expandWorkoutsToInclude(week),
       onFailure: (failure) => _failure = failure,

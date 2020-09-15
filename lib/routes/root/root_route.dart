@@ -50,6 +50,11 @@ class _WorkoutsList extends StatelessWidget {
       ),
       onModelReady: (model) async {
         await model.getWorkouts();
+        if (model.hasError) {
+          rootModel.disableSetPageController();
+          return;
+        }
+
         rootModel.onWorkoutsLoaded();
       },
       builder: (context, model, child) {
@@ -59,35 +64,43 @@ class _WorkoutsList extends StatelessWidget {
           );
         }
         if (model.hasError) {
-          return ListView(
-            children: _buildErrorWidgets(model.error),
+          return RefreshIndicator(
+            onRefresh: () => model.getWorkouts(updateLoading: false),
+            backgroundColor: AppColors.primary,
+            child: ListView(
+              children: _buildErrorWidgets(model.error),
+            ),
           );
         }
         return ListView(
-          children: model.workouts
-              .map(
-                (workout) => Container(
-                  color: AppColors.primary,
-                  margin: EdgeInsets.only(bottom: 12.0),
-                  padding: EdgeInsets.symmetric(vertical: 6.0),
-                  child: Column(
-                    children: [
-                      Text(
-                        workout.date.toString(),
-                        style: getTextStyle(TextStyles.body1),
-                      ),
-                      Text(
-                        'number of exercises: ${workout.exercises.length}',
-                        style: getTextStyle(TextStyles.body1),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
+          children: _buildWorkoutWidgets(model.workouts),
         );
       },
     );
+  }
+
+  List<Widget> _buildWorkoutWidgets(List<FormattedWorkout> workouts) {
+    return workouts
+        .map(
+          (workout) => Container(
+            color: AppColors.primary,
+            margin: EdgeInsets.only(bottom: 12.0),
+            padding: EdgeInsets.symmetric(vertical: 6.0),
+            child: Column(
+              children: [
+                Text(
+                  workout.date.toString(),
+                  style: getTextStyle(TextStyles.body1),
+                ),
+                Text(
+                  'number of exercises: ${workout.exercises.length}',
+                  style: getTextStyle(TextStyles.body1),
+                ),
+              ],
+            ),
+          ),
+        )
+        .toList();
   }
 
   List<Widget> _buildErrorWidgets(Failure error) {

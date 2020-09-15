@@ -40,13 +40,18 @@ class RootViewmodel extends BaseModel {
   }
 
   void onWorkoutsLoaded() {
-    if (_hasSetPageController) return;
-    _hasSetPageController = true;
+    if (workoutsService.loadedAll) notifyListeners();
 
-    final firstDate = workoutsService.workouts.first.date;
-    final index = firstDate.weeksUntil(DateTime.now());
-    pageController.jumpToPage(index);
+    if (!_hasSetPageController) {
+      _hasSetPageController = true;
+
+      final firstDate = workoutsService.workouts.first.date;
+      final index = firstDate.weeksUntil(DateTime.now());
+      pageController.jumpToPage(index);
+    }
   }
+
+  void disableSetPageController() => _hasSetPageController = true;
 
   void changeTab(int change) {
     final newIndex = pageController.currentPage + change;

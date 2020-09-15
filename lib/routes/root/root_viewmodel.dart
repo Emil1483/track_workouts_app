@@ -1,36 +1,65 @@
 import 'package:flutter/cupertino.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
-import 'package:track_workouts/handlers/error/error_handler.dart';
-import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/utils/models/week.dart';
+import 'package:track_workouts/utils/date_time_utils.dart';
 
 class RootViewmodel extends BaseModel {
-  final WorkoutsService _workoutsService;
+  final WorkoutsService workoutsService;
 
-  Failure _failure;
+  final _MyPageController pageController = _MyPageController();
+  bool _hasSetPageController = false;
 
-  RootViewmodel(this._workoutsService);
+  RootViewmodel({@required this.workoutsService});
 
-  List<FormattedWorkout> get workouts => _workoutsService.workouts.map((workout) => FormattedWorkout.from(workout)).toList();
-  Failure get error => _failure.copy();
-  bool get hasError => _failure != null;
-  bool get loadedAll => _workoutsService.loadedAll;
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
 
-  Future<void> getWorkouts({bool startLoading = true}) async {
-    if (startLoading) setLoading(true);
-    await ErrorHandler.handleErrors<void>(
-      run: _workoutsService.loadInitialWorkouts,
-      onFailure: (failure) => _failure = failure,
-      onSuccess: (_) => _failure = null,
+  Week get currentWeek {
+    final index = pageController.currentPage;
+    return getWeekFromIndex(index);
+  }
+
+  int get pageCount {
+    if (!workoutsService.loadedAll) return null;
+    final lastDate = workoutsService.workouts.last.date;
+    return 1 + lastDate.weeksUntil(DateTime.now());
+  }
+
+  bool get cantGoLeft => pageController.currentPage <= 0;
+
+  bool get cantGoRight {
+    if (!workoutsService.loadedAll) return false;
+    final lastDate = workoutsService.workouts.last.date;
+    final weeksToLastWorkout = lastDate.flooredToWeek.weeksUntil(currentWeek.start);
+    return weeksToLastWorkout <= 0;
+  }
+
+  void onWorkoutsLoaded() {
+    if (_hasSetPageController) return;
+    _hasSetPageController = true;
+
+    final firstDate = workoutsService.workouts.first.date;
+    final index = firstDate.weeksUntil(DateTime.now());
+    pageController.jumpToPage(index);
+  }
+
+  void changeTab(int change) {
+    final newIndex = pageController.currentPage + change;
+    pageController.animateToPage(
+      newIndex,
+      duration: Duration(milliseconds: 250),
+      curve: Curves.easeInOutCubic,
     );
-    setLoading(false);
   }
 
-  Future<void> loadMoreWorkouts() async {
-    await _workoutsService.loadMoreWorkouts();
-    notifyListeners();
-  }
+  Week getWeekFromIndex(int index) => Week(
+        DateTime.now().subtract(Duration(days: 7 * index)),
+      );
 }
 
 class FormattedWorkout {
@@ -66,4 +95,13 @@ class FormattedExercise {
 
   @override
   String toString() => 'name = $name, sets = $sets';
+}
+
+class _MyPageController extends PageController {
+  _MyPageController({int initialPage = 0}) : super(initialPage: initialPage);
+
+  int get currentPage {
+    if (positions.isEmpty) return initialPage;
+    return page.round();
+  }
 }

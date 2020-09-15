@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData get appTheme => ThemeData(
       primaryColor: AppColors.primary,
-      scaffoldBackgroundColor: AppColors.black500,
+      scaffoldBackgroundColor: AppColors.black900,
       fontFamily: 'Proxima',
       accentColor: AppColors.accent,
     );
@@ -18,9 +18,11 @@ class AppColors {
   static const black900 = Color(0xFF181a1b);
 
   static const white = Color(0xFFFFFFFF);
+
+  static const disabled = Color(0xFF999999);
 }
 
-enum TextStyles { h1, body1, caption }
+enum TextStyles { h1, body1, caption,  }
 
 TextStyle getTextStyle(TextStyles textStyle) {
   switch (textStyle) {

@@ -1,47 +1,35 @@
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
-import 'package:track_workouts/handlers/error/failure.dart';
+import 'package:track_workouts/utils/models/week.dart';
 
 class WorkoutsService {
   final WorkoutsRepository _workoutsRepository;
 
   List<Workout> _workouts;
   bool _loadedAll = false;
-  bool _isLoading = false;
 
   WorkoutsService(this._workoutsRepository);
 
   bool get loadedAll => _loadedAll;
 
-  List<Workout> get workouts => List.generate(
-        _workouts.length,
-        (i) => _workouts[i].copyWith(),
-      );
+  List<Workout> get workouts => _workouts == null
+      ? null
+      : List.generate(
+          _workouts.length,
+          (i) => _workouts[i].copyWith(),
+        );
 
-  Future<void> loadInitialWorkouts() async {
-    final workoutsData = await _workoutsRepository.getWorkoutsData();
-    final workouts = workoutsData.workouts;
-    _workouts = List<Workout>.from(workoutsData.workouts);
-    _loadedAll = workouts.length < workoutsData.options.limit;
-  }
+  Future<void> expandWorkoutsToInclude(Week week) async {
+    if (_workouts == null) _workouts = [];
 
-  Future<void> loadMoreWorkouts() async {
-    if (_isLoading || _loadedAll) return;
+    while (!_loadedAll && (_workouts.isEmpty || _workouts.last.date.isBefore(week.end))) {
+      final toDate = _workouts.isEmpty ? null : _workouts.last.date.subtract(Duration(days: 1));
+      final workoutsData = await _workoutsRepository.getWorkoutsData(toDate: toDate);
+      final workouts = workoutsData.workouts;
+      _workouts.addAll(workouts);
 
-    if (_workouts == null || _workouts.isEmpty) throw Failure('workouts must not be empty');
-
-    _isLoading = true;
-
-    final toDate = _workouts.last.date.subtract(Duration(days: 1));
-
-    final workoutsData = await _workoutsRepository.getWorkoutsData(toDate: toDate);
-    final moreWorkouts = workoutsData.workouts;
-
-    _loadedAll = moreWorkouts.length < workoutsData.options.limit;
-
-    _workouts.addAll(moreWorkouts);
-
-    _isLoading = false;
+      _loadedAll = workouts.length < workoutsData.options.limit;
+    }
   }
 
   void dispose() {

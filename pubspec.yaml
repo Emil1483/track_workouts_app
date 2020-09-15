@@ -23,6 +23,7 @@ dev_dependencies:
   chopper_generator: ^3.0.3
   build_runner:
   angel_serialize_generator: ^2.5.0
+  intl: ^0.16.1
 
 flutter:
   uses-material-design: true

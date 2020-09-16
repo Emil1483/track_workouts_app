@@ -72,6 +72,19 @@ class _WorkoutsList extends StatelessWidget {
             ),
           );
         }
+        if (model.workouts.isEmpty) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Align(
+              alignment: Alignment(0, -0.45),
+              child: Text(
+                '😪\n\nNo workouts this week',
+                textAlign: TextAlign.center,
+                style: getTextStyle(TextStyles.body2),
+              ),
+            ),
+          );
+        }
         return ListView(
           children: _buildWorkoutWidgets(model.workouts),
         );

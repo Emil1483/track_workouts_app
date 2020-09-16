@@ -5,6 +5,13 @@ ThemeData get appTheme => ThemeData(
       scaffoldBackgroundColor: AppColors.black900,
       fontFamily: 'Proxima',
       accentColor: AppColors.accent,
+      dividerTheme: DividerThemeData(
+        color: AppColors.transparentWhite,
+        space: 0.0,
+      ),
+      iconTheme: IconThemeData(
+        color: AppColors.white,
+      ),
     );
 
 class AppColors {
@@ -20,10 +27,12 @@ class AppColors {
   static const white = Color(0xFFFFFFFF);
   static const white300 = Color(0xFF727272);
 
+  static const transparentWhite = Color(0x33FFFFFF);
+
   static const disabled = Color(0xFF999999);
 }
 
-enum TextStyles { h1, body1, body2, caption }
+enum TextStyles { h1, body1, body2, subtitle1, caption }
 
 TextStyle getTextStyle(TextStyles textStyle) {
   switch (textStyle) {
@@ -47,6 +56,13 @@ TextStyle getTextStyle(TextStyles textStyle) {
         color: AppColors.white300,
         letterSpacing: 0.75,
         fontWeight: FontWeight.w600,
+      );
+    case TextStyles.subtitle1:
+      return TextStyle(
+        fontSize: 16,
+        color: AppColors.white,
+        letterSpacing: 0.6,
+        fontStyle: FontStyle.italic,
       );
     case TextStyles.caption:
       return TextStyle(

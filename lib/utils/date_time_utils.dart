@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 extension DateTimeUtils on DateTime {
   DateTime get flooredToDay => DateTime(year, month, day);
 
@@ -11,4 +13,6 @@ extension DateTimeUtils on DateTime {
     final diff = otherWeek.difference(this).inHours / (24 * 7);
     return diff.round();
   }
+
+  String get formatDayMonthDate => DateFormat('E - MMM. dd').format(this) + 'th';
 }

@@ -4,6 +4,7 @@ import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
+import 'package:track_workouts/routes/root/workout_widget.dart';
 import 'package:track_workouts/routes/root/workouts_list_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/utils/models/week.dart';
@@ -85,35 +86,9 @@ class _WorkoutsList extends StatelessWidget {
             ),
           );
         }
-        return ListView(
-          children: _buildWorkoutWidgets(model.workouts),
-        );
+        return ListView(children: model.workouts.map((workout) => WorkoutWidget(workout: workout)).toList());
       },
     );
-  }
-
-  List<Widget> _buildWorkoutWidgets(List<FormattedWorkout> workouts) {
-    return workouts
-        .map(
-          (workout) => Container(
-            color: AppColors.primary,
-            margin: EdgeInsets.only(bottom: 12.0),
-            padding: EdgeInsets.symmetric(vertical: 6.0),
-            child: Column(
-              children: [
-                Text(
-                  workout.date.toString(),
-                  style: getTextStyle(TextStyles.body1),
-                ),
-                Text(
-                  'number of exercises: ${workout.exercises.length}',
-                  style: getTextStyle(TextStyles.body1),
-                ),
-              ],
-            ),
-          ),
-        )
-        .toList();
   }
 
   List<Widget> _buildErrorWidgets(Failure error) {

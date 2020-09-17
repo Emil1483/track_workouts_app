@@ -15,7 +15,7 @@ class DateWidget extends StatelessWidget {
       defaultStyle: style,
       patternList: [
         EasyRichTextPattern(
-          targetString: '(st|nd|rd|th)',
+          targetString: '(st|nd|rd|th)\$',
           superScript: true,
           matchWordBoundaries: false,
           style: style,

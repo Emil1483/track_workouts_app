@@ -32,7 +32,7 @@ class AppColors {
   static const disabled = Color(0xFF999999);
 }
 
-enum TextStyles { h1, body1, body2, subtitle1, caption }
+enum TextStyles { h1, h2, body1, body2, subtitle1, caption }
 
 TextStyle getTextStyle(TextStyles textStyle) {
   switch (textStyle) {
@@ -42,6 +42,12 @@ TextStyle getTextStyle(TextStyles textStyle) {
         color: AppColors.white,
         fontWeight: FontWeight.w700,
         fontStyle: FontStyle.italic,
+        letterSpacing: 1,
+      );
+    case TextStyles.h2:
+      return TextStyle(
+        fontSize: 18,
+        color: AppColors.white,
         letterSpacing: 1,
       );
     case TextStyles.body1:

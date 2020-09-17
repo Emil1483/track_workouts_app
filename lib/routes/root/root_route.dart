@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
+import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
+import 'package:track_workouts/routes/root/color_utils.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
-import 'package:track_workouts/routes/root/workout_widget.dart';
 import 'package:track_workouts/routes/root/workouts_list_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
+import 'package:track_workouts/ui_elements/date_widget.dart';
+import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
 class RootRoute extends StatelessWidget {
@@ -79,15 +82,27 @@ class _WorkoutsList extends StatelessWidget {
             child: Align(
               alignment: Alignment(0, -0.45),
               child: Text(
-                '😪\n\nNo workouts this week',
+                '😪\n\nno workouts this week',
                 textAlign: TextAlign.center,
                 style: getTextStyle(TextStyles.body2),
               ),
             ),
           );
         }
-        return ListView(children: model.workouts.map((workout) => WorkoutWidget(workout: workout)).toList());
+        return ListView(children: model.workouts.map(_buildWorkoutWidget).toList());
       },
+    );
+  }
+
+  Widget _buildWorkoutWidget(FormattedWorkout workout) {
+    return ListElement(
+      onTap: () => Router.pushNamed(Router.workoutDetailsRoute, arguments: [workout]),
+      mainWidget: Row(
+        children: [
+          Text('●  ', style: getTextStyle(TextStyles.subtitle1).copyWith(color: ColorUtils.getColorFrom(workout))),
+          DateWidget(date: workout.date, style: getTextStyle(TextStyles.subtitle1)),
+        ],
+      ),
     );
   }
 

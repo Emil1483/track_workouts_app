@@ -17,7 +17,7 @@ class ExerciseDetails extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(exercise.name, style: getTextStyle(TextStyles.h1)),
+        title: Text(exercise.name.formatFromCamelcase, style: getTextStyle(TextStyles.h1)),
       ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 8.0),
@@ -37,7 +37,7 @@ class ExerciseDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Set # ${index + 1}', style: getTextStyle(TextStyles.h2)),
+          Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2)),
           SizedBox(height: 4.0),
           ...mySet.entries.map(_buildSetEntry).toList(),
         ],
@@ -48,7 +48,7 @@ class ExerciseDetails extends StatelessWidget {
   Widget _buildSetEntry(MapEntry<String, double> entry) {
     final attributeName = entry.key;
     final attribute = entry.value;
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

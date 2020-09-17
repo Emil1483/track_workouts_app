@@ -5,7 +5,7 @@ class ColorUtils {
   static Color getColorFrom(FormattedWorkout workout) {
     final List<double> hues = [];
     workout.exercises.forEach((exercise) {
-      final hash = exercise.name.hashCode.toString();
+      final hash = exercise.name.toLowerCase().hashCode.toString();
       final subHash = hash.substring(hash.length - 3);
       final hashNumber = int.parse(subHash);
       hues.add(hashNumber * 360 / 1000);

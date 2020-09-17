@@ -14,5 +14,19 @@ extension DateTimeUtils on DateTime {
     return diff.round();
   }
 
-  String get formatDayMonthDate => DateFormat('E - MMM. dd').format(this) + 'th';
+  String get formatDayMonthDate => DateFormat('EEEE, MMM. d').format(this) + dateSuperScript;
+
+  String get dateSuperScript {
+    final dateString = DateFormat('d').format(this);
+    final date = int.parse(dateString);
+    final lastDigit = int.parse(dateString.substring(dateString.length - 1));
+
+    if (date > 10 && date < 30) return 'th';
+
+    if (lastDigit == 1) return 'st';
+    if (lastDigit == 2) return 'nd';
+    if (lastDigit == 3) return 'rd';
+
+    return 'th';
+  }
 }

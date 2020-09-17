@@ -27,7 +27,7 @@ class WorkoutWidget extends StatelessWidget {
                   defaultStyle: getTextStyle(TextStyles.subtitle1),
                   patternList: [
                     EasyRichTextPattern(
-                      targetString: 'th',
+                      targetString: '(st|nd|rd|th)',
                       superScript: true,
                       matchWordBoundaries: false,
                       style: getTextStyle(TextStyles.subtitle1),

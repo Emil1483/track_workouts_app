@@ -9,8 +9,8 @@
     - [x] build root route ui
     - [ ] build details route ui
 
-- [ ] add edit functionality to details route
-
-- [ ] add 'new workout' ui
+- [ ] add 'new workout' route
     - [ ] add list of current exercises
     - [ ] add new exercise page
+
+- [ ] add edit functionality to details route

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:track_workouts/routes/root/root_route.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
+import 'package:track_workouts/routes/workout_details/exercise_details_route.dart';
 import 'package:track_workouts/routes/workout_details/workout_details_route.dart';
 
 class Router {
@@ -8,6 +9,7 @@ class Router {
 
   static const String rootRoute = 'root';
   static const String workoutDetailsRoute = 'workoutDetails';
+  static const String exerciseDetailsRoute = 'exerciseDetails';
 
   static Future<T> pushNamedAndRemoveUntil<T>(String pushRoute, {String untilRoute, List arguments}) {
     return navigatorKey.currentState.pushNamedAndRemoveUntil(
@@ -35,6 +37,10 @@ class Router {
         final arguments = settings.arguments as List;
         FormattedWorkout workout = arguments[0];
         return MaterialPageRoute(builder: (context) => WorkoutDetailsRoute(workout: workout), settings: settings);
+      case exerciseDetailsRoute:
+        final arguments = settings.arguments as List;
+        FormattedExercise exercise = arguments[0];
+        return MaterialPageRoute(builder: (context) => ExerciseDetails(exercise: exercise), settings: settings);
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

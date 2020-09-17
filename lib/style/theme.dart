@@ -48,6 +48,7 @@ TextStyle getTextStyle(TextStyles textStyle) {
       return TextStyle(
         fontSize: 18,
         color: AppColors.white,
+        fontWeight: FontWeight.w700,
         letterSpacing: 1,
       );
     case TextStyles.body1:

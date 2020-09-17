@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/date_widget.dart';
@@ -27,7 +28,7 @@ class WorkoutDetailsRoute extends StatelessWidget {
 
   Widget _buildExercise(FormattedExercise exercise) {
     return ListElement(
-      onTap: () {},
+      onTap: () => Router.pushNamed(Router.exerciseDetailsRoute, arguments: [exercise]),
       centered: true,
       mainWidget: Text(
         exercise.name.formatFromCamelcase,

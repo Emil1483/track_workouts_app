@@ -10,7 +10,8 @@
     - [ ] build details route ui
         - [x] add type safety for set attributes by using enums
         - [x] put pre break between each set
-        - [ ] if an attribute is the same for all sets, put it on top of the view
+        - [x] if an attribute is the same for all sets, put it on top of the view
+        - [ ] add units by using an extension on Map
 
 - [ ] add 'new workout' route
     - [ ] add list of current exercises

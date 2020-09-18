@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
+import 'package:track_workouts/routes/workout_details/exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
-import 'package:track_workouts/utils/string_utils.dart';
+import 'package:track_workouts/utils/duration_utils.dart';
 
 class ExerciseDetails extends StatelessWidget {
   final FormattedExercise exercise;
@@ -11,25 +13,29 @@ class ExerciseDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> setWidgets = [];
-    for (int i = 0; i < exercise.sets.length; i++) {
-      setWidgets.add(_buildSetWidget(exercise.sets[i], i));
-    }
+    return BaseWidget<ExerciseDetailsViewmodel>(
+      model: ExerciseDetailsViewmodel(exercise: exercise),
+      builder: (context, model, child) {
+        final List<Widget> setWidgets = [];
+        model.forEachFormattedSet((formattedSet, index) => setWidgets.add(_buildSetWidget(formattedSet, index)));
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(exercise.name.formatFromCamelcase, style: getTextStyle(TextStyles.h1)),
-      ),
-      body: ListView(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        children: setWidgets,
-      ),
+        return Scaffold(
+          appBar: AppBar(title: Text(model.exerciseName, style: getTextStyle(TextStyles.h1))),
+          body: ListView(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            children: [
+              _RepeatedAttributes(attributes: model.repeatedAttributes),
+              ...setWidgets,
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildSetWidget(Map<AttributeName, double> mySet, int index) {
+  Widget _buildSetWidget(Map<AttributeName, double> formattedSet, int index) {
     Widget breakWidget;
-    final filteredSet = Map<AttributeName, double>.from(mySet)
+    final filteredSet = Map<AttributeName, double>.from(formattedSet)
       ..removeWhere((name, value) {
         if (name == AttributeName.pre_break) {
           breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
@@ -80,6 +86,40 @@ class ExerciseDetails extends StatelessWidget {
   }
 }
 
+class _RepeatedAttributes extends StatelessWidget {
+  final Map<AttributeName, double> attributes;
+
+  const _RepeatedAttributes({@required this.attributes});
+
+  @override
+  Widget build(BuildContext context) {
+    if (attributes.isEmpty) return Container();
+
+    return Column(
+      children: [
+        SizedBox(height: 16.0),
+        Wrap(
+          alignment: WrapAlignment.center,
+          children: attributes.entries.map((attribute) {
+            final name = attribute.key.formattedString;
+            final value = attribute.value;
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+              margin: EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
+              decoration: BoxDecoration(
+                color: AppColors.accent900,
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Text('$name: $value', style: getTextStyle(TextStyles.caption)),
+            );
+          }).toList(),
+        ),
+        Divider(height: 24.0),
+      ],
+    );
+  }
+}
+
 class _BreakWidget extends StatelessWidget {
   final Duration duration;
 
@@ -87,18 +127,17 @@ class _BreakWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final minutes = duration.inMinutes;
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 4.0),
+        margin: EdgeInsets.symmetric(vertical: 12.0),
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
         decoration: BoxDecoration(
           color: AppColors.accent900,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Text(
-          '$minutes minute break',
+          '${duration.formatMinuteSeconds} break',
           style: getTextStyle(TextStyles.h3),
         ),
       ),

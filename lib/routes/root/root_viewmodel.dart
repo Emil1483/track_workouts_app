@@ -94,7 +94,7 @@ class FormattedWorkout {
 
 class FormattedExercise {
   final String name;
-  final List<Map<String, double>> sets;
+  final List<Map<AttributeName, double>> sets;
 
   FormattedExercise(this.name, this.sets);
 

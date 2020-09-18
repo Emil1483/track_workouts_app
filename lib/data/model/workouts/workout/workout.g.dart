@@ -9,7 +9,9 @@ part of 'workout.dart';
 @generatedSerializable
 class Workout extends _Workout {
   Workout(
-      {this.id, this.date, Map<String, List<Map<String, double>>> exercises})
+      {this.id,
+      this.date,
+      Map<String, List<Map<AttributeName, double>>> exercises})
       : this.exercises = Map.unmodifiable(exercises ?? {});
 
   @override
@@ -19,12 +21,12 @@ class Workout extends _Workout {
   DateTime date;
 
   @override
-  Map<String, List<Map<String, double>>> exercises;
+  Map<String, List<Map<AttributeName, double>>> exercises;
 
   Workout copyWith(
       {String id,
       DateTime date,
-      Map<String, List<Map<String, double>>> exercises}) {
+      Map<String, List<Map<AttributeName, double>>> exercises}) {
     return Workout(
         id: id ?? this.id,
         date: date ?? this.date,
@@ -37,8 +39,8 @@ class Workout extends _Workout {
         other.date == date &&
         MapEquality<String, List>(
                 keys: DefaultEquality<String>(),
-                values: ListEquality<Map>(MapEquality<String, double>(
-                    keys: DefaultEquality<String>(),
+                values: ListEquality<Map>(MapEquality<AttributeName, double>(
+                    keys: DefaultEquality<AttributeName>(),
                     values: DefaultEquality<double>())))
             .equals(other.exercises, exercises);
   }

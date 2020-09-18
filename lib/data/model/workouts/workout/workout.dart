@@ -1,11 +1,12 @@
 import 'package:angel_serialize/angel_serialize.dart';
+import 'package:track_workouts/utils/string_utils.dart';
 
 part 'workout.g.dart';
 
 DateTime _deserializeDate(String timestamp) => DateTime.parse(timestamp);
 String _serializeDate(DateTime date) => date.toIso8601String();
 
-Map<String, List<Map<String, double>>> _deserializeExercises(Map<String, dynamic> map) {
+Map<String, List<Map<AttributeName, double>>> _deserializeExercises(Map<String, dynamic> map) {
   return Map<String, dynamic>.from(map).map(
     (name, sets) => MapEntry(
       name,
@@ -14,14 +15,26 @@ Map<String, List<Map<String, double>>> _deserializeExercises(Map<String, dynamic
   );
 }
 
-List<Map<String, double>> _getSetsFromDynamic(dynamic sets) {
+List<Map<AttributeName, double>> _getSetsFromDynamic(dynamic sets) {
   return List<dynamic>.from(sets).map(_getSetFromDynamic).toList();
 }
 
-Map<String, double> _getSetFromDynamic(dynamic setElement) {
+Map<AttributeName, double> _getSetFromDynamic(dynamic setElement) {
   return Map<String, dynamic>.from(setElement).map(
-    (setField, setValue) => MapEntry(setField, (setValue as num) + 0.0),
+    (setField, setValue) => MapEntry(_getAttributeEnum(setField), (setValue as num) + 0.0),
   );
+}
+
+AttributeName _getAttributeEnum(String string) {
+  final formattedString = string.camelcaseToUnderscore;
+  return AttributeName.values.firstWhere((name) => name.string == formattedString);
+}
+
+enum AttributeName { reps, weight, pre_break, body_mass, band_level, time }
+
+extension AttributeNameExtension on AttributeName {
+  String get string => this.toString().split('.')[1];
+  String get formattedString => string.formatFromUnderscore;
 }
 
 @serializable
@@ -33,5 +46,5 @@ abstract class _Workout {
   DateTime date;
 
   @SerializableField(deserializer: #_deserializeExercises)
-  Map<String, List<Map<String, double>>> exercises;
+  Map<String, List<Map<AttributeName, double>>> exercises;
 }

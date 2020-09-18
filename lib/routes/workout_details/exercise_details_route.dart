@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/utils/string_utils.dart';
@@ -26,7 +27,7 @@ class ExerciseDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildSetWidget(Map<String, double> mySet, int index) {
+  Widget _buildSetWidget(Map<AttributeName, double> mySet, int index) {
     return Container(
       margin: EdgeInsets.only(top: 8.0),
       padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
@@ -45,7 +46,7 @@ class ExerciseDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildSetEntry(MapEntry<String, double> entry) {
+  Widget _buildSetEntry(MapEntry<AttributeName, double> entry) {
     final attributeName = entry.key;
     final attribute = entry.value;
 
@@ -53,7 +54,7 @@ class ExerciseDetails extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          attributeName.formatFromCamelcase,
+          attributeName.formattedString,
           style: getTextStyle(TextStyles.body1),
         ),
         Text(

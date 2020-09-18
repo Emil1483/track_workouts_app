@@ -8,7 +8,7 @@
 - [ ] create ui
     - [x] build root route ui
     - [ ] build details route ui
-        - [ ] add type safety for set attributes by using enums
+        - [x] add type safety for set attributes by using enums
         - [ ] put pre break between each set
         - [ ] if an attribute is the same for all sets, put it on top of the view
 

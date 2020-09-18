@@ -28,21 +28,35 @@ class ExerciseDetails extends StatelessWidget {
   }
 
   Widget _buildSetWidget(Map<AttributeName, double> mySet, int index) {
-    return Container(
-      margin: EdgeInsets.only(top: 8.0),
-      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: AppColors.black500,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2)),
-          SizedBox(height: 4.0),
-          ...mySet.entries.map(_buildSetEntry).toList(),
-        ],
-      ),
+    Widget breakWidget;
+    final filteredSet = Map<AttributeName, double>.from(mySet)
+      ..removeWhere((name, value) {
+        if (name == AttributeName.pre_break) {
+          breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
+          return true;
+        }
+        return false;
+      });
+    return Column(
+      children: [
+        breakWidget ?? Container(),
+        Container(
+          margin: EdgeInsets.only(top: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          decoration: BoxDecoration(
+            color: AppColors.black500,
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2)),
+              SizedBox(height: 4.0),
+              ...filteredSet.entries.map(_buildSetEntry).toList(),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -62,6 +76,32 @@ class ExerciseDetails extends StatelessWidget {
           style: getTextStyle(TextStyles.body1).copyWith(fontWeight: FontWeight.bold),
         ),
       ],
+    );
+  }
+}
+
+class _BreakWidget extends StatelessWidget {
+  final Duration duration;
+
+  const _BreakWidget({@required this.duration});
+
+  @override
+  Widget build(BuildContext context) {
+    final minutes = duration.inMinutes;
+    return Padding(
+      padding: EdgeInsets.only(top: 8.0),
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 4.0),
+        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+        decoration: BoxDecoration(
+          color: AppColors.accent900,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Text(
+          '$minutes minute break',
+          style: getTextStyle(TextStyles.h3),
+        ),
+      ),
     );
   }
 }

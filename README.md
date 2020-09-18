@@ -9,7 +9,7 @@
     - [x] build root route ui
     - [ ] build details route ui
         - [x] add type safety for set attributes by using enums
-        - [ ] put pre break between each set
+        - [x] put pre break between each set
         - [ ] if an attribute is the same for all sets, put it on top of the view
 
 - [ ] add 'new workout' route

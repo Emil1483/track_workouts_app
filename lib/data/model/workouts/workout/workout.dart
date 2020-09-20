@@ -69,7 +69,12 @@ extension Attribute on MapEntry<AttributeName, double> {
     return value.round().toString();
   }
 
-  String get formattedValueString => '$valueString ${key.unit.string}';
+  String get formattedValueString {
+    String result = valueString;
+    Unit unit = key.unit;
+    if (unit != null) result += ' ${unit.string}';
+    return result;
+  }
 }
 
 @serializable

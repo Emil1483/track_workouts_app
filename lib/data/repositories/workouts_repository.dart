@@ -11,7 +11,7 @@ class WorkoutsRepository {
   Future<List<Workout>> getWorkouts({DateTime toDate}) async {
     return await ErrorHandler.catchCommonErrors(() async {
       final workoutsData = await getWorkoutsData(toDate: toDate);
-      return List<Workout>.from(workoutsData.workouts);
+      return workoutsData.workouts.copy();
     });
   }
 

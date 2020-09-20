@@ -25,6 +25,7 @@ dev_dependencies:
   angel_serialize_generator: ^2.5.0
   intl: ^0.16.1
   easy_rich_text: ^0.5.1
+  auto_size_text: ^2.1.0
 
 flutter:
   uses-material-design: true

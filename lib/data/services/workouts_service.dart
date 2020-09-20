@@ -12,12 +12,7 @@ class WorkoutsService {
 
   bool get loadedAll => _loadedAll;
 
-  List<Workout> get workouts => _workouts == null
-      ? null
-      : List.generate(
-          _workouts.length,
-          (i) => _workouts[i].copyWith(),
-        );
+  List<Workout> get workouts => _workouts == null ? null : _workouts.copy();
 
   Future<void> loadInitialWorkouts() async {
     _workouts = await _workoutsRepository.getWorkouts();

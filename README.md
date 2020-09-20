@@ -14,9 +14,10 @@
         - [x] add units by using an extension on Map
         - [x] redo set widget
 
-- [ ] refactor by adding .copy()
+- [x] refactor by adding .copy()
 
 - [ ] add 'new workout' route
+    - [ ] add bottom navigation button
     - [ ] add list of current exercises
     - [ ] add new exercise page
 

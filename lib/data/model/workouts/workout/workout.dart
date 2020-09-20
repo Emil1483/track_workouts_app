@@ -77,6 +77,10 @@ extension Attribute on MapEntry<AttributeName, double> {
   }
 }
 
+extension Workouts on List<Workout> {
+  List<Workout> copy() => List.generate(length, (i) => this[i].copyWith());
+}
+
 @serializable
 abstract class _Workout {
   @SerializableField(alias: '_id')

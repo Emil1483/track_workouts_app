@@ -3,6 +3,7 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/utils/string_utils.dart';
+import 'package:track_workouts/utils/map_utils.dart';
 
 class ExerciseDetailsViewmodel extends BaseModel {
   final FormattedExercise exercise;
@@ -11,13 +12,13 @@ class ExerciseDetailsViewmodel extends BaseModel {
   Map<AttributeName, double> _repeatedAttributes;
 
   ExerciseDetailsViewmodel({@required this.exercise}) {
-    _formattedSets = List.generate(exercise.sets.length, (index) => Map.from(exercise.sets[index]));
+    _formattedSets = exercise.sets.copy();
     if (exercise.sets.length <= 1) {
       _repeatedAttributes = {};
       return;
     }
 
-    _repeatedAttributes = Map<AttributeName, double>.from(exercise.sets.first);
+    _repeatedAttributes = exercise.sets.first.copy();
     for (int i = 1; i < exercise.sets.length; i++) {
       final currentSet = exercise.sets[i];
       currentSet.forEach((name, value) {
@@ -34,10 +35,9 @@ class ExerciseDetailsViewmodel extends BaseModel {
 
   String get exerciseName => exercise.name.formatFromCamelcase;
 
-  List<Map<AttributeName, double>> get formattedSets =>
-      List.generate(_formattedSets.length, (index) => Map.from(_formattedSets[index]));
+  List<Map<AttributeName, double>> get formattedSets => _formattedSets.copy();
 
-  Map<AttributeName, double> get repeatedAttributes => Map.from(_repeatedAttributes);
+  Map<AttributeName, double> get repeatedAttributes => _repeatedAttributes.copy();
 
   void forEachFormattedSet(void Function(Map<AttributeName, double> formattedSet, int index) function) {
     for (int i = 0; i < _formattedSets.length; i++) {

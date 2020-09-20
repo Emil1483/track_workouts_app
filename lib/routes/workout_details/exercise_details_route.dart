@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/workout_details/exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
+import 'package:track_workouts/utils/map_utils.dart';
 
 class ExerciseDetails extends StatelessWidget {
   final FormattedExercise exercise;
@@ -35,7 +37,7 @@ class ExerciseDetails extends StatelessWidget {
 
   Widget _buildSetWidget(Map<AttributeName, double> formattedSet, int index) {
     Widget breakWidget;
-    final filteredSet = Map<AttributeName, double>.from(formattedSet)
+    final filteredSet = formattedSet.copy()
       ..removeWhere((name, value) {
         if (name == AttributeName.pre_break) {
           breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
@@ -112,11 +114,11 @@ class _RepeatedAttributes extends StatelessWidget {
             final value = attribute.formattedValueString;
 
             return Container(
-              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
+              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
               margin: EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
               decoration: BoxDecoration(
                 color: AppColors.accent900,
-                borderRadius: BorderRadius.circular(4.0),
+                borderRadius: BorderRadius.circular(64.0),
               ),
               child: Text('$name: $value', style: getTextStyle(TextStyles.caption)),
             );
@@ -142,10 +144,11 @@ class _BreakWidget extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
         decoration: BoxDecoration(
           color: AppColors.accent900,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(64.0),
         ),
-        child: Text(
+        child: AutoSizeText(
           '${duration.formatMinuteSeconds} break',
+          maxLines: 1,
           style: getTextStyle(TextStyles.h3),
         ),
       ),

@@ -5,14 +5,16 @@
 - [x] fetch workouts from api
 - [x] add proper error handling
 - [x] create infinite listView that automatically loads more data
-- [ ] create ui
+- [x] create ui
     - [x] build root route ui
-    - [ ] build details route ui
+    - [x] build details route ui
         - [x] add type safety for set attributes by using enums
         - [x] put pre break between each set
         - [x] if an attribute is the same for all sets, put it on top of the view
         - [x] add units by using an extension on Map
-        - [ ] redo set widget
+        - [x] redo set widget
+
+- [ ] refactor by adding .copy()
 
 - [ ] add 'new workout' route
     - [ ] add list of current exercises

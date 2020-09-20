@@ -32,9 +32,44 @@ AttributeName _getAttributeEnum(String string) {
 
 enum AttributeName { reps, weight, pre_break, body_mass, band_level, time }
 
+enum Unit { kg, s }
+
 extension AttributeNameExtension on AttributeName {
   String get string => this.toString().split('.')[1];
   String get formattedString => string.formatFromUnderscore;
+  Unit get unit {
+    switch (this) {
+      case AttributeName.body_mass:
+        return Unit.kg;
+      case AttributeName.pre_break:
+        return Unit.s;
+      case AttributeName.time:
+        return Unit.s;
+      case AttributeName.weight:
+        return Unit.kg;
+      default:
+        return null;
+    }
+  }
+}
+
+extension UnitExtension on Unit {
+  String get string => this.toString().split('.')[1];
+}
+
+extension Attribute on MapEntry<AttributeName, double> {
+  String get valueString {
+    switch (key.unit) {
+      case Unit.kg:
+        return value.toStringAsFixed(1);
+      case Unit.s:
+        return value.round().toString();
+    }
+
+    return value.round().toString();
+  }
+
+  String get formattedValueString => '$valueString ${key.unit.string}';
 }
 
 @serializable

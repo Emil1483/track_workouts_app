@@ -67,18 +67,18 @@ class ExerciseDetails extends StatelessWidget {
   }
 
   Widget _buildSetEntry(MapEntry<AttributeName, double> entry) {
-    final attributeName = entry.key;
-    final attribute = entry.value;
+    final name = entry.key.formattedString;
+    final value = entry.formattedValueString;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          attributeName.formattedString,
+          name,
           style: getTextStyle(TextStyles.body1),
         ),
         Text(
-          attribute.toString(),
+          value,
           style: getTextStyle(TextStyles.body1).copyWith(fontWeight: FontWeight.bold),
         ),
       ],
@@ -102,7 +102,8 @@ class _RepeatedAttributes extends StatelessWidget {
           alignment: WrapAlignment.center,
           children: attributes.entries.map((attribute) {
             final name = attribute.key.formattedString;
-            final value = attribute.value;
+            final value = attribute.formattedValueString;
+            
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
               margin: EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),

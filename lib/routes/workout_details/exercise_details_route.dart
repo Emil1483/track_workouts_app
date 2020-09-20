@@ -53,13 +53,20 @@ class ExerciseDetails extends StatelessWidget {
             color: AppColors.black500,
             borderRadius: BorderRadius.circular(8.0),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2)),
-              SizedBox(height: 4.0),
-              ...filteredSet.entries.map(_buildSetEntry).toList(),
-            ],
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2))),
+                if (filteredSet.isNotEmpty) VerticalDivider(width: 24.0, thickness: 0.65),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: filteredSet.entries.map(_buildSetEntry).toList(),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],
@@ -103,7 +110,7 @@ class _RepeatedAttributes extends StatelessWidget {
           children: attributes.entries.map((attribute) {
             final name = attribute.key.formattedString;
             final value = attribute.formattedValueString;
-            
+
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 2.0),
               margin: EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),

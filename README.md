@@ -11,7 +11,8 @@
         - [x] add type safety for set attributes by using enums
         - [x] put pre break between each set
         - [x] if an attribute is the same for all sets, put it on top of the view
-        - [ ] add units by using an extension on Map
+        - [x] add units by using an extension on Map
+        - [ ] redo set widget
 
 - [ ] add 'new workout' route
     - [ ] add list of current exercises

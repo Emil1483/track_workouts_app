@@ -19,6 +19,10 @@ class WorkoutsService {
           (i) => _workouts[i].copyWith(),
         );
 
+  Future<void> loadInitialWorkouts() async {
+    _workouts = await _workoutsRepository.getWorkouts();
+  }
+
   Future<void> expandWorkoutsToInclude(Week week) async {
     if (_workouts == null) _workouts = [];
 

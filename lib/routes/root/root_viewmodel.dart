@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
+import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/utils/models/week.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
@@ -9,7 +10,6 @@ class RootViewmodel extends BaseModel {
   final WorkoutsService workoutsService;
 
   final _MyPageController pageController = _MyPageController();
-  bool _hasSetPageController = false;
 
   RootViewmodel({@required this.workoutsService});
 
@@ -17,6 +17,18 @@ class RootViewmodel extends BaseModel {
   void dispose() {
     super.dispose();
     pageController.dispose();
+  }
+
+  Future<void> loadInitialWorkouts() async {
+    setLoading(true);
+    await ErrorHandler.handleErrors<void>(
+      run: workoutsService.loadInitialWorkouts,
+      onFailure: (failure) {},
+      onSuccess: (success) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => setPage());
+      },
+    );
+    setLoading(false);
   }
 
   Week get currentWeek {
@@ -39,19 +51,12 @@ class RootViewmodel extends BaseModel {
     return weeksToLastWorkout <= 0;
   }
 
-  void onWorkoutsLoaded() {
-    if (workoutsService.loadedAll) notifyListeners();
-
-    if (!_hasSetPageController) {
-      _hasSetPageController = true;
-
-      final firstDate = workoutsService.workouts.first.date;
-      final index = firstDate.weeksUntil(DateTime.now());
-      pageController.jumpToPage(index);
-    }
+  void setPage() {
+    final firstDate = workoutsService.workouts.first.date;
+    final currentWeek = getWeekFromIndex(0).start;
+    final index = firstDate.weeksUntil(currentWeek);
+    pageController.jumpToPage(index);
   }
-
-  void disableSetPageController() => _hasSetPageController = true;
 
   void changeTab(int change) {
     final newIndex = pageController.currentPage + change;

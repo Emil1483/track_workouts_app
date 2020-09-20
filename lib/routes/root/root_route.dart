@@ -17,23 +17,26 @@ class RootRoute extends StatelessWidget {
   Widget build(BuildContext context) {
     return BaseWidget<RootViewmodel>(
       model: RootViewmodel(workoutsService: Provider.of<WorkoutsService>(context)),
+      onModelReady: (model) => model.loadInitialWorkouts(),
       onDispose: (model) => model.dispose(),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.h1))),
-        body: Column(
-          children: [
-            _WeekSelector(),
-            Expanded(
-              child: PageView.builder(
-                controller: model.pageController,
-                itemCount: model.pageCount,
-                itemBuilder: (context, index) => _WorkoutsList(
-                  week: model.getWeekFromIndex(index),
-                ),
+        body: model.loading
+            ? Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  _WeekSelector(),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: model.pageController,
+                      itemCount: model.pageCount,
+                      itemBuilder: (context, index) => _WorkoutsList(
+                        week: model.getWeekFromIndex(index),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -46,21 +49,12 @@ class _WorkoutsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rootModel = Provider.of<RootViewmodel>(context, listen: false);
     return BaseWidget<WorkoutsListViewmodel>(
       model: WorkoutsListViewmodel(
         week: week,
         workoutsService: Provider.of<WorkoutsService>(context),
       ),
-      onModelReady: (model) async {
-        await model.getWorkouts();
-        if (model.hasError) {
-          rootModel.disableSetPageController();
-          return;
-        }
-
-        rootModel.onWorkoutsLoaded();
-      },
+      onModelReady: (model) => model.getWorkouts(),
       builder: (context, model, child) {
         if (model.loading) {
           return Center(

@@ -17,6 +17,7 @@ ThemeData get appTheme => ThemeData(
 
 class AppColors {
   static const primary = Color(0xFF0a1a2a);
+  static const primary700 = Color(0xFF102942);
 
   static const accent = Color(0xFFfa5d3e);
   static const accent900 = Color(0xFFac1f04);

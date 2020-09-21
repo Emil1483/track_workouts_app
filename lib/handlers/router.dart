@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:track_workouts/routes/new_workout/new_workout_route.dart';
+import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_route.dart';
+import 'package:track_workouts/routes/new_workout/new_workout/new_workout_route.dart';
 import 'package:track_workouts/routes/root/root_route.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/workout_details/exercise_details_route.dart';
@@ -40,6 +41,8 @@ class Router {
         return MaterialPageRoute(builder: (context) => ExerciseDetailsRoute(exercise: exercise), settings: settings);
       case NewWorkoutRoute.routeName:
         return MaterialPageRoute(builder: (context) => NewWorkoutRoute(), settings: settings);
+      case ChooseRoutineRoute.routeName:
+        return MaterialPageRoute(builder: (context) => ChooseRoutineRoute(), settings: settings);
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

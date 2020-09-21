@@ -17,8 +17,11 @@ extension Routines on List<Routine> {
 class Exercise {
   final String name;
   final List<AttributeName> attributes;
+  final int numberOfSets;
 
-  Exercise({@required this.name, @required this.attributes});
+  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets});
+
+  Exercise copy() => Exercise(attributes: attributes, name: name, numberOfSets: numberOfSets);
 
   static const defaultAttributes = [AttributeName.pre_break, AttributeName.reps, AttributeName.weight];
 }

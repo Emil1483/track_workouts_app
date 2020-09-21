@@ -5,7 +5,6 @@ import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_route.dart';
-import 'package:track_workouts/routes/new_workout/new_workout/new_workout_route.dart';
 import 'package:track_workouts/routes/root/color_utils.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/root/workouts_list_viewmodel.dart';

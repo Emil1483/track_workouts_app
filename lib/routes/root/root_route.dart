@@ -4,15 +4,19 @@ import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_route.dart';
 import 'package:track_workouts/routes/root/color_utils.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/root/workouts_list_viewmodel.dart';
+import 'package:track_workouts/routes/workout_details/workout_details_route.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/date_widget.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
 class RootRoute extends StatelessWidget {
+  static const String routeName = 'root';
+
   @override
   Widget build(BuildContext context) {
     return BaseWidget<RootViewmodel>(
@@ -20,7 +24,7 @@ class RootRoute extends StatelessWidget {
       onModelReady: (model) => model.loadInitialWorkouts(),
       onDispose: (model) => model.dispose(),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text('Track Workouts', style: getTextStyle(TextStyles.h1))),
+        appBar: AppBar(title: Text('Track Workouts')),
         body: model.loading
             ? Center(child: CircularProgressIndicator())
             : Column(
@@ -35,6 +39,7 @@ class RootRoute extends StatelessWidget {
                       ),
                     ),
                   ),
+                  _NewWorkoutButton(),
                 ],
               ),
       ),
@@ -90,7 +95,7 @@ class _WorkoutsList extends StatelessWidget {
 
   Widget _buildWorkoutWidget(FormattedWorkout workout) {
     return ListElement(
-      onTap: () => Router.pushNamed(Router.workoutDetailsRoute, arguments: [workout]),
+      onTap: () => Router.pushNamed(WorkoutDetailsRoute.routeName, arguments: [workout]),
       mainWidget: Row(
         children: [
           Text('●  ', style: getTextStyle(TextStyles.subtitle1).copyWith(color: ColorUtils.getColorFrom(workout))),
@@ -145,6 +150,28 @@ class _WeekSelector extends StatelessWidget {
                 onPressed: model.cantGoRight ? null : () => model.changeTab(1),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NewWorkoutButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 48.0,
+      decoration: BoxDecoration(gradient: LinearGradient(colors: [AppColors.accent, AppColors.accent900])),
+      child: Material(
+        color: AppColors.transparent,
+        child: InkWell(
+          onTap: () => Router.pushNamed(NewWorkoutRoute.routeName),
+          child: Center(
+            child: Text(
+              'New Workout'.toUpperCase(),
+              style: getTextStyle(TextStyles.button),
+            ),
           ),
         ),
       ),

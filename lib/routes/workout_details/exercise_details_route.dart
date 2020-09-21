@@ -8,10 +8,12 @@ import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
-class ExerciseDetails extends StatelessWidget {
+class ExerciseDetailsRoute extends StatelessWidget {
+  static const String routeName = 'exerciseDetails';
+
   final FormattedExercise exercise;
 
-  const ExerciseDetails({@required this.exercise});
+  const ExerciseDetailsRoute({@required this.exercise});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class ExerciseDetails extends StatelessWidget {
         model.forEachFormattedSet((formattedSet, index) => setWidgets.add(_buildSetWidget(formattedSet, index)));
 
         return Scaffold(
-          appBar: AppBar(title: Text(model.exerciseName, style: getTextStyle(TextStyles.h1))),
+          appBar: AppBar(title: Text(model.exerciseName)),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             children: [

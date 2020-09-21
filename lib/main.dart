@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:track_workouts/routes/root/root_route.dart';
 import 'package:track_workouts/style/theme.dart';
 
 import 'handlers/provider_setup.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         navigatorKey: Router.navigatorKey,
         theme: appTheme,
-        initialRoute: Router.rootRoute,
+        initialRoute: RootRoute.routeName,
         onGenerateRoute: Router.generateRoute,
       ),
     );

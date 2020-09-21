@@ -21,7 +21,7 @@ extension DateTimeUtils on DateTime {
     final date = int.parse(dateString);
     final lastDigit = int.parse(dateString.substring(dateString.length - 1));
 
-    if (date > 10 && date < 30) return 'th';
+    if (date > 10 && date < 20) return 'th';
 
     if (lastDigit == 1) return 'st';
     if (lastDigit == 2) return 'nd';

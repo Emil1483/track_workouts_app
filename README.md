@@ -17,8 +17,9 @@
 - [x] refactor by adding .copy()
 
 - [ ] add 'new workout' route
-    - [ ] add bottom navigation button
-    - [ ] add list of current exercises
+    - [x] add bottom navigation button
+    - [x] add list of current exercises
     - [ ] add new exercise page
+    - [ ] add build custom routine page
 
 - [ ] add edit functionality to details route

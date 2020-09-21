@@ -10,7 +10,7 @@ extension DateTimeUtils on DateTime {
   DateTime copy() => this == null ? null : DateTime.parse(this.toIso8601String());
 
   int weeksUntil(DateTime otherWeek) {
-    final diff = otherWeek.difference(this).inHours / (24 * 7);
+    final diff = otherWeek.flooredToWeek.difference(flooredToWeek).inHours / (24 * 7);
     return diff.round();
   }
 

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
+import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_route.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 
@@ -25,7 +27,12 @@ class NewWorkoutRoute extends StatelessWidget {
 
   Widget _buildExerciseWidget(ActiveExercise exercise) {
     return ListElement(
-      onTap: exercise.progress == Progress.completed ? null : () {},
+      onTap: exercise.progress == Progress.completed
+          ? null
+          : () => Router.pushNamed(
+                NewExerciseRoute.routeName,
+                arguments: [exercise],
+              ),
       centered: true,
       color: exercise.progress.color,
       mainWidget: AutoSizeText(

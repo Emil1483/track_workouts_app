@@ -1,9 +1,21 @@
+import 'package:flutter/material.dart';
+import 'package:track_workouts/data/model/workouts/workouts_data/workouts_data.dart';
+import 'package:uuid/uuid.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
+class Listener {
+  final Function listener;
+  final String id;
+
+  Listener({@required this.listener, @required this.id});
+}
+
 class WorkoutsService {
   final WorkoutsRepository _workoutsRepository;
+
+  final List<Listener> _listeners = [];
 
   List<Workout> _workouts;
   bool _loadedAll = false;
@@ -14,21 +26,50 @@ class WorkoutsService {
 
   List<Workout> get workouts => _workouts == null ? null : _workouts.copy();
 
+  String addListener(Function listener) {
+    final id = Uuid().v1();
+    _listeners.add(Listener(listener: listener, id: id));
+    return id;
+  }
+
+  void disposeListener(String id) => _listeners.removeWhere((listener) => listener.id == id);
+
+  void _notifyListeners() => _listeners.forEach((listener) => listener.listener());
+
+  void _addWorkouts(WorkoutsData workoutsData) {
+    if (_workouts == null) _workouts = [];
+
+    final workouts = workoutsData.workouts;
+    _workouts.addAll(workouts);
+    _loadedAll = workouts.length < workoutsData.options.limit;
+  }
+
   Future<void> loadInitialWorkouts() async {
-    _workouts = await _workoutsRepository.getWorkouts();
+    final workoutsData = await _workoutsRepository.getWorkoutsData();
+    await Future.delayed(Duration(seconds: 1));
+    _addWorkouts(workoutsData);
+    _notifyListeners();
   }
 
   Future<void> expandWorkoutsToInclude(Week week) async {
     if (_workouts == null) _workouts = [];
 
-    while (!_loadedAll && (_workouts.isEmpty || _workouts.last.date.isBefore(week.end))) {
+    bool addedToWorkouts = false;
+    while (!workoutsContains(week)) {
       final toDate = _workouts.isEmpty ? null : _workouts.last.date.subtract(Duration(days: 1));
       final workoutsData = await _workoutsRepository.getWorkoutsData(toDate: toDate);
-      final workouts = workoutsData.workouts;
-      _workouts.addAll(workouts);
+      _addWorkouts(workoutsData);
 
-      _loadedAll = workouts.length < workoutsData.options.limit;
+      addedToWorkouts = true;
     }
+
+    if (addedToWorkouts) _notifyListeners();
+  }
+
+  bool workoutsContains(Week week) {
+    if (_loadedAll) return true;
+    if (_workouts.isEmpty) return false;
+    return !_workouts.last.date.isAfter(week.start);
   }
 
   void dispose() {

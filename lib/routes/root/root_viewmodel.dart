@@ -9,30 +9,42 @@ import 'package:track_workouts/utils/date_time_utils.dart';
 class RootViewmodel extends BaseModel {
   final WorkoutsService workoutsService;
 
-  final _MyPageController pageController = _MyPageController();
+  _MyPageController _pageController;
 
-  RootViewmodel({@required this.workoutsService});
+  String _id;
+
+  RootViewmodel({@required this.workoutsService}) {
+    _id = workoutsService.addListener(() => notifyListeners());
+  }
 
   @override
   void dispose() {
     super.dispose();
-    pageController.dispose();
+    _pageController.dispose();
+    workoutsService.disposeListener(_id);
   }
+
+  _MyPageController get pageController => _pageController;
 
   Future<void> loadInitialWorkouts() async {
     setLoading(true);
     await ErrorHandler.handleErrors<void>(
       run: workoutsService.loadInitialWorkouts,
-      onFailure: (failure) {},
+      onFailure: (failure) {
+        _pageController = _MyPageController();
+      },
       onSuccess: (success) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => setPage());
+        final firstDate = workoutsService.workouts.first.date;
+        final currentWeek = getWeekFromIndex(0).start;
+        final index = firstDate.weeksUntil(currentWeek);
+        _pageController = _MyPageController(initialPage: index);
       },
     );
     setLoading(false);
   }
 
   Week get currentWeek {
-    final index = pageController.currentPage;
+    final index = _pageController.currentPage;
     return getWeekFromIndex(index);
   }
 
@@ -42,7 +54,7 @@ class RootViewmodel extends BaseModel {
     return 1 + lastDate.weeksUntil(DateTime.now());
   }
 
-  bool get cantGoLeft => pageController.currentPage <= 0;
+  bool get cantGoLeft => _pageController.currentPage <= 0;
 
   bool get cantGoRight {
     if (!workoutsService.loadedAll) return false;
@@ -51,16 +63,9 @@ class RootViewmodel extends BaseModel {
     return weeksToLastWorkout <= 0;
   }
 
-  void setPage() {
-    final firstDate = workoutsService.workouts.first.date;
-    final currentWeek = getWeekFromIndex(0).start;
-    final index = firstDate.weeksUntil(currentWeek);
-    pageController.jumpToPage(index);
-  }
-
   void changeTab(int change) {
-    final newIndex = pageController.currentPage + change;
-    pageController.animateToPage(
+    final newIndex = _pageController.currentPage + change;
+    _pageController.animateToPage(
       newIndex,
       duration: Duration(milliseconds: 250),
       curve: Curves.easeInOutCubic,

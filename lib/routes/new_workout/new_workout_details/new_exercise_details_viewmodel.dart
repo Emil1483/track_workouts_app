@@ -4,10 +4,10 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
-class NewExerciseViewmodel extends BaseModel {
+class NewExerciseDetailsViewmodel extends BaseModel {
   final List<ActiveSet> _activeSets;
 
-  NewExerciseViewmodel(Exercise exercise)
+  NewExerciseDetailsViewmodel(Exercise exercise)
       : _activeSets = [ActiveSet(attributes: Map.fromIterable(exercise.attributes, value: (_) => null))];
 
   List<ActiveSet> get activeSets => _activeSets.copy();

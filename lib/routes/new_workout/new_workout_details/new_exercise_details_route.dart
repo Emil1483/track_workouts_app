@@ -3,25 +3,23 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
-import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_viewmodel.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 
-class NewExerciseRoute extends StatelessWidget {
+class NewExerciseDetailsRoute extends StatelessWidget {
   static const String routeName = 'newWorkoutDetails';
 
   final ActiveExercise activeExercise;
 
-  const NewExerciseRoute({@required this.activeExercise});
+  const NewExerciseDetailsRoute({@required this.activeExercise});
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<NewExerciseViewmodel>(
-      model: NewExerciseViewmodel(activeExercise.exercise),
+    return BaseWidget<NewExerciseDetailsViewmodel>(
+      model: NewExerciseDetailsViewmodel(activeExercise.exercise),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: AutoSizeText(activeExercise.exercise.name, maxLines: 1)),
-        body: ListView(
-          children: model.activeSets.map(_buildActiveSet).toList(),
-        ),
+        body: ListView(children: model.activeSets.map(_buildActiveSet).toList()),
       ),
     );
   }

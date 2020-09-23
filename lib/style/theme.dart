@@ -35,6 +35,8 @@ class AppColors {
   static const disabled = Color(0xFF999999);
 
   static const transparent = Color(0x00000000);
+
+  static const error = Color(0xFFFF0033);
 }
 
 enum TextStyles { h1, h2, h3, body1, body2, subtitle1, button, caption }

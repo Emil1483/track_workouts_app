@@ -5,12 +5,42 @@ import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
 class NewExerciseDetailsViewmodel extends BaseModel {
-  final List<ActiveSet> _activeSets;
+  final GlobalKey<FormState> formKey = GlobalKey();
 
-  NewExerciseDetailsViewmodel(Exercise exercise)
-      : _activeSets = [ActiveSet(attributes: Map.fromIterable(exercise.attributes, value: (_) => null))];
+  final Exercise exercise;
+
+  final List<ActiveSet> _activeSets;
+  final Map<AttributeName, TextEditingController> _controllers;
+
+  NewExerciseDetailsViewmodel(this.exercise)
+      : _activeSets = [_getActiveSet(exercise)..removeAttribute(AttributeName.pre_break)],
+        _controllers = Map.fromIterable(exercise.attributes, value: (_) => TextEditingController());
+
+  static ActiveSet _getActiveSet(Exercise exercise) {
+    return ActiveSet(attributes: Map.fromIterable(exercise.attributes, value: (_) => null));
+  }
 
   List<ActiveSet> get activeSets => _activeSets.copy();
+
+  TextEditingController getControllerFrom(AttributeName name) => _controllers[name];
+
+  void saveSets() {
+    if (!formKey.currentState.validate()) return;
+
+    _controllers.forEach((attributeName, controller) {
+      final attributes = _activeSets.last.attributes;
+      if (!attributes.containsKey(attributeName)) return;
+      attributes[attributeName] = double.tryParse(controller.text);
+    });
+
+    _activeSets.last.completeSet();
+    _activeSets.add(_getActiveSet(exercise));
+    notifyListeners();
+  }
+
+  void updateField(AttributeName attributeName, String valueString) {
+    _activeSets.last.attributes[attributeName] = double.tryParse(valueString);
+  }
 }
 
 class ActiveSet {
@@ -31,6 +61,8 @@ class ActiveSet {
     });
     _completed = true;
   }
+
+  void removeAttribute(AttributeName attributeName) => attributes.remove(attributeName);
 }
 
 extension on List<ActiveSet> {

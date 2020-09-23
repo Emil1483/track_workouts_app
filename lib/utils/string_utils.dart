@@ -1,4 +1,6 @@
 extension StringUtils on String {
+  bool get isNullEmptyOrWhitespace => this == null || this.isEmpty || this.trim().isEmpty;
+
   String get formatFromCamelcase {
     String result = '';
     for (int i = 0; i < this.length; i++) {

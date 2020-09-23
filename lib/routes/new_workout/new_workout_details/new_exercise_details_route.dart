@@ -6,6 +6,7 @@ import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmo
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
+import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 
 class NewExerciseDetailsRoute extends StatelessWidget {
@@ -46,45 +47,71 @@ class NewExerciseDetailsRoute extends StatelessWidget {
       );
     }
 
+    final borderRadius = 8.0;
+
     return Column(
       children: [
         breakWidget ?? Container(),
         Container(
           margin: EdgeInsets.only(bottom: 12.0),
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
           decoration: BoxDecoration(
             color: AppColors.black500,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [BoxShadow(blurRadius: 4.0, offset: Offset(0, 3), color: AppColors.black950)],
+            borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: Column(
-            children: formattedSet.attributes.entries.map(
-              (attribute) {
-                final name = attribute.key.formattedString;
-                final unit = attribute.key.unit;
-                final unitString = unit == null ? '' : ' (${unit.string})';
-                return Padding(
-                  padding: EdgeInsets.only(bottom: 14.0),
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    style: getTextStyle(TextStyles.caption),
-                    decoration: InputDecoration(
-                      labelText: name + unitString,
-                      labelStyle: getTextStyle(TextStyles.caption),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.accent900, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.white, width: 0.5),
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ).toList(),
+            children: [
+              _AttributesTextFields(formattedSet: formattedSet),
+              MainButton(
+                onTap: () {},
+                text: 'Save',
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(borderRadius),
+                  bottomRight: Radius.circular(borderRadius),
+                ),
+              ),
+            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AttributesTextFields extends StatelessWidget {
+  final ActiveSet formattedSet;
+
+  const _AttributesTextFields({@required this.formattedSet});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: Column(
+        children: formattedSet.attributes.entries.map(
+          (attribute) {
+            final name = attribute.key.formattedString;
+            final unit = attribute.key.unit;
+            final unitString = unit == null ? '' : ' (${unit.string})';
+            return Padding(
+              padding: EdgeInsets.only(bottom: 14.0),
+              child: TextField(
+                keyboardType: TextInputType.number,
+                style: getTextStyle(TextStyles.caption),
+                decoration: InputDecoration(
+                  labelText: name + unitString,
+                  labelStyle: getTextStyle(TextStyles.caption),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.accent900, width: 2.0),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: AppColors.white, width: 0.5),
+                  ),
+                ),
+              ),
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 }

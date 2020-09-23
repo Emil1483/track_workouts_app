@@ -12,6 +12,7 @@ import 'package:track_workouts/routes/workout_details/workout_details_route.dart
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/date_widget.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
+import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
 class RootRoute extends StatelessWidget {
@@ -39,7 +40,10 @@ class RootRoute extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _NewWorkoutButton(),
+                  MainButton(
+                    onTap: () => Router.pushNamed(ChooseRoutineRoute.routeName),
+                    text: 'New Workout',
+                  ),
                 ],
               ),
       ),
@@ -150,28 +154,6 @@ class _WeekSelector extends StatelessWidget {
                 onPressed: model.cantGoRight ? null : () => model.changeTab(1),
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NewWorkoutButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 48.0,
-      decoration: BoxDecoration(gradient: LinearGradient(colors: [AppColors.accent, AppColors.accent900])),
-      child: Material(
-        color: AppColors.transparent,
-        child: InkWell(
-          onTap: () => Router.pushNamed(ChooseRoutineRoute.routeName),
-          child: Center(
-            child: Text(
-              'New Workout'.toUpperCase(),
-              style: getTextStyle(TextStyles.button),
-            ),
           ),
         ),
       ),

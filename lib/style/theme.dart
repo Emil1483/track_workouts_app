@@ -25,6 +25,7 @@ class AppColors {
   static const black200 = Color(0xFF303436);
   static const black500 = Color(0xFF1f2223);
   static const black900 = Color(0xFF181a1b);
+  static const black950 = Color(0xFF141617);
 
   static const white = Color(0xFFFFFFFF);
   static const white300 = Color(0xFF727272);

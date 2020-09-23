@@ -5,6 +5,7 @@ import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/workout_details/exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
+import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
@@ -114,14 +115,8 @@ class _RepeatedAttributes extends StatelessWidget {
           children: attributes.entries.map((attribute) {
             final name = attribute.key.formattedString;
             final value = attribute.formattedValueString;
-
-            return Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            return ColoredContainer(
               margin: EdgeInsets.symmetric(horizontal: 3.0, vertical: 3.0),
-              decoration: BoxDecoration(
-                color: AppColors.accent900,
-                borderRadius: BorderRadius.circular(64.0),
-              ),
               child: Text('$name: $value', style: getTextStyle(TextStyles.caption)),
             );
           }).toList(),
@@ -141,13 +136,7 @@ class _BreakWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 8.0),
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 12.0),
-        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
-        decoration: BoxDecoration(
-          color: AppColors.accent900,
-          borderRadius: BorderRadius.circular(64.0),
-        ),
+      child: ColoredContainer(
         child: AutoSizeText(
           '${duration.formatMinuteSeconds} break',
           maxLines: 1,

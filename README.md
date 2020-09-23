@@ -20,6 +20,11 @@
     - [x] add bottom navigation button
     - [x] add list of current exercises
     - [ ] add new exercise page
+        - [ ] add break time == null error handling
+        - [ ] allow some attributes to be null on condition (eg. weight can be null if band level is not).
+        - [ ] add break picker
+        - [ ] store set data in new_workout_service
+        - [ ] add timer panel
     - [ ] add build custom routine page
 
 - [ ] add edit functionality to details route

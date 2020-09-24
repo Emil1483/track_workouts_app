@@ -30,7 +30,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   TextEditingController getControllerFrom(AttributeName name) => _controllers[name];
 
   String validateAttribute(AttributeName name, String value) {
-    if (!_activeSets.last.oneOf.contains(name)) return Validation.mustBeNumber(value);
+    if (!(_activeSets.last.oneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
 
     return null;
   }
@@ -69,13 +69,13 @@ class ActiveSet {
     if (completed != null) _completed = completed;
   }
 
-  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf.copy(), completed: _completed);
+  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf?.copy(), completed: _completed);
 
   bool get completed => _completed;
 
   void completeSet() {
     attributes.forEach((name, value) {
-      if (oneOf.contains(name)) {
+      if (oneOf?.contains(name) ?? false) {
         if (attributes.allAreNull(oneOf)) {
           throw Failure('You must also submit either ${oneOf.format((name) => name.formattedString, 'or')}');
         }

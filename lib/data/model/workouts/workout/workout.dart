@@ -81,6 +81,10 @@ extension Workouts on List<Workout> {
   List<Workout> copy() => List.generate(length, (i) => this[i].copyWith());
 }
 
+extension AttributeNames on List<AttributeName> {
+  List<AttributeName> copy() => List.from(this);
+}
+
 @serializable
 abstract class _Workout {
   @SerializableField(alias: '_id')

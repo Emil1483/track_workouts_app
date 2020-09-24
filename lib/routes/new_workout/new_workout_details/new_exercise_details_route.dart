@@ -117,16 +117,17 @@ class _AttributesTextFields extends StatelessWidget {
         child: Column(
           children: formattedAttributes.entries.map(
             (attribute) {
-              final name = attribute.key.formattedString;
-              final unit = attribute.key.unit;
+              final AttributeName attributeName = attribute.key;
+              final name = attributeName.formattedString;
+              final unit = attributeName.unit;
               final unitString = unit == null ? '' : ' (${unit.string})';
               return Padding(
                 padding: EdgeInsets.only(bottom: 14.0),
                 child: TextFormField(
-                  controller: model.getControllerFrom(attribute.key),
+                  controller: model.getControllerFrom(attributeName),
                   keyboardType: TextInputType.number,
                   style: getTextStyle(TextStyles.caption),
-                  validator: Validation.mustBeNumber,
+                  validator: (value) => model.validateAttribute(attributeName, value),
                   decoration: InputDecoration(
                     labelText: name + unitString,
                     labelStyle: getTextStyle(TextStyles.caption),

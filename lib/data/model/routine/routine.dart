@@ -18,10 +18,14 @@ class Exercise {
   final String name;
   final List<AttributeName> attributes;
   final int numberOfSets;
+  final List<AttributeName> oneOf;
 
-  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets});
-
-  Exercise copy() => Exercise(attributes: attributes, name: name, numberOfSets: numberOfSets);
+  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets, this.oneOf}) {
+    oneOf?.forEach((name) {
+      assert(attributes.contains(name));
+    });
+  }
+  Exercise copy() => Exercise(attributes: attributes.copy(), name: name, numberOfSets: numberOfSets, oneOf: oneOf?.copy());
 
   static const defaultAttributes = [AttributeName.pre_break, AttributeName.reps, AttributeName.weight];
 }

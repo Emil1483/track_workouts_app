@@ -16,13 +16,18 @@ class ChooseRoutineViewmodel extends BaseModel {
     Routine(
       name: 'Pull Workout',
       exercises: [
-        Exercise(name: 'Pull Ups', numberOfSets: 4, attributes: [
-          AttributeName.body_mass,
-          AttributeName.pre_break,
-          AttributeName.reps,
-          AttributeName.weight,
-          AttributeName.band_level,
-        ]),
+        Exercise(
+          name: 'Pull Ups',
+          numberOfSets: 4,
+          oneOf: [AttributeName.band_level, AttributeName.weight],
+          attributes: [
+            AttributeName.body_mass,
+            AttributeName.pre_break,
+            AttributeName.reps,
+            AttributeName.weight,
+            AttributeName.band_level,
+          ],
+        ),
         Exercise(name: 'Barbell Row', numberOfSets: 4, attributes: Exercise.defaultAttributes),
         Exercise(name: 'Reverse Grip Lat Pulldowns', numberOfSets: 4, attributes: Exercise.defaultAttributes),
         Exercise(name: 'Chest Supported Rear Delt Row', numberOfSets: 4, attributes: Exercise.defaultAttributes),

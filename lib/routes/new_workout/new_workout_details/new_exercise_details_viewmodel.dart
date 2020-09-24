@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/handlers/error/error_handler.dart';
+import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
@@ -8,11 +10,12 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final Exercise exercise;
+  final void Function(String) onError;
 
   final List<ActiveSet> _activeSets;
   final Map<AttributeName, TextEditingController> _controllers;
 
-  NewExerciseDetailsViewmodel(this.exercise)
+  NewExerciseDetailsViewmodel({@required this.exercise, @required this.onError})
       : _activeSets = [_getActiveSet(exercise)..removeAttribute(AttributeName.pre_break)],
         _controllers = Map.fromIterable(exercise.attributes, value: (_) => TextEditingController());
 
@@ -24,7 +27,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   TextEditingController getControllerFrom(AttributeName name) => _controllers[name];
 
-  void saveSets() {
+  Future<void> saveSets() async {
     if (!formKey.currentState.validate()) return;
 
     _controllers.forEach((attributeName, controller) {
@@ -33,9 +36,15 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       attributes[attributeName] = double.tryParse(controller.text);
     });
 
-    _activeSets.last.completeSet();
-    _activeSets.add(_getActiveSet(exercise));
-    notifyListeners();
+    await ErrorHandler.handleErrors(
+      run: () async => _activeSets.last.completeSet(),
+      onFailure: (failure) => onError(failure.message),
+      onSuccess: (_) {
+        _activeSets.last.completeSet();
+        _activeSets.add(_getActiveSet(exercise));
+        notifyListeners();
+      },
+    );
   }
 
   void updateField(AttributeName attributeName, String valueString) {
@@ -56,8 +65,8 @@ class ActiveSet {
   bool get completed => _completed;
 
   void completeSet() {
-    attributes.forEach((_, value) {
-      assert(value != null);
+    attributes.forEach((name, value) {
+      if (value == null) throw Failure('${name.formattedString} is required');
     });
     _completed = true;
   }

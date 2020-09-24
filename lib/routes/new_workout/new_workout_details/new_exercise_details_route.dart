@@ -10,20 +10,22 @@ import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
+import 'package:track_workouts/utils/error_mixins.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
-class NewExerciseDetailsRoute extends StatelessWidget {
+class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
   static const String routeName = 'newWorkoutDetails';
 
   final ActiveExercise activeExercise;
 
-  const NewExerciseDetailsRoute({@required this.activeExercise});
+  NewExerciseDetailsRoute({@required this.activeExercise});
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BaseWidget<NewExerciseDetailsViewmodel>(
-      model: NewExerciseDetailsViewmodel(activeExercise.exercise),
+      model: NewExerciseDetailsViewmodel(exercise: activeExercise.exercise, onError: onError),
       builder: (context, model, child) {
         final List<Widget> setWidgets = [];
         for (int i = 0; i < model.activeSets.length; i++) {

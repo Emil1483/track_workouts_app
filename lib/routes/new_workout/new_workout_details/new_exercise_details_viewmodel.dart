@@ -30,6 +30,11 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   TextEditingController getControllerFrom(AttributeName name) => _controllers[name];
 
   String validateAttribute(AttributeName name, String value) {
+    if (value.isNotEmpty) {
+      final numberValidation = Validation.mustBeNumber(value);
+      if (numberValidation != null) return Validation.mustBeNumber(value);
+    }
+
     if (!(_activeSets.last.oneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
 
     return null;

@@ -67,8 +67,9 @@ class WorkoutsService {
   }
 
   bool workoutsContains(Week week) {
-    if (_loadedAll) return true;
+    if (_workouts == null) return false;
     if (_workouts.isEmpty) return false;
+    if (_loadedAll) return true;
     return !_workouts.last.date.isAfter(week.start);
   }
 

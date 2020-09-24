@@ -35,9 +35,7 @@ class RootRoute extends StatelessWidget {
                     child: PageView.builder(
                       controller: model.pageController,
                       itemCount: model.pageCount,
-                      itemBuilder: (context, index) => _WorkoutsList(
-                        week: model.getWeekFromIndex(index),
-                      ),
+                      itemBuilder: (context, index) => _WorkoutsList(week: model.getWeekFromIndex(index)),
                     ),
                   ),
                   MainButton(

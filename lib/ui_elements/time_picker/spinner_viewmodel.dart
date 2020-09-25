@@ -13,7 +13,6 @@ class SpinnerViewmodel extends BaseModel {
 
   bool onScrollNotification(ScrollNotification notification) {
     if (notification is ScrollUpdateNotification) {
-      controller.position.activity.velocity;
       final newIndex = (controller.offset / itemHeight).round() + 1;
       if (newIndex != _selectedIndex) {
         _selectedIndex = newIndex;

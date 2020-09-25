@@ -39,10 +39,15 @@ class AppColors {
   static const error = Color(0xFFFF0033);
 }
 
-enum TextStyles { h1, h2, h3, body1, body2, subtitle1, button, caption }
+enum TextStyles { h0, h1, h2, h3, body1, body2, subtitle1, button, caption }
 
 TextStyle getTextStyle(TextStyles textStyle) {
   switch (textStyle) {
+    case TextStyles.h0:
+      return TextStyle(
+        fontSize: 36,
+        color: AppColors.white,
+      );
     case TextStyles.h1:
       return TextStyle(
         fontSize: 24,

@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/time_picker/spinner_viewmodel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dart';
-
-class PickedTime {
-  final int minutes;
-  final int seconds;
-
-  PickedTime({@required this.minutes, @required this.seconds});
-}
 
 class _ItemScrollPhysics extends ScrollPhysics {
   final double itemHeight;
@@ -66,10 +60,10 @@ class TimePicker extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _TimePickerState createState() => _TimePickerState();
+  TimePickerState createState() => TimePickerState();
 }
 
-class _TimePickerState extends State<TimePicker> {
+class TimePickerState extends State<TimePicker> {
   final GlobalKey<_SpinnerState> minuteKey = GlobalKey<_SpinnerState>();
   final GlobalKey<_SpinnerState> secondKey = GlobalKey<_SpinnerState>();
 
@@ -78,7 +72,7 @@ class _TimePickerState extends State<TimePicker> {
     final secondIndex = secondKey.currentState.getSelectedIndex();
     return PickedTime(
       minutes: minuteIndex % 60,
-      seconds: (secondIndex % (60 / TimePickerViewmodel.secondInterval)).round(),
+      seconds: (secondIndex % (60 / TimePickerViewmodel.secondInterval)).round() * TimePickerViewmodel.secondInterval,
     );
   }
 

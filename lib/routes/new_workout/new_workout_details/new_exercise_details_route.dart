@@ -65,26 +65,7 @@ class _ActiveSetWidget extends StatelessWidget {
       final duration = seconds == null ? null : Duration(seconds: seconds.round());
       formattedAttributes.remove(AttributeName.pre_break);
       breakWidget = ColoredContainer(
-        onTap: () => showDialog(
-          context: context,
-          builder: (context) => SimpleDialog(
-            backgroundColor: AppColors.black500,
-            title: Text('Break', textAlign: TextAlign.center),
-            titleTextStyle: getTextStyle(TextStyles.h1),
-            contentPadding: EdgeInsets.only(top: 16.0),
-            children: [
-              TimePicker(),
-              MainButton(
-                onTap: () {},
-                text: 'Save Break Time',
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(4.0),
-                  bottomRight: Radius.circular(4.0),
-                ),
-              ),
-            ],
-          ),
-        ),
+        onTap: () => model.pickPreBreak(context),
         child: Text(
           duration?.formatMinuteSeconds ?? 'Set Break',
           style: getTextStyle(TextStyles.caption),

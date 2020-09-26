@@ -4,6 +4,7 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/ui_elements/time_picker/time_picker_dialog.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 import 'package:track_workouts/utils/list_utils.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
@@ -40,14 +41,32 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     return null;
   }
 
+  Future<void> pickPreBreak(BuildContext context) async {
+    final attributes = _activeSets.last.attributes;
+    if (!attributes.containsKey(AttributeName.pre_break)) {
+      throw Failure('do not show time picker if the attribute does not exist');
+    }
+
+    final pickedTime = await TimePickerDialog.showTimePicker(context);
+
+    attributes[AttributeName.pre_break] = pickedTime.inSeconds.toDouble();
+  }
+
   Future<void> saveSets() async {
     if (!formKey.currentState.validate()) return;
 
     _controllers.forEach((attributeName, controller) {
       final attributes = _activeSets.last.attributes;
       if (!attributes.containsKey(attributeName)) return;
-      attributes[attributeName] = double.tryParse(controller.text);
+
+      final value = double.tryParse(controller.text);
+      if (value == null) return;
+
+      attributes[attributeName] = value;
     });
+
+    print(_controllers.keys);
+    print(_activeSets.last.attributes);
 
     await ErrorHandler.handleErrors(
       run: () async => _activeSets.last.completeSet(),

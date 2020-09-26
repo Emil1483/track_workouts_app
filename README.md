@@ -22,9 +22,11 @@
     - [ ] add new exercise page
         - [x] add break time == null error handling
         - [x] allow some attributes to be null on condition (eg. weight can be null if band level is not).
-        - [ ] add break picker
+        - [x] add break picker
         - [ ] store set data in new_workout_service
+        - [ ] add edit functionality
         - [ ] add timer panel
+        - [ ] add auto fill
     - [ ] add build custom routine page
 
 - [ ] add edit functionality to details route

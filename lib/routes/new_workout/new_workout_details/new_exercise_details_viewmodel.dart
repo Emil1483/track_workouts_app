@@ -48,8 +48,9 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     }
 
     final pickedTime = await TimePickerDialog.showTimePicker(context);
-
+    if (pickedTime == null) return;
     attributes[AttributeName.pre_break] = pickedTime.inSeconds.toDouble();
+    notifyListeners();
   }
 
   Future<void> saveSets() async {
@@ -64,9 +65,6 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
       attributes[attributeName] = value;
     });
-
-    print(_controllers.keys);
-    print(_activeSets.last.attributes);
 
     await ErrorHandler.handleErrors(
       run: () async => _activeSets.last.completeSet(),

@@ -9,10 +9,10 @@ import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
-import 'package:track_workouts/ui_elements/time_picker/time_picker.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
 import 'package:track_workouts/utils/map_utils.dart';
+import 'package:track_workouts/utils/num_utils.dart';
 
 class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
   static const String routeName = 'newWorkoutDetails';
@@ -61,15 +61,15 @@ class _ActiveSetWidget extends StatelessWidget {
 
     Widget breakWidget;
     if (formattedAttributes.containsKey(AttributeName.pre_break)) {
-      final seconds = formattedAttributes[AttributeName.pre_break];
-      final duration = seconds == null ? null : Duration(seconds: seconds.round());
+      final duration = formattedAttributes[AttributeName.pre_break].toDurationFromSeconds();
       formattedAttributes.remove(AttributeName.pre_break);
+
+      final breakText = duration == null ? 'Set Break' : '${duration?.formatMinuteSeconds} break';
+
       breakWidget = ColoredContainer(
+        fill: false,
         onTap: () => model.pickPreBreak(context),
-        child: Text(
-          duration?.formatMinuteSeconds ?? 'Set Break',
-          style: getTextStyle(TextStyles.caption),
-        ),
+        child: Text(breakText, style: getTextStyle(TextStyles.caption)),
       );
     }
 

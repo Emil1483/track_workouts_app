@@ -4,12 +4,13 @@ import 'package:track_workouts/routes/base/base_model.dart';
 class SpinnerViewmodel extends BaseModel {
   final ScrollController controller;
   final double itemHeight;
+  final int interval;
 
-  int _selectedIndex = 0;
+  int _selectedIndex;
 
-  SpinnerViewmodel({@required this.controller, @required this.itemHeight});
+  SpinnerViewmodel(this.controller, this.itemHeight, this.interval) : _selectedIndex = (controller.initialScrollOffset / itemHeight).round() + 1;
 
-  get selectedIndex => _selectedIndex;
+  int getSelectedIndex() => _selectedIndex;
 
   bool onScrollNotification(ScrollNotification notification) {
     if (notification is ScrollUpdateNotification) {
@@ -21,7 +22,7 @@ class SpinnerViewmodel extends BaseModel {
     } else if (notification is UserScrollNotification) {
       if (notification.direction.index == 0) {
         if (controller.offset == 0) {
-          controller.jumpTo(itemHeight * 60 * 10);
+          controller.jumpTo(itemHeight * interval * 10);
         }
       }
     }

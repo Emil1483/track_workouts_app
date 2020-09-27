@@ -18,10 +18,18 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   final Map<AttributeName, TextEditingController> _controllers;
 
   NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError})
-      : _controllers = Map.fromIterable(
-          exercise.attributes.where((name) => name != AttributeName.pre_break),
-          value: (_) => TextEditingController(),
-        );
+      : _controllers = _buildControllers(newWorkoutService, exercise);
+
+  static Map<AttributeName, TextEditingController> _buildControllers(NewWorkoutService newWorkoutService, Exercise exercise) {
+    final activeSet = newWorkoutService.tryGetActiveSet(exerciseName: exercise.name);
+    return Map.fromIterable(
+      exercise.attributes.where((name) => name != AttributeName.pre_break),
+      value: (name) {
+        final value = activeSet == null ? null : activeSet.attributes[name];
+        return TextEditingController(text: value?.toString());
+      },
+    );
+  }
 
   List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseName: exercise.name);
 
@@ -82,5 +90,17 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         notifyListeners();
       },
     );
+  }
+
+  void editSet(int index) {
+    newWorkoutService.editActiveSet(exerciseName: exercise.name, index: index);
+    final activeSet = newWorkoutService.getActiveSet(exerciseName: exercise.name);
+    _controllers.forEach((attributeName, controller) {
+      final value = activeSet.attributes[attributeName];
+      if (value != null) {
+        controller.text = activeSet.attributes[attributeName].toString();
+      }
+    });
+    notifyListeners();
   }
 }

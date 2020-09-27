@@ -9,8 +9,9 @@ import 'package:track_workouts/utils/duration_utils.dart';
 class SetWidget extends StatelessWidget {
   final Map<AttributeName, double> attributes;
   final int index;
+  final Function onLongPress;
 
-  const SetWidget({@required this.attributes, @required this.index});
+  const SetWidget({@required this.attributes, @required this.index, this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -23,29 +24,36 @@ class SetWidget extends StatelessWidget {
         }
         return false;
       });
+    final borderRadius = BorderRadius.circular(8.0);
     return Column(
       children: [
         breakWidget ?? Container(),
-        Container(
-          margin: EdgeInsets.only(top: 8.0),
-          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-          decoration: BoxDecoration(
+        Padding(
+          padding: EdgeInsets.only(top: 8.0),
+          child: Material(
             color: AppColors.black500,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(child: Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2))),
-                if (filteredSet.isNotEmpty) VerticalDivider(width: 24.0, thickness: 0.65),
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: filteredSet.entries.map(_buildSetEntry).toList(),
+            borderRadius: borderRadius,
+            child: InkWell(
+              borderRadius: borderRadius,
+              onLongPress: onLongPress,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                child: IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: Text('Set #${index + 1}', style: getTextStyle(TextStyles.h2))),
+                      if (filteredSet.isNotEmpty) VerticalDivider(width: 24.0, thickness: 0.65),
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: filteredSet.entries.where((entry) => entry.value != null).map(_buildSetEntry).toList(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),

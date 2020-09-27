@@ -61,6 +61,19 @@ class Routine {
     activeSet.completeSet();
   }
 
+  void editActiveSet(String exerciseName, int index) {
+    final activeSets = getActiveSets(exerciseName);
+    final activeSet = getActiveSet(exerciseName);
+
+    if (activeSet.checked) {
+      activeSet.setCompleted(true);
+    } else {
+      activeSets.removeLast();
+    }
+
+    activeSets[index].setCompleted(false);
+  }
+
   Routine copy() => Routine(
         name: name,
         exercises: exercises,
@@ -94,6 +107,7 @@ class Exercise {
 
 class ActiveSet {
   bool _completed = false;
+  bool _checked = false;
   final Map<AttributeName, double> attributes;
   final List<AttributeName> oneOf;
 
@@ -104,6 +118,10 @@ class ActiveSet {
   ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf?.copy(), completed: _completed);
 
   bool get completed => _completed;
+
+  bool get checked => _checked;
+
+  void setCompleted(bool completed) => _completed = completed;
 
   void completeSet() {
     attributes.forEach((name, value) {
@@ -119,9 +137,8 @@ class ActiveSet {
       if (value == null) throw Failure('${name.formattedString} is required');
     });
 
-    attributes.removeWhere((_, value) => value == null);
-
     _completed = true;
+    _checked = true;
   }
 
   void removeAttribute(AttributeName attributeName) => attributes.remove(attributeName);

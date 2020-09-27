@@ -37,7 +37,13 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
         for (int i = 0; i < model.activeSets.length; i++) {
           final activeSet = model.activeSets[i];
           if (activeSet.completed) {
-            setWidgets.add(SetWidget(attributes: activeSet.attributes, index: i));
+            setWidgets.add(
+              SetWidget(
+                attributes: activeSet.attributes,
+                index: i,
+                onLongPress: () => model.editSet(i),
+              ),
+            );
           } else {
             setWidgets.add(_ActiveSetWidget(attributes: activeSet.attributes));
           }

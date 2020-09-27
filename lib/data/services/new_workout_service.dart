@@ -20,12 +20,22 @@ class NewWorkoutService {
 
   ActiveSet getActiveSet({@required String exerciseName}) => _selectedRoutine.getActiveSet(exerciseName);
 
+  ActiveSet tryGetActiveSet({@required String exerciseName}) {
+    try {
+      return _selectedRoutine.getActiveSet(exerciseName);
+    } on StateError catch (_) {
+      return null;
+    }
+  }
+
   void addActiveSet({@required String exerciseName}) => _selectedRoutine.addActiveSet(exerciseName);
 
   void changeActiveSetAttribute({@required String exerciseName, @required AttributeName attributeName, @required double value}) =>
       _selectedRoutine.changeActiveSetAttribute(exerciseName, attributeName, value);
 
   void completeActiveSet({@required String exerciseName}) => _selectedRoutine.completeActiveSet(exerciseName);
+
+  void editActiveSet({@required String exerciseName, @required int index}) => _selectedRoutine.editActiveSet(exerciseName, index);
 
   void dispose() {
     _workoutsRepository.workoutsApiService.dispose();

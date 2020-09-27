@@ -24,7 +24,7 @@
         - [x] allow some attributes to be null on condition (eg. weight can be null if band level is not).
         - [x] add break picker
         - [x] store set data in new_workout_service
-        - [ ] add edit functionality
+        - [x] add edit functionality
         - [ ] add timer panel
         - [ ] add auto fill
     - [ ] add build custom routine page

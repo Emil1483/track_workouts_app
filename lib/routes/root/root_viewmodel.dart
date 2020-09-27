@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
@@ -8,23 +9,26 @@ import 'package:track_workouts/utils/date_time_utils.dart';
 
 class RootViewmodel extends BaseModel {
   final WorkoutsService workoutsService;
+  final NewWorkoutService newWorkoutService;
 
   _MyPageController _pageController;
 
-  String _id;
+  String _listenerId;
 
-  RootViewmodel({@required this.workoutsService}) {
-    _id = workoutsService.addListener(() => notifyListeners());
+  RootViewmodel({@required this.workoutsService, @required this.newWorkoutService}) {
+    _listenerId = workoutsService.addListener(() => notifyListeners());
   }
 
   @override
   void dispose() {
     super.dispose();
     _pageController.dispose();
-    workoutsService.disposeListener(_id);
+    workoutsService.disposeListener(_listenerId);
   }
 
   _MyPageController get pageController => _pageController;
+
+  bool get hasChosenWorkout => newWorkoutService.selectedRoutine != null;
 
   Future<void> loadInitialWorkouts() async {
     setLoading(true);

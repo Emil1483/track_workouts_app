@@ -14,4 +14,15 @@ extension ListUtils<U> on List<U> {
     }
     return result;
   }
+
+  bool onlyOneWhere(bool Function(U) predicate) {
+    bool foundOne = false;
+    for (final element in this) {
+      if (predicate(element)) {
+        if (foundOne) return false;
+        foundOne = true;
+      }
+    }
+    return foundOne;
+  }
 }

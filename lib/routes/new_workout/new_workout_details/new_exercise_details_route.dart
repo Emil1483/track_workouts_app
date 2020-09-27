@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
@@ -25,7 +26,12 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
   Widget build(BuildContext context) {
     super.build(context);
     return BaseWidget<NewExerciseDetailsViewmodel>(
-      model: NewExerciseDetailsViewmodel(exercise: activeExercise.exercise, onError: onError),
+      model: NewExerciseDetailsViewmodel(
+        exercise: activeExercise.exercise,
+        onError: onError,
+        newWorkoutService: Provider.of<NewWorkoutService>(context),
+      ),
+      onModelReady: (model) => model.initializeActiveSets(),
       builder: (context, model, child) {
         final List<Widget> setWidgets = [];
         for (int i = 0; i < model.activeSets.length; i++) {

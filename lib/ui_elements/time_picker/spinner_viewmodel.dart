@@ -8,15 +8,17 @@ class SpinnerViewmodel extends BaseModel {
 
   int _selectedIndex;
 
-  SpinnerViewmodel(this.controller, this.itemHeight, this.interval) : _selectedIndex = (controller.initialScrollOffset / itemHeight).round() + 1;
+  SpinnerViewmodel(this.controller, this.itemHeight, this.interval)
+      : _selectedIndex = (controller.initialScrollOffset / itemHeight).round() + 1;
 
   int getSelectedIndex() => _selectedIndex;
 
-  bool onScrollNotification(ScrollNotification notification) {
+  bool onScrollNotification(ScrollNotification notification, BuildContext context) {
     if (notification is ScrollUpdateNotification) {
       final newIndex = (controller.offset / itemHeight).round() + 1;
       if (newIndex != _selectedIndex) {
         _selectedIndex = newIndex;
+        Feedback.forLongPress(context);
         notifyListeners();
       }
     } else if (notification is UserScrollNotification) {

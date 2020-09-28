@@ -15,6 +15,7 @@ dependencies:
   data_connection_checker: ^0.3.4
   dartz: ^0.9.1
   uuid: ^2.2.2
+  sliding_up_panel: ^1.0.2
 
   cupertino_icons: ^0.1.2
 

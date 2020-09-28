@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_dialog.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
 
 class NewExerciseDetailsViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey();
+  final PanelController panelController = PanelController();
 
   final NewWorkoutService newWorkoutService;
   final Exercise exercise;
@@ -61,6 +64,21 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
     final pickedTime = await TimePickerDialog.showTimePicker(context);
     if (pickedTime == null) return;
+
+    newWorkoutService.changeActiveSetAttribute(
+      exerciseName: exercise.name,
+      attributeName: AttributeName.pre_break,
+      value: pickedTime.inSeconds.toDouble(),
+    );
+    notifyListeners();
+  }
+
+  void modifyPreBreakIfPossible(PickedTime pickedTime) {
+    final attributes = newWorkoutService.getActiveSet(exerciseName: exercise.name).attributes;
+    if (!attributes.containsKey(AttributeName.pre_break)) return;
+    if (attributes[AttributeName.pre_break] != null) {
+      if (attributes[AttributeName.pre_break] > 0) return;
+    }
 
     newWorkoutService.changeActiveSetAttribute(
       exerciseName: exercise.name,

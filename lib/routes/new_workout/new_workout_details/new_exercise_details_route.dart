@@ -6,9 +6,12 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
+import 'package:track_workouts/ui_elements/panel.dart';
+import 'package:track_workouts/ui_elements/panel_header.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
@@ -48,11 +51,29 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             setWidgets.add(_ActiveSetWidget(attributes: activeSet.attributes));
           }
         }
+
+        final panelHeight = 52.0;
+        final borderRadius = 18.0;
+
         return Scaffold(
           appBar: AppBar(title: AutoSizeText(exercise.name, maxLines: 1)),
-          body: ListView(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            children: setWidgets,
+          body: SlidingUpPanel(
+            controller: model.panelController,
+            color: AppColors.black950,
+            minHeight: panelHeight,
+            parallaxEnabled: true,
+            backdropTapClosesPanel: true,
+            backdropEnabled: true,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(borderRadius)),
+            header: PanelHeader(),
+            body: Padding(
+              padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                children: setWidgets,
+              ),
+            ),
+            panel: TimePanel(),
           ),
         );
       },
@@ -76,7 +97,7 @@ class _ActiveSetWidget extends StatelessWidget {
       final duration = formattedAttributes[AttributeName.pre_break].toDurationFromSeconds();
       formattedAttributes.remove(AttributeName.pre_break);
 
-      final breakText = duration == null ? 'Set Break' : '${duration?.formatMinuteSeconds} break';
+      final breakText = duration == null ? 'Set Break' : duration.breakText;
 
       breakWidget = ColoredContainer(
         fill: false,

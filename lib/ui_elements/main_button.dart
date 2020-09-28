@@ -5,15 +5,20 @@ class MainButton extends StatelessWidget {
   final Function onTap;
   final String text;
   final BorderRadiusGeometry borderRadius;
+  final bool primaryColor;
 
-  MainButton({@required this.onTap, @required this.text, this.borderRadius});
+  MainButton({@required this.onTap, @required this.text, this.borderRadius, this.primaryColor = false});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 48.0,
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppColors.accent, AppColors.accent900]),
+        gradient: LinearGradient(
+          colors: primaryColor
+              ? [AppColors.primary, Color.lerp(AppColors.primary, AppColors.white, 0.05)]
+              : [AppColors.accent, AppColors.accent900],
+        ),
         borderRadius: borderRadius,
       ),
       child: Material(

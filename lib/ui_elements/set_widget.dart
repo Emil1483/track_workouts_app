@@ -19,7 +19,11 @@ class SetWidget extends StatelessWidget {
     final filteredSet = attributes.copy()
       ..removeWhere((name, value) {
         if (name == AttributeName.pre_break) {
-          breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
+          if (value > 0) {
+            breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
+          } else {
+            breakWidget = SizedBox(height: 12.0);
+          }
           return true;
         }
         return false;
@@ -92,7 +96,7 @@ class _BreakWidget extends StatelessWidget {
       padding: EdgeInsets.only(top: 8.0),
       child: ColoredContainer(
         child: AutoSizeText(
-          '${duration.formatMinuteSeconds} break',
+          duration.breakText,
           maxLines: 1,
           style: getTextStyle(TextStyles.h3),
         ),

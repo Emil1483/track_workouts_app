@@ -128,7 +128,7 @@ class _SpinnerState extends State<_Spinner> {
       model: SpinnerViewmodel(widget.controller, widget.itemHeight, widget.interval),
       onModelReady: (model) => getSelectedIndex = model.getSelectedIndex,
       builder: (context, model, child) => NotificationListener<ScrollNotification>(
-        onNotification: model.onScrollNotification,
+        onNotification: (notification) => model.onScrollNotification(notification, context),
         child: ListView.builder(
           controller: widget.controller,
           physics: _ItemScrollPhysics(itemHeight: widget.itemHeight),

@@ -32,8 +32,8 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
     _controller.addListener(() async {
       if (_controller.value == 1) {
         model.panelController.close();
-        await Future.delayed(Duration(milliseconds: 500));
         model.modifyPreBreakIfPossible(_pickedTime);
+        await Future.delayed(Duration(milliseconds: 500));
         setState(() => _pickedTime = null);
       }
     });

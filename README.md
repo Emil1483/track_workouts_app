@@ -25,7 +25,7 @@
         - [x] add break picker
         - [x] store set data in new_workout_service
         - [x] add edit functionality
-        - [ ] add colors to new workout route
+        - [x] add colors to new workout route
         - [ ] add timer panel
         - [ ] add auto fill
     - [ ] add build custom routine page

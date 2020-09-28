@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
+import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
-import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
@@ -18,16 +18,16 @@ import 'package:track_workouts/utils/num_utils.dart';
 class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
   static const String routeName = 'newWorkoutDetails';
 
-  final ActiveExercise activeExercise;
+  final Exercise exercise;
 
-  NewExerciseDetailsRoute({@required this.activeExercise});
+  NewExerciseDetailsRoute({@required this.exercise});
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return BaseWidget<NewExerciseDetailsViewmodel>(
       model: NewExerciseDetailsViewmodel(
-        exercise: activeExercise.exercise,
+        exercise: exercise,
         onError: onError,
         newWorkoutService: Provider.of<NewWorkoutService>(context),
       ),
@@ -49,7 +49,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
           }
         }
         return Scaffold(
-          appBar: AppBar(title: AutoSizeText(activeExercise.exercise.name, maxLines: 1)),
+          appBar: AppBar(title: AutoSizeText(exercise.name, maxLines: 1)),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             children: setWidgets,

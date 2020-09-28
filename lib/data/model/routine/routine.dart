@@ -18,6 +18,8 @@ class Routine {
               value: (_) => [],
             );
 
+  Map<String, List<ActiveSet>> get activeExercises => _activeExercises.copy();
+
   List<ActiveSet> getActiveSets(String exerciseName) {
     if (!_activeExercises.containsKey(exerciseName)) throw StateError('exercise name does not exist');
     return _activeExercises[exerciseName];
@@ -77,11 +79,15 @@ class Routine {
   Routine copy() => Routine(
         name: name,
         exercises: exercises,
-        activeExercises: Map.fromIterable(
-          _activeExercises.entries,
-          key: (entry) => (entry as MapEntry<String, List<ActiveSet>>).key,
-          value: (entry) => (entry as MapEntry<String, List<ActiveSet>>).value.copy(),
-        ),
+        activeExercises: _activeExercises.copy(),
+      );
+}
+
+extension ActiveExercises on Map<String, List<ActiveSet>> {
+  Map<String, List<ActiveSet>> copy() => Map.fromIterable(
+        entries,
+        key: (entry) => (entry as MapEntry<String, List<ActiveSet>>).key,
+        value: (entry) => (entry as MapEntry<String, List<ActiveSet>>).value.copy(),
       );
 }
 
@@ -111,11 +117,12 @@ class ActiveSet {
   final Map<AttributeName, double> attributes;
   final List<AttributeName> oneOf;
 
-  ActiveSet({@required this.attributes, @required this.oneOf, bool completed}) {
+  ActiveSet({@required this.attributes, @required this.oneOf, bool completed, bool checked}) {
     if (completed != null) _completed = completed;
+    if (checked != null) _checked = checked;
   }
 
-  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf?.copy(), completed: _completed);
+  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf?.copy(), completed: _completed, checked: _checked);
 
   bool get completed => _completed;
 

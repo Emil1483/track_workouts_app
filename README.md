@@ -28,6 +28,10 @@
         - [x] add colors to new workout route
         - [ ] add timer panel
         - [ ] add auto fill
+    - [ ] push workout to database
+    - [ ] fetch todays workout and put it as current routine
     - [ ] add build custom routine page
+    - [ ] add button that adds custom exercise
+    - [ ] redo choose routine page
 
 - [ ] add edit functionality to details route

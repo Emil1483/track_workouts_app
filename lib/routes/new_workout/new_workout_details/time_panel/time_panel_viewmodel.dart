@@ -46,13 +46,6 @@ class TimePanelViewmodel extends BaseModel {
     });
   }
 
-  void _resetSpinners() {
-    final copiedTime = _pickedTime.copy();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      timePickerModel.animateTo(copiedTime);
-    });
-  }
-
   void startCountdown() {
     _pickedTime = timePickerModel.selectedTime;
     _timePickerHeight = timerContainerKey.currentContext.size.height;

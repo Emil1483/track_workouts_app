@@ -15,8 +15,7 @@ class TimePanelViewmodel extends BaseModel {
   PickedTime _pickedTime;
   double _timePickerHeight;
 
-  TimePanelViewmodel({@required double timePickerHeight})
-      : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
+  TimePanelViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
@@ -33,8 +32,15 @@ class TimePanelViewmodel extends BaseModel {
       if (_controller.value == 1) {
         model.panelController.close();
         model.modifyPreBreakIfPossible(_pickedTime);
+
         await Future.delayed(Duration(milliseconds: 500));
+
+        final copiedTime = _pickedTime.copy();
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          timePickerModel.jumpToTime(copiedTime);
+        });
         _pickedTime = null;
+
         notifyListeners();
       }
     });

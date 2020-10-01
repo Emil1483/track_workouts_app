@@ -19,11 +19,15 @@ class TimePanelViewmodel extends BaseModel {
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
+  bool get pickedTimeNotSelected => timePickerModel.selectedTime.isZero;
+
   double get timePickerHeight => _timePickerHeight;
 
   AnimationController get controller => _controller;
 
   double get countdownValue => 1 - _controller.value;
+
+  void addSpinnerListener() => timePickerModel.addListener(notifyListeners);
 
   void buildAnimationController(BuildContext context, {@required TickerProvider vsync}) {
     final model = Provider.of<NewExerciseDetailsViewmodel>(context, listen: false);

@@ -19,7 +19,10 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
   Widget build(BuildContext context) {
     return BaseWidget<TimePanelViewmodel>(
       model: TimePanelViewmodel(timePickerHeight: TimePicker.defaultHeight),
-      onModelReady: (model) => model.buildAnimationController(context, vsync: this),
+      onModelReady: (model) {
+        model.buildAnimationController(context, vsync: this);
+        model.addSpinnerListener();
+      },
       onDispose: (model) => model.dispose(),
       builder: (context, model, child) {
         final timeWidget = model.pickedTime == null
@@ -56,8 +59,8 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
                     text: 'Start',
                     primaryColor: model.pickedTime != null,
                     borderRadius: BorderRadius.vertical(bottom: _radius),
-                    onTap: model.startCountdown,
-                  )
+                    onTap: model.pickedTimeNotSelected ? null : model.startCountdown,
+                  ),
                 ],
               ),
             ),

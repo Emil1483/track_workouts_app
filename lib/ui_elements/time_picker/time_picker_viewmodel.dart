@@ -21,6 +21,9 @@ class TimePickerViewmodel extends BaseModel {
       interval: secondInterval,
       itemHeight: (height / 3),
     );
+
+    minuteModel.addListener(notifyListeners);
+    secondModel.addListener(notifyListeners);
   }
 
   PickedTime get selectedTime {

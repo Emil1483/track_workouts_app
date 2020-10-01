@@ -17,6 +17,8 @@ class PickedTime {
     return PickedTime(minutes: minutes, seconds: seconds);
   }
 
+  bool get isZero => minutes == 0 && seconds == 0;
+
   @override
   String toString() {
     final minutesString = minutes.toString().padLeft(2, '0');

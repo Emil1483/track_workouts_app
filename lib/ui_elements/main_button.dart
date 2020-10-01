@@ -14,11 +14,7 @@ class MainButton extends StatelessWidget {
     return Container(
       height: 48.0,
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: primaryColor
-              ? [AppColors.primary, Color.lerp(AppColors.primary, AppColors.white, 0.05)]
-              : [AppColors.accent, AppColors.accent900],
-        ),
+        gradient: LinearGradient(colors: _gradient),
         borderRadius: borderRadius,
       ),
       child: Material(
@@ -35,5 +31,13 @@ class MainButton extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Color> get _gradient {
+    if (onTap == null) return [AppColors.disabled, AppColors.white300];
+
+    if (!primaryColor) return [AppColors.accent, AppColors.accent900];
+
+    return [Color.lerp(AppColors.primary, AppColors.white, 0.05), AppColors.primary];
   }
 }

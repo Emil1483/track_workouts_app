@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/time_picker/spinner_viewmodel.dart';
@@ -49,57 +48,34 @@ class _ItemScrollPhysics extends ScrollPhysics {
   bool get allowImplicitScrolling => false;
 }
 
-class TimePicker extends StatefulWidget {
+class TimePicker extends StatelessWidget {
+  static const double defaultHeight = 198.0;
+
+  final TimePickerViewmodel model;
   final double height;
   final double width;
 
-  const TimePicker({
-    this.height = 198.0,
+  TimePicker({
+    @required this.model,
+    this.height = defaultHeight,
     this.width = 256.0,
-    Key key,
-  }) : super(key: key);
-
-  @override
-  TimePickerState createState() => TimePickerState();
-}
-
-class TimePickerState extends State<TimePicker> {
-  final GlobalKey<_SpinnerState> minuteKey = GlobalKey<_SpinnerState>();
-  final GlobalKey<_SpinnerState> secondKey = GlobalKey<_SpinnerState>();
-
-  PickedTime get selectedTime {
-    final minuteIndex = minuteKey.currentState.getSelectedIndex();
-    final secondIndex = secondKey.currentState.getSelectedIndex();
-    return PickedTime(
-      minutes: minuteIndex % 60,
-      seconds: (secondIndex % (60 / TimePickerViewmodel.secondInterval)).round() * TimePickerViewmodel.secondInterval,
-    );
-  }
+  });
 
   @override
   Widget build(BuildContext context) {
     return BaseWidget<TimePickerViewmodel>(
-      model: TimePickerViewmodel(widget.height / 3),
+      model: model,
       builder: (context, model, child) => Container(
-        height: widget.height,
-        width: widget.width,
+        height: height,
+        width: width,
         padding: EdgeInsets.symmetric(horizontal: 32.0),
         child: Row(
           children: [
             Expanded(
-              child: _Spinner(
-                key: minuteKey,
-                controller: model.minuteController,
-                itemHeight: widget.height / 3,
-              ),
+              child: _Spinner(model: model.minuteModel),
             ),
             Expanded(
-              child: _Spinner(
-                key: secondKey,
-                controller: model.secondController,
-                itemHeight: widget.height / 3,
-                interval: TimePickerViewmodel.secondInterval,
-              ),
+              child: _Spinner(model: model.secondModel),
             ),
           ],
         ),
@@ -108,37 +84,27 @@ class TimePickerState extends State<TimePicker> {
   }
 }
 
-class _Spinner extends StatefulWidget {
-  final ScrollController controller;
-  final double itemHeight;
-  final int interval;
+class _Spinner extends StatelessWidget {
+  final SpinnerViewmodel model;
 
-  const _Spinner({Key key, @required this.controller, @required this.itemHeight, this.interval = 1}) : super(key: key);
-
-  @override
-  _SpinnerState createState() => _SpinnerState();
-}
-
-class _SpinnerState extends State<_Spinner> {
-  int Function() getSelectedIndex;
+  _Spinner({@required this.model});
 
   @override
   Widget build(BuildContext context) {
     return BaseWidget<SpinnerViewmodel>(
-      model: SpinnerViewmodel(widget.controller, widget.itemHeight, widget.interval),
-      onModelReady: (model) => getSelectedIndex = model.getSelectedIndex,
+      model: model,
       builder: (context, model, child) => NotificationListener<ScrollNotification>(
         onNotification: (notification) => model.onScrollNotification(notification, context),
         child: ListView.builder(
-          controller: widget.controller,
-          physics: _ItemScrollPhysics(itemHeight: widget.itemHeight),
+          controller: model.controller,
+          physics: _ItemScrollPhysics(itemHeight: model.itemHeight),
           itemBuilder: (context, index) => Container(
             alignment: Alignment.center,
-            height: widget.itemHeight,
+            height: model.itemHeight,
             child: Text(
-              (index * widget.interval % 60).toString().padLeft(2, '0'),
+              (index * model.interval % 60).toString().padLeft(2, '0'),
               style: getTextStyle(TextStyles.h0).copyWith(
-                color: model.getSelectedIndex() == index ? AppColors.white : AppColors.disabled,
+                color: model.selectedIndex == index ? AppColors.white : AppColors.disabled,
               ),
             ),
           ),

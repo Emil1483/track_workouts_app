@@ -4,10 +4,11 @@ import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker.dart';
+import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dart';
 
 class TimePickerDialog {
   static Future<PickedTime> showTimePicker(BuildContext context) {
-    final timerKey = GlobalKey<TimePickerState>();
+    final timePickerModel = TimePickerViewmodel(height: TimePicker.defaultHeight);
     return showDialog<PickedTime>(
       context: context,
       builder: (context) => SimpleDialog(
@@ -16,9 +17,9 @@ class TimePickerDialog {
         titleTextStyle: getTextStyle(TextStyles.h1),
         contentPadding: EdgeInsets.only(top: 16.0),
         children: [
-          TimePicker(key: timerKey),
+          TimePicker(model: timePickerModel),
           MainButton(
-            onTap: () => Router.pop(timerKey.currentState.selectedTime),
+            onTap: () => Router.pop(timePickerModel.selectedTime),
             text: 'Save Break Time',
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(4.0),

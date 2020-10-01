@@ -23,4 +23,6 @@ class PickedTime {
     final secondsString = seconds.toString().padLeft(2, '0');
     return '$minutesString : $secondsString';
   }
+
+  PickedTime copy() => PickedTime(minutes: minutes, seconds: seconds);
 }

@@ -30,4 +30,26 @@ class SpinnerViewmodel extends BaseModel {
     }
     return false;
   }
+
+  int getClosestIndex(int index) {
+    final offset = controller.offset;
+    final currentIndex = (offset / itemHeight).round() + 1;
+    final currentNormalizedIndex = currentIndex % (60 / interval);
+    final normalizedIndex = index % (60 / interval);
+    final diff = normalizedIndex - currentNormalizedIndex;
+    return currentIndex + diff.round() - 1;
+  }
+
+  double getOffsetFromValue(int value) {
+    final index = (value / interval).round();
+    return getClosestIndex(index) * itemHeight;
+  }
+
+  void jumpToValue(int value) => controller.jumpTo(getOffsetFromValue(value));
+
+  void animateToIndex(int index) => controller.animateTo(
+        (index - 1) * itemHeight,
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInOutCubic,
+      );
 }

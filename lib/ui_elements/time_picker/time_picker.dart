@@ -98,13 +98,16 @@ class _Spinner extends StatelessWidget {
         child: ListView.builder(
           controller: model.controller,
           physics: _ItemScrollPhysics(itemHeight: model.itemHeight),
-          itemBuilder: (context, index) => Container(
-            alignment: Alignment.center,
-            height: model.itemHeight,
-            child: Text(
-              (index * model.interval % 60).toString().padLeft(2, '0'),
-              style: getTextStyle(TextStyles.h0).copyWith(
-                color: model.selectedIndex == index ? AppColors.white : AppColors.disabled,
+          itemBuilder: (context, index) => GestureDetector(
+            onTap: () => model.animateToIndex(index),
+            child: Container(
+              alignment: Alignment.center,
+              height: model.itemHeight,
+              child: Text(
+                (index * model.interval % 60).toString().padLeft(2, '0'),
+                style: getTextStyle(TextStyles.h0).copyWith(
+                  color: model.selectedIndex == index ? AppColors.white : AppColors.disabled,
+                ),
               ),
             ),
           ),

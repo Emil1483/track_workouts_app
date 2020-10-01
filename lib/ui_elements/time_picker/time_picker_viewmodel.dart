@@ -35,8 +35,8 @@ class TimePickerViewmodel extends BaseModel {
 
   _getInitialOffset(int interval) => (height / 3) * 60 * 10 / interval - (height / 3);
 
-  void jumpToTime(PickedTime time) {
-    minuteModel.jumpToValue(time.minutes);
-    secondModel.jumpToValue(time.seconds);
+  void animateTo(PickedTime time) {
+    minuteModel.jumpTo(time.minutes);
+    secondModel.jumpTo(time.seconds);
   }
 }

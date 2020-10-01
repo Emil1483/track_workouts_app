@@ -25,28 +25,6 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
       },
       onDispose: (model) => model.dispose(),
       builder: (context, model, child) {
-        final timeWidget = model.pickedTime == null
-            ? Container(
-                key: model.timerContainerKey,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: _radius),
-                  border: Border.all(color: AppColors.accent),
-                  color: AppColors.black900,
-                ),
-                child: TimePicker(model: model.timePickerModel),
-              )
-            : AnimatedBuilder(
-                animation: model.controller,
-                builder: (context, child) => CustomPaint(
-                  painter: _CountdownPainter(value: model.countdownValue),
-                  child: Container(
-                    height: model.timePickerHeight,
-                    alignment: Alignment.center,
-                    child: Text((model.pickedTime * model.countdownValue).toString(), style: getTextStyle(TextStyles.h0)),
-                  ),
-                ),
-              );
-
         return Column(
           children: [
             SizedBox(height: 64.0),
@@ -54,12 +32,41 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
               width: 256.0,
               child: Column(
                 children: [
-                  timeWidget,
+                  Stack(
+                    children: [
+                      Opacity(
+                        opacity: model.selectingTime ? 1.0 : 0.0,
+                        child: Container(
+                          key: model.timerContainerKey,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.vertical(top: _radius),
+                            border: Border.all(color: AppColors.accent),
+                            color: AppColors.black900,
+                          ),
+                          child: TimePicker(model: model.timePickerModel),
+                        ),
+                      ),
+                      if (!model.selectingTime)
+                        AnimatedBuilder(
+                          animation: model.controller,
+                          builder: (context, child) => CustomPaint(
+                            painter: _CountdownPainter(value: model.countdownValue),
+                            child: Container(
+                              height: model.timePickerHeight,
+                              alignment: Alignment.center,
+                              child:
+                                  Text((model.pickedTime * model.countdownValue).toString(), style: getTextStyle(TextStyles.h0)),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                   MainButton(
-                    text: 'Start',
-                    primaryColor: model.pickedTime != null,
+                    texts: model.selectingTime ? ['Start'] : [model.isCountingDown ? 'Stop' : 'Continue', 'Cancel'],
+                    onTaps: model.selectingTime ? [model.startCountdown] : [model.startStopCountdown, model.cancelCountdown],
+                    primaryColor: !model.selectingTime,
                     borderRadius: BorderRadius.vertical(bottom: _radius),
-                    onTap: model.pickedTimeNotSelected ? null : model.startCountdown,
+                    disabled: model.pickedTimeNotSelected,
                   ),
                 ],
               ),

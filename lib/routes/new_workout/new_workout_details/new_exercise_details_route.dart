@@ -120,8 +120,8 @@ class _ActiveSetWidget extends StatelessWidget {
             children: [
               _AttributesTextFields(formattedAttributes: formattedAttributes),
               MainButton(
-                onTap: () => model.saveSets(),
-                text: 'Save',
+                onTaps: [() => model.saveSets()],
+                texts: ['Save'],
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(borderRadius),
                   bottomRight: Radius.circular(borderRadius),

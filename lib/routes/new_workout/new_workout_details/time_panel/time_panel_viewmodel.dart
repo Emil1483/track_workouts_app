@@ -19,6 +19,8 @@ class TimePanelViewmodel extends BaseModel {
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
+  bool get selectingTime => _pickedTime == null;
+
   bool get pickedTimeNotSelected => timePickerModel.selectedTime.isZero;
 
   double get timePickerHeight => _timePickerHeight;
@@ -37,16 +39,17 @@ class TimePanelViewmodel extends BaseModel {
         model.panelController.close();
         model.modifyPreBreakIfPossible(_pickedTime);
 
-        await Future.delayed(Duration(milliseconds: 500));
-
-        final copiedTime = _pickedTime.copy();
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          timePickerModel.jumpToTime(copiedTime);
-        });
+        await Future.delayed(Duration(milliseconds: 100));
         _pickedTime = null;
-
         notifyListeners();
       }
+    });
+  }
+
+  void _resetSpinners() {
+    final copiedTime = _pickedTime.copy();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      timePickerModel.animateTo(copiedTime);
     });
   }
 
@@ -58,6 +61,28 @@ class TimePanelViewmodel extends BaseModel {
     _controller.animateTo(1, duration: _pickedTime.toDuration);
 
     notifyListeners();
+  }
+
+  bool get isCountingDown => _controller.isAnimating;
+
+  void startStopCountdown() {
+    if (selectingTime) return;
+
+    if (isCountingDown) {
+      _controller.stop();
+    } else {
+      _controller.animateTo(1, duration: _pickedTime.toDuration * countdownValue);
+    }
+    notifyListeners();
+  }
+
+  void cancelCountdown() {
+    if (selectingTime) return;
+
+    _pickedTime = null;
+    notifyListeners();
+
+    _controller.stop();
   }
 
   @override

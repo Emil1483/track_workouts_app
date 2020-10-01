@@ -19,8 +19,8 @@ class TimePickerDialog {
         children: [
           TimePicker(model: timePickerModel),
           MainButton(
-            onTap: () => Router.pop(timePickerModel.selectedTime),
-            text: 'Save Break Time',
+            onTaps: [() => Router.pop(timePickerModel.selectedTime)],
+            texts: ['Save Break Time'],
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(4.0),
               bottomRight: Radius.circular(4.0),

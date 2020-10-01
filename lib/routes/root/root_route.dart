@@ -44,10 +44,10 @@ class RootRoute extends StatelessWidget {
                     ),
                   ),
                   MainButton(
-                    onTap: () => Router.pushNamed(
+                    onTaps: [() => Router.pushNamed(
                       model.hasChosenWorkout ? NewWorkoutRoute.routeName : ChooseRoutineRoute.routeName,
-                    ),
-                    text: model.hasChosenWorkout ? 'Continue Workout' : 'New Workout',
+                    )],
+                    texts: [model.hasChosenWorkout ? 'Continue Workout' : 'New Workout'],
                   ),
                 ],
               ),

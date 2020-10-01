@@ -45,11 +45,13 @@ class SpinnerViewmodel extends BaseModel {
     return getClosestIndex(index) * itemHeight;
   }
 
-  void jumpToValue(int value) => controller.jumpTo(getOffsetFromValue(value));
-
-  void animateToIndex(int index) => controller.animateTo(
-        (index - 1) * itemHeight,
+  void animateToOffset(double offset) => controller.animateTo(
+        offset,
         duration: Duration(milliseconds: 200),
         curve: Curves.easeInOutCubic,
       );
+  
+  void jumpTo(int value) => controller.jumpTo(getOffsetFromValue(value));
+
+  void animateToIndex(int index) => animateToOffset((index - 1) * itemHeight);
 }

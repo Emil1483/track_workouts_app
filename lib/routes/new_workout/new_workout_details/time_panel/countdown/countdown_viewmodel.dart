@@ -37,7 +37,9 @@ class CountdownViewmodel extends BaseModel {
     _controller = AnimationController(vsync: vsync);
     _controller.addListener(() async {
       if (_controller.value == 1) {
-        if (model.modifyIfPossible(_pickedTime, AttributeName.pre_break)) model.panelController.close();
+        if (model.modifyIfPossible(_pickedTime.inSeconds.toDouble(), AttributeName.pre_break)) {
+          model.panelController.close();
+        }
 
         await Future.delayed(Duration(milliseconds: 100));
         _pickedTime = null;

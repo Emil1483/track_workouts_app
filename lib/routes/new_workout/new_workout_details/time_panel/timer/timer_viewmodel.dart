@@ -50,7 +50,9 @@ class TimerViewmodel extends BaseModel {
   }
 
   void cancelTimer() {
-    if (model.modifyIfPossible(currentTime, AttributeName.time)) model.panelController.close();
+    if (model.modifyIfPossible(currentTime.inSeconds.toDouble(), AttributeName.time)) {
+      model.panelController.close();
+    }
     _currentTime = Duration();
     _timer?.cancel();
     _timer = null;

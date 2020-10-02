@@ -73,7 +73,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     notifyListeners();
   }
 
-  bool modifyIfPossible(PickedTime pickedTime, AttributeName attributeName) {
+  bool modifyIfPossible(double value, AttributeName attributeName) {
     final attributes = newWorkoutService.getActiveSet(exerciseName: exercise.name).attributes;
     if (!attributes.containsKey(attributeName)) return false;
     if (attributes[attributeName] != null) {
@@ -83,8 +83,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     newWorkoutService.changeActiveSetAttribute(
       exerciseName: exercise.name,
       attributeName: attributeName,
-      value: pickedTime.inSeconds.toDouble(),
+      value: value,
     );
+
+    _controllers[attributeName]?.text = value.toString();
     notifyListeners();
 
     return true;

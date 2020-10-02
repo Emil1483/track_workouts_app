@@ -51,6 +51,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             setWidgets.add(_ActiveSetWidget(attributes: activeSet.attributes));
           }
         }
+        setWidgets.add(SizedBox(height: 64.0));
 
         final panelHeight = 52.0;
         final borderRadius = 18.0;

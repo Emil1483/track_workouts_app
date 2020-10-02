@@ -39,6 +39,12 @@ class ChooseRoutineViewmodel extends BaseModel {
     Routine(
       name: 'Push Workout',
       exercises: [
+        Exercise(name: 'Human Flag Hold', numberOfSets: 4, attributes: [
+          AttributeName.band_level,
+          AttributeName.body_mass,
+          AttributeName.pre_break,
+          AttributeName.time,
+        ]),
         Exercise(name: 'Incline Barbell Bench Press', numberOfSets: 4, attributes: Exercise.defaultAttributes),
         Exercise(name: 'Standing Dumbbell Shoulder Press', numberOfSets: 4, attributes: Exercise.defaultAttributes),
         Exercise(name: 'Paused Flat Dumbbell Press', numberOfSets: 4, attributes: Exercise.defaultAttributes),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
-import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dart';
 
 class SpinnerViewmodel extends BaseModel {
   final ScrollController controller;

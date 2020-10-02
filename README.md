@@ -26,7 +26,9 @@
         - [x] store set data in new_workout_service
         - [x] add edit functionality
         - [x] add colors to new workout route
-        - [ ] add timer panel
+        - [ ] add time panel
+            - [ ] add sound effect
+            - [ ] add timer
         - [ ] add auto fill
     - [ ] push workout to database
     - [ ] fetch todays workout and put it as current routine

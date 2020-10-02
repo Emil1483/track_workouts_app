@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
@@ -50,7 +51,7 @@ class _TimePanelState extends State<TimePanel> with SingleTickerProviderStateMix
                         AnimatedBuilder(
                           animation: model.controller,
                           builder: (context, child) => CustomPaint(
-                            painter: _CountdownPainter(value: model.countdownValue),
+                            painter: _CountdownPainter(value: 1 - model.countdownValue),
                             child: Container(
                               height: model.timePickerHeight,
                               alignment: Alignment.center,
@@ -100,6 +101,18 @@ class _CountdownPainter extends CustomPainter {
     );
   }
 
+  double _getAngleValue(Size size) {
+    final h = size.height / 2;
+    final w = size.width / 2;
+    final t = value * (h * 4 + w * 4);
+
+    if (t < w) return math.atan(t / h);
+    if (t < w + 2 * h) return math.atan((t - w - h) / w) + math.pi / 2;
+    if (t < 3 * w + 2 * h) return math.atan((t - 2 * h - 2 * w) / h) + math.pi;
+    if (t < 3 * w + 4 * h) return math.atan((t - 3 * w - 3 * h) / w) + 3 * math.pi / 2;
+    return math.atan((t - 4 * w - 4 * h) / h) + 2 * math.pi;
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
     Path path = Path();
@@ -108,7 +121,11 @@ class _CountdownPainter extends CustomPainter {
 
     final iterations = 10;
     for (int i = 0; i < iterations; i++) {
-      final angle = 2 * math.pi * i * value / (iterations - 1) - math.pi / 2;
+      final angle = lerpDouble(
+        3 * math.pi / 2 - _getAngleValue(size),
+        -math.pi / 2,
+        i / (iterations - 1),
+      );
       final radius = size.width + size.height;
       path.lineTo(
         radius * math.cos(angle) + size.width / 2,

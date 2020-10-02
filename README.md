@@ -27,7 +27,7 @@
         - [x] add edit functionality
         - [x] add colors to new workout route
         - [ ] add time panel
-            - [ ] fix countdown timer speed
+            - [x] fix countdown timer speed
             - [ ] add sound effect
             - [ ] add timer
         - [ ] add auto fill

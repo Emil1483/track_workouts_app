@@ -6,7 +6,7 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
-import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/time_panel.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';

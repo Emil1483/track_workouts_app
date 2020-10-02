@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
+import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dart';
 
-class TimePanelViewmodel extends BaseModel {
+class CountdownViewmodel extends BaseModel {
   final GlobalKey timerContainerKey = GlobalKey();
 
   final TimePickerViewmodel timePickerModel;
@@ -15,7 +16,7 @@ class TimePanelViewmodel extends BaseModel {
   PickedTime _pickedTime;
   double _timePickerHeight;
 
-  TimePanelViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
+  CountdownViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
@@ -36,8 +37,7 @@ class TimePanelViewmodel extends BaseModel {
     _controller = AnimationController(vsync: vsync);
     _controller.addListener(() async {
       if (_controller.value == 1) {
-        model.panelController.close();
-        model.modifyPreBreakIfPossible(_pickedTime);
+        if (model.modifyIfPossible(_pickedTime, AttributeName.pre_break)) model.panelController.close();
 
         await Future.delayed(Duration(milliseconds: 100));
         _pickedTime = null;

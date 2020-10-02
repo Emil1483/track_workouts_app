@@ -6,6 +6,15 @@ class PickedTime {
 
   PickedTime({@required this.minutes, @required this.seconds});
 
+  static PickedTime zero = PickedTime(minutes: 0, seconds: 0);
+
+  factory PickedTime.fromDuration(Duration duration) {
+    return PickedTime(
+      minutes: duration.inMinutes % 60,
+      seconds: duration.inSeconds % 60,
+    );
+  }
+
   int get inSeconds => minutes * 60 + seconds;
 
   Duration get toDuration => Duration(minutes: minutes, seconds: seconds);

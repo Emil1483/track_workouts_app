@@ -25,7 +25,7 @@ class MainButton extends StatelessWidget {
           children: _mapOnTaps(
             (onTap, text) => Expanded(
               child: InkWell(
-                key: ValueKey(text),
+                key: ValueKey(onTap),
                 onTap: disabled ? null : onTap,
                 borderRadius: borderRadius,
                 child: Center(

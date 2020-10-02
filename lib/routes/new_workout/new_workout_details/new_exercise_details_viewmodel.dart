@@ -73,19 +73,21 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     notifyListeners();
   }
 
-  void modifyPreBreakIfPossible(PickedTime pickedTime) {
+  bool modifyIfPossible(PickedTime pickedTime, AttributeName attributeName) {
     final attributes = newWorkoutService.getActiveSet(exerciseName: exercise.name).attributes;
-    if (!attributes.containsKey(AttributeName.pre_break)) return;
-    if (attributes[AttributeName.pre_break] != null) {
-      if (attributes[AttributeName.pre_break] > 0) return;
+    if (!attributes.containsKey(attributeName)) return false;
+    if (attributes[attributeName] != null) {
+      if (attributes[attributeName] > 0) return false;
     }
 
     newWorkoutService.changeActiveSetAttribute(
       exerciseName: exercise.name,
-      attributeName: AttributeName.pre_break,
+      attributeName: attributeName,
       value: pickedTime.inSeconds.toDouble(),
     );
     notifyListeners();
+
+    return true;
   }
 
   Future<void> saveSets() async {

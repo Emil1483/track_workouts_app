@@ -29,7 +29,7 @@
         - [ ] add time panel
             - [x] fix countdown timer speed
             - [ ] add sound effect
-            - [ ] add timer
+            - [x] add timer
         - [ ] add auto fill
     - [ ] push workout to database
     - [ ] fetch todays workout and put it as current routine

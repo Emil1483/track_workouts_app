@@ -26,9 +26,9 @@
         - [x] store set data in new_workout_service
         - [x] add edit functionality
         - [x] add colors to new workout route
-        - [ ] add time panel
+        - [x] add time panel
             - [x] fix countdown timer speed
-            - [ ] add sound effect
+            - [x] add sound effect
             - [x] add timer
         - [ ] add auto fill
     - [ ] push workout to database

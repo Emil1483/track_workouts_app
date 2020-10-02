@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';

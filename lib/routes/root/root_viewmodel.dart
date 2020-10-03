@@ -3,7 +3,10 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
+import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_route.dart';
+import 'package:track_workouts/routes/new_workout/new_workout/new_workout_route.dart';
 import 'package:track_workouts/utils/models/week.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
 
@@ -45,6 +48,13 @@ class RootViewmodel extends BaseModel {
       },
     );
     setLoading(false);
+  }
+
+  Future<void> navigateToNewWorkout() async {
+    await Router.pushNamed(
+      hasChosenWorkout ? NewWorkoutRoute.routeName : ChooseRoutineRoute.routeName,
+    );
+    notifyListeners();
   }
 
   Week get currentWeek {

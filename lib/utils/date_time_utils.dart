@@ -16,6 +16,8 @@ extension DateTimeUtils on DateTime {
 
   String get formatDayMonthDate => DateFormat('EEEE, MMM. d').format(this) + dateSuperScript;
 
+  DateTime get ignoreTimeZone => add(timeZoneOffset);
+
   String get dateSuperScript {
     final dateString = DateFormat('d').format(this);
     final date = int.parse(dateString);

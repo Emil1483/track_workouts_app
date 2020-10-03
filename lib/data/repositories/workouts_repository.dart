@@ -26,8 +26,8 @@ class WorkoutsRepository {
     });
   }
 
-  Future<void> postWorkout(Map<String, List<ActiveSet>> activeExercises) async {
-    await ErrorHandler.catchCommonErrors(() async {
+  Future<Workout> postWorkout(Map<String, List<ActiveSet>> activeExercises) async {
+    return await ErrorHandler.catchCommonErrors(() async {
       final List<Map<String, dynamic>> exercises = [];
 
       activeExercises.forEach((exerciseName, activeSets) {
@@ -49,11 +49,13 @@ class WorkoutsRepository {
         }
       });
 
-      await workoutsApiService.postWorkout({
+      final response = await workoutsApiService.postWorkout({
         'password': ApiInfo.API_PASSWORD,
         'date': DateTime.now().toIso8601String(),
         'exercises': exercises,
       });
+
+      return WorkoutSerializer.fromMap((response.body as Map)['workout']);
     });
   }
 }

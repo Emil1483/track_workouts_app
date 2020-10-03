@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
+import 'package:track_workouts/data/services/workouts_service.dart';
 
 class NewWorkoutService {
   final WorkoutsRepository _workoutsRepository;
+  final WorkoutsService _workoutsService;
 
   Routine _selectedRoutine;
 
-  NewWorkoutService(this._workoutsRepository);
+  NewWorkoutService(this._workoutsRepository, this._workoutsService);
 
   Routine get selectedRoutine => _selectedRoutine?.copy();
 
@@ -37,9 +39,10 @@ class NewWorkoutService {
     final activeSet = _selectedRoutine.getActiveSet(exerciseName);
     activeSet.checkOk();
 
-    await _workoutsRepository.postWorkout(_selectedRoutine.activeExercises);
+    final workout = await _workoutsRepository.postWorkout(_selectedRoutine.activeExercises);
 
     activeSet.setCompleted(true);
+    _workoutsService.updateWorkout(workout);
   }
 
   void editActiveSet({@required String exerciseName, @required int index}) => _selectedRoutine.editActiveSet(exerciseName, index);

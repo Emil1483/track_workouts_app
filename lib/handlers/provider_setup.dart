@@ -6,13 +6,14 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 
 List<SingleChildWidget> getProviders() {
+  final workoutsService = WorkoutsService(WorkoutsRepository(WorkoutsApiService.create()));
   return [
     Provider<WorkoutsService>(
-      create: (_) => WorkoutsService(WorkoutsRepository(WorkoutsApiService.create())),
+      create: (_) => workoutsService,
       dispose: (_, service) => service.dispose(),
     ),
     Provider<NewWorkoutService>(
-      create: (_) => NewWorkoutService(WorkoutsRepository(WorkoutsApiService.create())),
+      create: (_) => NewWorkoutService(WorkoutsRepository(WorkoutsApiService.create()), workoutsService),
       dispose: (_, service) => service.dispose(),
     ),
   ];

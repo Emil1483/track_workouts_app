@@ -66,6 +66,23 @@ class WorkoutsService {
     if (addedToWorkouts) _notifyListeners();
   }
 
+  void updateWorkout(Workout workout) {
+    int index = 0;
+    while (index < _workouts.length) {
+      final currentDate = _workouts[index].date;
+      if (currentDate.isBefore(workout.date)) {
+        _workouts.insert(index, workout);
+        break;
+      }
+      if (currentDate.isAtSameMomentAs(workout.date)) {
+        _workouts[index] = workout;
+        break;
+      }
+      index++;
+    }
+    _notifyListeners();
+  }
+
   bool workoutsContains(Week week) {
     if (_workouts == null) return false;
     if (_workouts.isEmpty) return false;

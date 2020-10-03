@@ -31,7 +31,7 @@
             - [x] add sound effect
             - [x] add timer
         - [x] add auto fill
-    - [ ] push workout to database
+    - [x] push workout to database
     - [ ] fetch todays workout and put it as current routine
     - [ ] add build custom routine page
     - [ ] add button that adds custom exercise

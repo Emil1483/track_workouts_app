@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
@@ -17,27 +18,31 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   final Exercise exercise;
   final void Function(String) onError;
 
-  final Map<AttributeName, TextEditingController> _controllers;
+  Map<AttributeName, TextEditingController> _controllers;
 
-  NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError})
-      : _controllers = _buildControllers(newWorkoutService, exercise);
-
-  static Map<AttributeName, TextEditingController> _buildControllers(NewWorkoutService newWorkoutService, Exercise exercise) {
-    final activeSet = newWorkoutService.tryGetActiveSet(exerciseName: exercise.name);
-    return Map.fromIterable(
-      exercise.attributes.where((name) => name != AttributeName.pre_break),
-      value: (name) {
-        final value = activeSet == null ? null : activeSet.attributes[name];
-        return TextEditingController(text: value?.toString());
-      },
-    );
-  }
+  NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError});
 
   List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseName: exercise.name);
 
-  TextEditingController getControllerFrom(AttributeName name) => _controllers[name];
+  TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
 
   ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseName: exercise.name);
+
+  Future<void> buildTextControllers() async {
+    final activeSet = newWorkoutService.tryGetActiveSet(exerciseName: exercise.name);
+    final prefs = await SharedPreferences.getInstance();
+
+    _controllers = Map.fromIterable(
+      exercise.attributes.where((name) => name != AttributeName.pre_break),
+      value: (name) {
+        final attributeName = name as AttributeName;
+        final value = activeSet?.attributes[attributeName] ?? prefs.getDouble(attributeName.string);
+        return TextEditingController(text: value?.toString());
+      },
+    );
+
+    notifyListeners();
+  }
 
   void initializeActiveSets() {
     final activeSets = newWorkoutService.getActiveSets(exerciseName: exercise.name);
@@ -106,7 +111,15 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     await ErrorHandler.handleErrors(
       run: () async => newWorkoutService.completeActiveSet(exerciseName: exercise.name),
       onFailure: (failure) => onError(failure.message),
-      onSuccess: (_) {
+      onSuccess: (_) async {
+        final prefs = await SharedPreferences.getInstance();
+
+        _controllers.forEach((name, controller) async {
+          if (!AttributeNameExtension.repeatingAttributes.contains(name)) return;
+
+          await prefs.setDouble(name.string, double.parse(controller.text));
+        });
+
         newWorkoutService.addActiveSet(exerciseName: exercise.name);
         notifyListeners();
       },

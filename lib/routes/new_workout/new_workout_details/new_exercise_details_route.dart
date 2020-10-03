@@ -34,7 +34,10 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
         onError: onError,
         newWorkoutService: Provider.of<NewWorkoutService>(context),
       ),
-      onModelReady: (model) => model.initializeActiveSets(),
+      onModelReady: (model) async {
+        model.initializeActiveSets();
+        await model.buildTextControllers();
+      },
       builder: (context, model, child) {
         final List<Widget> setWidgets = [];
         for (int i = 0; i < model.activeSets.length; i++) {
@@ -67,13 +70,15 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             backdropEnabled: true,
             borderRadius: BorderRadius.vertical(top: Radius.circular(borderRadius)),
             header: PanelHeader(),
-            body: Padding(
-              padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
-              child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                children: setWidgets,
-              ),
-            ),
+            body: model.loading
+                ? Center(child: CircularProgressIndicator())
+                : Padding(
+                    padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
+                    child: ListView(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      children: setWidgets,
+                    ),
+                  ),
             panel: TimePanel(),
           ),
         );

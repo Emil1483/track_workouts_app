@@ -36,7 +36,11 @@ enum Unit { kg, s }
 
 extension AttributeNameExtension on AttributeName {
   String get string => this.toString().split('.')[1];
+
   String get formattedString => string.formatFromUnderscore;
+
+  static const List<AttributeName> repeatingAttributes = [AttributeName.body_mass];
+
   Unit get unit {
     switch (this) {
       case AttributeName.body_mass:

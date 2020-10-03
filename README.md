@@ -30,7 +30,7 @@
             - [x] fix countdown timer speed
             - [x] add sound effect
             - [x] add timer
-        - [ ] add auto fill
+        - [x] add auto fill
     - [ ] push workout to database
     - [ ] fetch todays workout and put it as current routine
     - [ ] add build custom routine page

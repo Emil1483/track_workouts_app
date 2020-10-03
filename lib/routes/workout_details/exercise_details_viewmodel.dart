@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
-import 'package:track_workouts/utils/string_utils.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 
 class ExerciseDetailsViewmodel extends BaseModel {

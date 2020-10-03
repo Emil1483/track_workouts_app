@@ -5,7 +5,6 @@ import 'package:track_workouts/routes/workout_details/exercise_details_route.dar
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/date_widget.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
-import 'package:track_workouts/utils/string_utils.dart';
 
 class WorkoutDetailsRoute extends StatelessWidget {
   static const String routeName = 'workoutDetails';

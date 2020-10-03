@@ -70,15 +70,13 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             backdropEnabled: true,
             borderRadius: BorderRadius.vertical(top: Radius.circular(borderRadius)),
             header: PanelHeader(),
-            body: model.loading
-                ? Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
-                    child: ListView(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      children: setWidgets,
-                    ),
-                  ),
+            body: Padding(
+              padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                children: setWidgets,
+              ),
+            ),
             panel: TimePanel(),
           ),
         );
@@ -128,6 +126,7 @@ class _ActiveSetWidget extends StatelessWidget {
               MainButton(
                 onTaps: [() => model.saveSets()],
                 texts: ['Save'],
+                loading: model.loading,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(borderRadius),
                   bottomRight: Radius.circular(borderRadius),

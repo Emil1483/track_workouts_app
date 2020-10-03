@@ -23,7 +23,7 @@ class ExerciseDetailsRoute extends StatelessWidget {
         model.forEachFormattedSet((formattedSet, index) => setWidgets.add(SetWidget(attributes: formattedSet, index: index)));
 
         return Scaffold(
-          appBar: AppBar(title: Text(model.exerciseName)),
+          appBar: AppBar(title: Text(model.exercise.name)),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             children: [

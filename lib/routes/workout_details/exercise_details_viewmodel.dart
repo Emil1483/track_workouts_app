@@ -33,8 +33,6 @@ class ExerciseDetailsViewmodel extends BaseModel {
     );
   }
 
-  String get exerciseName => exercise.name.formatFromCamelcase;
-
   List<Map<AttributeName, double>> get formattedSets => _formattedSets.copy();
 
   Map<AttributeName, double> get repeatedAttributes => _repeatedAttributes.copy();

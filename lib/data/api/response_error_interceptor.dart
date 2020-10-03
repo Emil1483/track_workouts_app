@@ -1,16 +1,16 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:chopper/chopper.dart';
+import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 
 class ResponseMobileInterceptor implements ResponseInterceptor {
   @override
   FutureOr<Response> onResponse(Response response) {
     if (!response.isSuccessful) {
-      final errorText = (response.body ?? {})['error'];
-      if (errorText != null) throw Failure(errorText);
-      print([response.statusCode, response.body]);
-      throw Failure();
+      final message = jsonDecode(response.error)['error'];
+      throw Failure(message ?? ErrorHandler.unknownError);
     }
     return response;
   }

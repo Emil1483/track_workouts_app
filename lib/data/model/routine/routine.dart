@@ -58,11 +58,6 @@ class Routine {
     attributes[attributeName] = value;
   }
 
-  void completeActiveSet(String exerciseName) {
-    final activeSet = getActiveSet(exerciseName);
-    activeSet.completeSet();
-  }
-
   void editActiveSet(String exerciseName, int index) {
     final activeSets = getActiveSets(exerciseName);
     final activeSet = getActiveSet(exerciseName);
@@ -128,9 +123,12 @@ class ActiveSet {
 
   bool get checked => _checked;
 
-  void setCompleted(bool completed) => _completed = completed;
+  void setCompleted(bool completed) {
+    _completed = completed;
+    if (completed) _checked = true;
+  }
 
-  void completeSet() {
+  void checkOk() {
     attributes.forEach((name, value) {
       if (oneOf?.contains(name) ?? false) {
         if (attributes.allAreNull(oneOf)) {
@@ -143,9 +141,6 @@ class ActiveSet {
       }
       if (value == null) throw Failure('${name.formattedString} is required');
     });
-
-    _completed = true;
-    _checked = true;
   }
 
   void removeAttribute(AttributeName attributeName) => attributes.remove(attributeName);

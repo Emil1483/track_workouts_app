@@ -7,9 +7,16 @@ class MainButton extends StatelessWidget {
   final BorderRadiusGeometry borderRadius;
   final bool primaryColor;
   final bool disabled;
+  final bool loading;
 
-  MainButton({@required this.onTaps, @required this.texts, this.borderRadius, this.primaryColor = false, this.disabled = false})
-      : assert(onTaps.length == texts.length);
+  MainButton({
+    @required this.onTaps,
+    @required this.texts,
+    this.borderRadius,
+    this.primaryColor = false,
+    this.disabled = false,
+    this.loading = false,
+  }) : assert(onTaps.length == texts.length);
 
   @override
   Widget build(BuildContext context) {
@@ -21,23 +28,31 @@ class MainButton extends StatelessWidget {
       ),
       child: Material(
         color: AppColors.transparent,
-        child: Row(
-          children: _mapOnTaps(
-            (onTap, text) => Expanded(
-              child: InkWell(
-                key: ValueKey(onTap),
-                onTap: disabled ? null : onTap,
-                borderRadius: borderRadius,
-                child: Center(
-                  child: Text(
-                    text.toUpperCase(),
-                    style: getTextStyle(TextStyles.button),
+        child: loading
+            ? Center(
+                child: Container(
+                  width: 24.0,
+                  height: 24.0,
+                  child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(AppColors.white)),
+                ),
+              )
+            : Row(
+                children: _mapOnTaps(
+                  (onTap, text) => Expanded(
+                    child: InkWell(
+                      key: ValueKey(onTap),
+                      onTap: disabled ? null : onTap,
+                      borderRadius: borderRadius,
+                      child: Center(
+                        child: Text(
+                          text.toUpperCase(),
+                          style: getTextStyle(TextStyles.button),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

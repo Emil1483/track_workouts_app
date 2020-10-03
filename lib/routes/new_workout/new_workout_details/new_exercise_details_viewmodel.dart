@@ -108,6 +108,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       );
     });
 
+    setLoading(true);
+
     await ErrorHandler.handleErrors(
       run: () async => newWorkoutService.completeActiveSet(exerciseName: exercise.name),
       onFailure: (failure) => onError(failure.message),
@@ -121,9 +123,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         });
 
         newWorkoutService.addActiveSet(exerciseName: exercise.name);
-        notifyListeners();
       },
     );
+
+    setLoading(false);
   }
 
   void editSet(int index) {

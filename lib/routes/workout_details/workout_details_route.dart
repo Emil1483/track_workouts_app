@@ -34,7 +34,7 @@ class WorkoutDetailsRoute extends StatelessWidget {
       onTap: () => Router.pushNamed(ExerciseDetailsRoute.routeName, arguments: [exercise]),
       centered: true,
       mainWidget: Text(
-        exercise.name.formatFromCamelcase,
+        exercise.name,
         style: getTextStyle(TextStyles.h2),
       ),
     );

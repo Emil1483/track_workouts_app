@@ -33,7 +33,14 @@ class NewWorkoutService {
   void changeActiveSetAttribute({@required String exerciseName, @required AttributeName attributeName, @required double value}) =>
       _selectedRoutine.changeActiveSetAttribute(exerciseName, attributeName, value);
 
-  void completeActiveSet({@required String exerciseName}) => _selectedRoutine.completeActiveSet(exerciseName);
+  Future<void> completeActiveSet({@required String exerciseName}) async {
+    final activeSet = _selectedRoutine.getActiveSet(exerciseName);
+    activeSet.checkOk();
+
+    await _workoutsRepository.postWorkout(_selectedRoutine.activeExercises);
+
+    activeSet.setCompleted(true);
+  }
 
   void editActiveSet({@required String exerciseName, @required int index}) => _selectedRoutine.editActiveSet(exerciseName, index);
 

@@ -87,6 +87,8 @@ extension Workouts on List<Workout> {
 
 extension AttributeNames on List<AttributeName> {
   List<AttributeName> copy() => List.from(this);
+
+  Map<AttributeName, double> toMap() => Map.fromIterable(this, value: (_) => null);
 }
 
 @serializable

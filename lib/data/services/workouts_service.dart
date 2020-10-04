@@ -6,7 +6,7 @@ import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
 class Listener {
-  final Function listener;
+  final Function(String) listener;
   final String id;
 
   Listener({@required this.listener, @required this.id});
@@ -26,7 +26,7 @@ class WorkoutsService {
 
   List<Workout> get workouts => _workouts == null ? null : _workouts.copy();
 
-  String addListener(Function listener) {
+  String addListener(Function(String) listener) {
     final id = Uuid().v1();
     _listeners.add(Listener(listener: listener, id: id));
     return id;
@@ -34,7 +34,7 @@ class WorkoutsService {
 
   void disposeListener(String id) => _listeners.removeWhere((listener) => listener.id == id);
 
-  void _notifyListeners() => _listeners.forEach((listener) => listener.listener());
+  void _notifyListeners() => _listeners.forEach((listener) => listener.listener(listener.id));
 
   void _addWorkouts(WorkoutsData workoutsData) {
     if (_workouts == null) _workouts = [];

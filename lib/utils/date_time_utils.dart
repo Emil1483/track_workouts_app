@@ -1,11 +1,11 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeUtils on DateTime {
-  DateTime get flooredToDay => DateTime(year, month, day);
+  static get today => DateTime.now().ignoreTimeZone.flooredToDay;
+
+  DateTime get flooredToDay => DateTime.utc(year, month, day);
 
   DateTime get flooredToWeek => flooredToDay.subtract(Duration(days: weekday - 1));
-
-  bool get isInFuture => this.isAfter(DateTime.now());
 
   DateTime copy() => this == null ? null : DateTime.parse(this.toIso8601String());
 

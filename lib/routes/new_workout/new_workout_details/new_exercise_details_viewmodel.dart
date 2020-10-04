@@ -36,7 +36,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       exercise.attributes.where((name) => name != AttributeName.pre_break),
       value: (name) {
         final attributeName = name as AttributeName;
-        final value = activeSet?.attributes[attributeName] ?? prefs.getDouble(attributeName.string);
+        final attributes = activeSet?.attributes;
+        final value = attributes == null ? prefs.getDouble(attributeName.string) : attributes[attributeName];
         return TextEditingController(text: value?.toString());
       },
     );
@@ -55,7 +56,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       if (numberValidation != null) return Validation.mustBeNumber(value);
     }
 
-    if (!(_activeSet.oneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
+    if (!(exercise.oneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
 
     return null;
   }

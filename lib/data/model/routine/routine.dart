@@ -11,12 +11,15 @@ class Routine {
   final Map<String, List<ActiveSet>> _activeExercises;
 
   Routine({@required this.name, @required this.exercises, Map<String, List<ActiveSet>> activeExercises})
-      : _activeExercises = activeExercises ??
-            Map.fromIterable(
-              exercises,
-              key: (exercise) => (exercise as Exercise).name,
-              value: (_) => [],
-            );
+      : _activeExercises = activeExercises ?? buildActiveExercises(exercises);
+
+  static Map<String, List<ActiveSet>> buildActiveExercises(List<Exercise> exercises) {
+    return Map.fromIterable(
+      exercises,
+      key: (exercise) => (exercise as Exercise).name,
+      value: (_) => [],
+    );
+  }
 
   Map<String, List<ActiveSet>> get activeExercises => _activeExercises.copy();
 
@@ -39,8 +42,8 @@ class Routine {
     final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
 
     final activeSet = ActiveSet(
-      attributes: Map.fromIterable(exercise.attributes, value: (_) => null),
-      oneOf: exercise.oneOf,
+      attributes: exercise.attributes.toMap(),
+      exercise: exercise,
     );
     if (activeSets.isEmpty) {
       activeSet.removeAttribute(AttributeName.pre_break);
@@ -110,14 +113,14 @@ class ActiveSet {
   bool _completed = false;
   bool _checked = false;
   final Map<AttributeName, double> attributes;
-  final List<AttributeName> oneOf;
+  final Exercise exercise;
 
-  ActiveSet({@required this.attributes, @required this.oneOf, bool completed, bool checked}) {
+  ActiveSet({@required this.attributes, @required this.exercise, bool completed, bool checked}) {
     if (completed != null) _completed = completed;
     if (checked != null) _checked = checked;
   }
 
-  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), oneOf: oneOf?.copy(), completed: _completed, checked: _checked);
+  ActiveSet copy() => ActiveSet(attributes: attributes.copy(), exercise: exercise, completed: _completed, checked: _checked);
 
   bool get completed => _completed;
 
@@ -129,6 +132,7 @@ class ActiveSet {
   }
 
   void checkOk() {
+    final oneOf = exercise.oneOf;
     attributes.forEach((name, value) {
       if (oneOf?.contains(name) ?? false) {
         if (attributes.allAreNull(oneOf)) {

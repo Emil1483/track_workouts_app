@@ -18,7 +18,7 @@ class ChooseRoutineRoute extends StatelessWidget {
         appBar: AppBar(title: Text('Choose Workout')),
         body: ListView(
           padding: EdgeInsets.symmetric(horizontal: 12.0),
-          children: model.routines.map((routine) => _buildRoutinesRow(routine, model)).toList(),
+          children: ChooseRoutineViewmodel.routines.map((routine) => _buildRoutinesRow(routine, model)).toList(),
         ),
       ),
     );

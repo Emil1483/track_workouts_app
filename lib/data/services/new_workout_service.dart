@@ -3,19 +3,64 @@ import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
+import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_viewmodel.dart';
+import 'package:track_workouts/utils/date_time_utils.dart';
 
 class NewWorkoutService {
   final WorkoutsRepository _workoutsRepository;
   final WorkoutsService _workoutsService;
 
   Routine _selectedRoutine;
+  Workout _workout;
 
-  NewWorkoutService(this._workoutsRepository, this._workoutsService);
+  NewWorkoutService(this._workoutsRepository, this._workoutsService) {
+    _workoutsService.addListener((id) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _workoutsService.disposeListener(id));
+      final workout = _workoutsService.workouts.first;
+      if (workout.date.isAtSameMomentAs(DateTimeUtils.today)) {
+        _workout = workout;
+      }
+    });
+  }
 
   Routine get selectedRoutine => _selectedRoutine?.copy();
 
+  Exercise findExercise(String exerciseName) {
+    for (final routine in ChooseRoutineViewmodel.routines) {
+      for (final exercise in routine.exercises) {
+        if (exercise.name == exerciseName) return exercise;
+      }
+    }
+    throw StateError('found no exercise with name \'$exerciseName\'');
+  }
+
   void selectRoutine(Routine routine) {
-    _selectedRoutine = routine.copy();
+    final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exercises);
+    if (_workout != null) {
+      _workout.exercises.forEach((exerciseName, sets) {
+        final exercise = findExercise(exerciseName);
+        activeExercises[exerciseName] = [
+          ...sets.map(
+            (mySet) => ActiveSet(
+              checked: true,
+              completed: true,
+              attributes: mySet,
+              exercise: exercise,
+            ),
+          ),
+          ActiveSet(
+            attributes: exercise.attributes.toMap(),
+            exercise: exercise,
+          ),
+        ];
+      });
+    }
+
+    _selectedRoutine = Routine(
+      exercises: routine.exercises,
+      name: routine.name,
+      activeExercises: activeExercises,
+    );
   }
 
   List<ActiveSet> getActiveSets({@required String exerciseName}) => _selectedRoutine.getActiveSets(exerciseName);

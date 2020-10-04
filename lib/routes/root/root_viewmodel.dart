@@ -19,7 +19,7 @@ class RootViewmodel extends BaseModel {
   String _listenerId;
 
   RootViewmodel({@required this.workoutsService, @required this.newWorkoutService}) {
-    _listenerId = workoutsService.addListener(() => notifyListeners());
+    _listenerId = workoutsService.addListener((_) => notifyListeners());
   }
 
   @override

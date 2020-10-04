@@ -13,9 +13,7 @@ class NewWorkoutViewmodel extends BaseModel {
 
   Map<String, List<ActiveSet>> get activeExercises => newWorkoutService.selectedRoutine.activeExercises;
 
-  Exercise getExerciseFrom(String exerciseName) {
-    return newWorkoutService.selectedRoutine.exercises.firstWhere((exercise) => exercise.name == exerciseName);
-  }
+  Exercise getExerciseFrom(String exerciseName) => newWorkoutService.findExercise(exerciseName);
 
   Future<void> goToDetails(Exercise exercise) async {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);

@@ -19,7 +19,7 @@
 - [ ] add 'new workout' route
     - [x] add bottom navigation button
     - [x] add list of current exercises
-    - [ ] add new exercise page
+    - [x] add new exercise page
         - [x] add break time == null error handling
         - [x] allow some attributes to be null on condition (eg. weight can be null if band level is not).
         - [x] add break picker
@@ -32,7 +32,7 @@
             - [x] add timer
         - [x] add auto fill
     - [x] push workout to database
-    - [ ] fetch todays workout and put it as current routine
+    - [x] fetch todays workout and put it as current routine
     - [ ] add build custom routine page
     - [ ] add button that adds custom exercise
     - [ ] redo choose routine page

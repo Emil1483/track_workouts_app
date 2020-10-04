@@ -12,7 +12,7 @@ class ChooseRoutineViewmodel extends BaseModel {
   final NewWorkoutService newWorkoutService;
 
   // TODO: use some other way to store this such that the user can create his own routines
-  final List<Routine> _routines = [
+  static final List<Routine> routines = [
     Routine(
       name: 'Pull Workout',
       exercises: [
@@ -57,8 +57,6 @@ class ChooseRoutineViewmodel extends BaseModel {
 
   ChooseRoutineViewmodel({@required this.newWorkoutService});
 
-  List<Routine> get routines => _routines.copy();
-
   void selectRoutine(Routine routine) {
     newWorkoutService.selectRoutine(routine);
     Router.pushReplacementNamed(NewWorkoutRoute.routeName);
@@ -67,9 +65,9 @@ class ChooseRoutineViewmodel extends BaseModel {
   // TODO: Delete this if not in use
   List<List<Routine>> routinesRows(int rowLength) {
     final List<List<Routine>> result = [];
-    for (int i = 0; i < _routines.length; i += rowLength) {
-      final end = min(i + rowLength, _routines.length);
-      result.add(_routines.sublist(i, end).copy());
+    for (int i = 0; i < routines.length; i += rowLength) {
+      final end = min(i + rowLength, routines.length);
+      result.add(routines.sublist(i, end).copy());
     }
     return result;
   }

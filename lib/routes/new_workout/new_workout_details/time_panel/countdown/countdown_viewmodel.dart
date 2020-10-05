@@ -1,4 +1,4 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
@@ -9,19 +9,16 @@ import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dar
 
 class CountdownViewmodel extends BaseModel {
   final GlobalKey timerContainerKey = GlobalKey();
+  final AudioCache _player = AudioCache(prefix: 'assets/sounds/');
 
   final TimePickerViewmodel timePickerModel;
 
   AnimationController _controller;
-  AssetsAudioPlayer _player;
 
   PickedTime _pickedTime;
   double _timePickerHeight;
 
-  CountdownViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight) {
-    _player = AssetsAudioPlayer.newPlayer();
-    _player.open(Audio('assets/sounds/done.mp3'), autoStart: false);
-  }
+  CountdownViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
@@ -46,7 +43,7 @@ class CountdownViewmodel extends BaseModel {
           model.panelController.close();
         }
 
-        _player.play();
+        await _player.play('done.mp3');
 
         await Future.delayed(Duration(milliseconds: 100));
         _pickedTime = null;
@@ -90,7 +87,6 @@ class CountdownViewmodel extends BaseModel {
   @override
   void dispose() {
     _controller.dispose();
-    _player.dispose();
     super.dispose();
   }
 }

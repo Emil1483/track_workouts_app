@@ -7,10 +7,11 @@ import 'package:track_workouts/utils/list_utils.dart';
 class Routine {
   final String name;
   final List<Exercise> exercises;
+  final String image;
 
   final Map<String, List<ActiveSet>> _activeExercises;
 
-  Routine({@required this.name, @required this.exercises, Map<String, List<ActiveSet>> activeExercises})
+  Routine({@required this.name, @required this.exercises, @required this.image, Map<String, List<ActiveSet>> activeExercises})
       : _activeExercises = activeExercises ?? buildActiveExercises(exercises);
 
   static Map<String, List<ActiveSet>> buildActiveExercises(List<Exercise> exercises) {
@@ -77,6 +78,7 @@ class Routine {
   Routine copy() => Routine(
         name: name,
         exercises: exercises,
+        image: image,
         activeExercises: _activeExercises.copy(),
       );
 }

@@ -33,8 +33,9 @@
         - [x] add auto fill
     - [x] push workout to database
     - [x] fetch todays workout and put it as current routine
+    - [ ] add change routine option
     - [ ] add build custom routine page
     - [ ] add button that adds custom exercise
-    - [ ] redo choose routine page
+    - [x] redo choose routine page
 
 - [ ] add edit functionality to details route

@@ -17,50 +17,75 @@ class ChooseRoutineRoute extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('Choose Workout')),
         body: ListView(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          children: ChooseRoutineViewmodel.routines.map((routine) => _buildRoutinesRow(routine, model)).toList(),
+          children: ChooseRoutineViewmodel.routines.map((routine) => _buildRoutinesRow(routine, context)).toList(),
         ),
       ),
     );
   }
 
-  Widget _buildRoutinesRow(Routine routine, ChooseRoutineViewmodel model) {
-    final borderRadius = BorderRadius.circular(12.0);
-
-    return Padding(
-      padding: EdgeInsets.only(top: 8.0),
-      child: Material(
-        color: AppColors.primary700,
-        elevation: 4.0,
-        borderRadius: borderRadius,
-        child: InkWell(
-          onTap: () => model.selectRoutine(routine),
-          borderRadius: borderRadius,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(routine.name, style: getTextStyle(TextStyles.h2)),
-                SizedBox(height: 4.0),
-                ...routine.exercises
-                    .map(
-                      (exercise) => Padding(
-                        padding: EdgeInsets.only(top: 2.0),
-                        child: AutoSizeText(
-                          '●  ${exercise.name}',
-                          style: getTextStyle(TextStyles.body1),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
+  Widget _buildRoutinesRow(Routine routine, BuildContext context) {
+    final model = Provider.of<ChooseRoutineViewmodel>(context);
+    return Stack(
+      children: [
+        Column(
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.width / 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 14.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(routine.name, style: getTextStyle(TextStyles.subtitle1)),
+                          SizedBox(height: 6.0),
+                          ...routine.exercises
+                              .map(
+                                (exercise) => Padding(
+                                  padding: EdgeInsets.only(top: 2.0),
+                                  child: AutoSizeText(
+                                    '●  ${exercise.name}',
+                                    style: getTextStyle(TextStyles.body1),
+                                    maxLines: 1,
+                                    minFontSize: 12.0,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ],
                       ),
-                    )
-                    .toList(),
-              ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24.0),
+                    child: VerticalDivider(),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(24.0),
+                      child: Image.asset(
+                        'assets/images/${routine.image}',
+                        color: Color.lerp(AppColors.accent, AppColors.white, .6),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
+            Divider(),
+          ],
+        ),
+        Positioned.fill(
+          child: Material(
+            color: AppColors.transparent,
+            child: InkWell(onTap: () => model.selectRoutine(routine)),
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -57,6 +57,7 @@ class NewWorkoutService {
     }
 
     _selectedRoutine = Routine(
+      image: routine.image,
       exercises: routine.exercises,
       name: routine.name,
       activeExercises: activeExercises,

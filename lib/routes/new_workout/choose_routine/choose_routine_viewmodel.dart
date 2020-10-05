@@ -15,6 +15,7 @@ class ChooseRoutineViewmodel extends BaseModel {
   static final List<Routine> routines = [
     Routine(
       name: 'Pull Workout',
+      image: 'pull_up.png',
       exercises: [
         Exercise(
           name: 'Pull Ups',
@@ -38,6 +39,7 @@ class ChooseRoutineViewmodel extends BaseModel {
     ),
     Routine(
       name: 'Push Workout',
+      image: 'default.png',//'bench_press.png',
       exercises: [
         Exercise(name: 'Human Flag Hold', numberOfSets: 4, attributes: [
           AttributeName.band_level,

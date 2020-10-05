@@ -39,7 +39,7 @@ class ChooseRoutineViewmodel extends BaseModel {
     ),
     Routine(
       name: 'Push Workout',
-      image: 'default.png',//'bench_press.png',
+      image: 'bench_press.png',
       exercises: [
         Exercise(name: 'Human Flag Hold', numberOfSets: 4, attributes: [
           AttributeName.band_level,

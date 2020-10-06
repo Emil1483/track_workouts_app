@@ -33,9 +33,7 @@
         - [x] add auto fill
     - [x] push workout to database
     - [x] fetch todays workout and put it as current routine
-    - [ ] add change routine option
     - [ ] add build custom routine page
     - [ ] add button that adds custom exercise
     - [x] redo choose routine page
-
-- [ ] add edit functionality to details route
+    - [ ] create time panel wrapper widget with time service that is used on more routes

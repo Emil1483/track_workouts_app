@@ -10,6 +10,7 @@ import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
+import 'package:track_workouts/ui_elements/main_text_field.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/panel_header.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
@@ -161,27 +162,11 @@ class _AttributesTextFields extends StatelessWidget {
               final unitString = unit == null ? '' : ' (${unit.string})';
               return Padding(
                 padding: EdgeInsets.only(bottom: 14.0),
-                child: TextFormField(
+                child: MainTextField(
                   controller: model.getControllerFrom(attributeName),
-                  keyboardType: TextInputType.number,
-                  style: getTextStyle(TextStyles.caption),
                   validator: (value) => model.validateAttribute(attributeName, value),
-                  decoration: InputDecoration(
-                    labelText: name + unitString,
-                    labelStyle: getTextStyle(TextStyles.caption),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.accent, width: 2.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.white, width: 0.5),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.error, width: 1.0),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: AppColors.error, width: 2.0),
-                    ),
-                  ),
+                  labelText: name + unitString,
+                  keyboardType: TextInputType.number,
                 ),
               );
             },

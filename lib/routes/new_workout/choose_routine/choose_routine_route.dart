@@ -16,6 +16,10 @@ class ChooseRoutineRoute extends StatelessWidget {
       model: ChooseRoutineViewmodel(newWorkoutService: Provider.of<NewWorkoutService>(context)),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('Choose Workout')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: model.createRoutine,
+          child: Icon(Icons.add),
+        ),
         body: ListView(
           children: ChooseRoutineViewmodel.routines.map((routine) => _buildRoutinesRow(routine, context)).toList(),
         ),

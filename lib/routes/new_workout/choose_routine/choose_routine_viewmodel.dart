@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/routes/create_routine/create_routine_route.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_route.dart';
 
 class ChooseRoutineViewmodel extends BaseModel {
@@ -64,13 +63,7 @@ class ChooseRoutineViewmodel extends BaseModel {
     Router.pushReplacementNamed(NewWorkoutRoute.routeName);
   }
 
-  // TODO: Delete this if not in use
-  List<List<Routine>> routinesRows(int rowLength) {
-    final List<List<Routine>> result = [];
-    for (int i = 0; i < routines.length; i += rowLength) {
-      final end = min(i + rowLength, routines.length);
-      result.add(routines.sublist(i, end).copy());
-    }
-    return result;
+  Future<void> createRoutine() async {
+    await Router.pushNamed(CreateRoutine.routeName);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
+import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
@@ -40,21 +41,24 @@ class CreateExerciseViewmodel extends BaseModel {
     notifyListeners();
   }
 
-  void save() {
+  Future<void> save() async {
     if (!formKey.currentState.validate()) return;
     if (!_selectableAttributes.atLeastOneSelected()) {
       onError('Please select at least one attribute');
       return;
     }
 
-    routinesService.addExercise(
-      Exercise(
-        attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
-        name: exerciseNameController.text.trim(),
-        numberOfSets: _numberOfSets,
+    await ErrorHandler.handleErrors(
+      run: () => routinesService.addExercise(
+        Exercise(
+          attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
+          name: exerciseNameController.text.trim(),
+          numberOfSets: _numberOfSets,
+        ),
       ),
+      onFailure: (failure) => onError(failure.message),
+      onSuccess: (_) => Router.pop(),
     );
-    Router.pop();
   }
 }
 

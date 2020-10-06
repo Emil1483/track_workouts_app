@@ -32,7 +32,9 @@ class CreateRoutine extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              child: ListView(),
+              child: ListView(
+                children: model.getExercisesBySelected(true).map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+              ),
             ),
             MainButton(
               onTaps: [() {}],
@@ -53,7 +55,7 @@ class _AddExerciseSheet extends StatelessWidget {
       color: AppColors.primary,
       child: Stack(
         children: [
-          ListView(children: model.exercises.map((exercise) => _ExerciseWidget(exercise: exercise)).toList()),
+          ListView(children: model.getExercisesBySelected(false).map((exercise) => _ExerciseWidget(exercise: exercise)).toList()),
           Positioned(
             bottom: 16.0,
             right: 16.0,
@@ -78,12 +80,12 @@ class _ExerciseWidget extends StatelessWidget {
     final model = Provider.of<CreateRoutineViewmodel>(context);
     return Dismissible(
       key: ValueKey(exercise),
-      onDismissed: (_) => model.deleteExercise(exercise),
+      onDismissed: (_) => model.delete(exercise),
       background: Container(color: AppColors.accent900),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async => await showDialog(context: context, builder: _buildConfirmDialog),
       child: InkWell(
-        onTap: () {},
+        onTap: () => model.select(exercise),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

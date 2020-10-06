@@ -24,7 +24,7 @@ class Router {
   }
 
   static Future<T> pushNamed<T>(String route, {Object arguments}) =>
-      navigatorKey.currentState.pushNamed(route, arguments: arguments);
+      navigatorKey.currentState.pushNamed<T>(route, arguments: arguments);
 
   static Future<T> pushReplacementNamed<T>(String route, {Object arguments}) =>
       navigatorKey.currentState.pushReplacementNamed(route, arguments: arguments);

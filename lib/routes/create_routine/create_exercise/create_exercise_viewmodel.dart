@@ -48,16 +48,16 @@ class CreateExerciseViewmodel extends BaseModel {
       return;
     }
 
+    final exercise = Exercise(
+      attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
+      name: exerciseNameController.text.trim(),
+      numberOfSets: _numberOfSets,
+    );
+
     await ErrorHandler.handleErrors(
-      run: () => routinesService.addExercise(
-        Exercise(
-          attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
-          name: exerciseNameController.text.trim(),
-          numberOfSets: _numberOfSets,
-        ),
-      ),
+      run: () => routinesService.addExercise(exercise),
       onFailure: (failure) => onError(failure.message),
-      onSuccess: (_) => Router.pop(),
+      onSuccess: (_) => Router.pop(exercise),
     );
   }
 }

@@ -1,18 +1,38 @@
 import 'package:flutter/cupertino.dart';
+import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
 class CreateExerciseViewmodel extends BaseModel {
+  static const List<AttributeName> defaultAttributes = [AttributeName.reps, AttributeName.pre_break, AttributeName.weight];
+
+  final TextEditingController exerciseNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final List<SelectableAttribute> _selectableAttributes;
 
+  int _numberOfSets = 4;
+
+  final RoutinesService routinesService;
   final void Function(String) onError;
 
-  CreateExerciseViewmodel({@required this.onError})
-      : _selectableAttributes = AttributeName.values.map((name) => SelectableAttribute(name)).toList();
+  CreateExerciseViewmodel({@required this.routinesService, @required this.onError})
+      : _selectableAttributes = AttributeName.values
+            .map((name) => SelectableAttribute(
+                  name,
+                  selected: defaultAttributes.contains(name),
+                ))
+            .toList();
 
   List<SelectableAttribute> get selectableAttributes => _selectableAttributes.copy();
+
+  int get numberOfSets => _numberOfSets;
+
+  void changeNumberOfSets(double newValue) {
+    _numberOfSets = newValue.round();
+    notifyListeners();
+  }
 
   void select(SelectableAttribute selectedAttribute) {
     final attribute = _selectableAttributes.firstWhere((attribute) => attribute.name == selectedAttribute.name);
@@ -26,6 +46,14 @@ class CreateExerciseViewmodel extends BaseModel {
       onError('Please select at least one attribute');
       return;
     }
+
+    routinesService.addExercise(
+      Exercise(
+        attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
+        name: exerciseNameController.text.trim(),
+        numberOfSets: _numberOfSets,
+      ),
+    );
     Router.pop();
   }
 }
@@ -34,13 +62,13 @@ class SelectableAttribute {
   final AttributeName name;
   bool _selected;
 
-  SelectableAttribute(this.name, [bool selected]) : _selected = selected ?? false;
+  SelectableAttribute(this.name, {bool selected}) : _selected = selected ?? false;
 
   bool get selected => _selected;
 
   void toggleSelected() => _selected = !_selected;
 
-  SelectableAttribute copy() => SelectableAttribute(name, _selected);
+  SelectableAttribute copy() => SelectableAttribute(name, selected: _selected);
 }
 
 extension on List<SelectableAttribute> {

@@ -5,9 +5,10 @@ import 'package:track_workouts/ui_elements/main_text_field.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
 
 class TextFieldAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final TextEditingController controller;
   final String labelText;
 
-  TextFieldAppBar({@required this.labelText});
+  TextFieldAppBar({this.controller, @required this.labelText});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +28,7 @@ class TextFieldAppBar extends StatelessWidget implements PreferredSizeWidget {
             SizedBox(width: 12.0),
             Expanded(
               child: MainTextField(
+                controller: controller,
                 labelText: labelText,
                 validator: Validation.notEmpty,
                 textStyle: TextStyles.h1,

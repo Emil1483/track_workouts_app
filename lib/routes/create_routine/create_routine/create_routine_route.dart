@@ -13,6 +13,10 @@ import 'package:track_workouts/utils/error_mixins.dart';
 class CreateRoutine extends StatelessWidget with ErrorStateless {
   static const String routeName = 'createRoutine';
 
+  final Routine routine;
+
+  CreateRoutine({@required this.routine});
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -20,6 +24,7 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
       model: CreateRoutineViewmodel(
         routinesService: Provider.of<RoutinesService>(context),
         onError: onError,
+        routine: routine,
       ),
       builder: (context, model, child) => Form(
         key: model.formKey,
@@ -158,11 +163,17 @@ class _ExerciseWidget extends StatelessWidget {
     return Dismissible(
       key: ValueKey(exercise),
       onDismissed: (_) => model.delete(exercise),
-      background: Container(color: AppColors.accent900),
+      background: Container(
+        padding: EdgeInsets.only(right: 12.0),
+        color: AppColors.accent900,
+        alignment: Alignment.centerRight,
+        child: Icon(Icons.delete),
+      ),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) async => await showDialog(context: context, builder: _buildConfirmDialog),
       child: InkWell(
         onTap: () => model.select(exercise),
+        onLongPress: () => model.edit(exercise),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

@@ -24,4 +24,9 @@ class ChooseRoutineViewmodel extends BaseModel {
     await Router.pushNamed(CreateRoutine.routeName);
     notifyListeners();
   }
+
+  Future<void> editRoutine(Routine routine) async {
+    await Router.pushNamed(CreateRoutine.routeName, arguments: [routine]);
+    notifyListeners();
+  }
 }

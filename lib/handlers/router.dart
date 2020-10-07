@@ -37,11 +37,11 @@ class Router {
         return MaterialPageRoute(builder: (context) => RootRoute(), settings: settings);
       case WorkoutDetailsRoute.routeName:
         final arguments = settings.arguments as List;
-        FormattedWorkout workout = arguments[0];
+        final FormattedWorkout workout = arguments[0];
         return MaterialPageRoute(builder: (context) => WorkoutDetailsRoute(workout: workout), settings: settings);
       case ExerciseDetailsRoute.routeName:
         final arguments = settings.arguments as List;
-        FormattedExercise exercise = arguments[0];
+        final FormattedExercise exercise = arguments[0];
         return MaterialPageRoute(builder: (context) => ExerciseDetailsRoute(exercise: exercise), settings: settings);
       case NewWorkoutRoute.routeName:
         return MaterialPageRoute(builder: (context) => NewWorkoutRoute(), settings: settings);
@@ -49,12 +49,16 @@ class Router {
         return MaterialPageRoute(builder: (context) => ChooseRoutineRoute(), settings: settings);
       case NewExerciseDetailsRoute.routeName:
         final arguments = settings.arguments as List;
-        Exercise exercise = arguments[0];
+        final Exercise exercise = arguments[0];
         return MaterialPageRoute(builder: (context) => NewExerciseDetailsRoute(exercise: exercise), settings: settings);
       case CreateRoutine.routeName:
-        return MaterialPageRoute(builder: (context) => CreateRoutine());
+        final arguments = settings.arguments as List;
+        final Routine routine = arguments == null ? null : arguments[0];
+        return MaterialPageRoute(builder: (context) => CreateRoutine(routine: routine));
       case CreateExerciseRoute.routeName:
-        return MaterialPageRoute(builder: (context) => CreateExerciseRoute());
+        final arguments = settings.arguments as List;
+        final Exercise exercise = arguments == null ? null : arguments[0];
+        return MaterialPageRoute(builder: (context) => CreateExerciseRoute(exercise: exercise));
       default:
         return MaterialPageRoute(
           builder: (context) => Scaffold(

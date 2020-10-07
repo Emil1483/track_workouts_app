@@ -25,13 +25,13 @@ class ChooseRoutineRoute extends StatelessWidget {
           child: Icon(Icons.add),
         ),
         body: ListView(
-          children: model.routines.map((routine) => _buildRoutinesRow(routine, context)).toList(),
+          children: model.routines.map((routine) => _buildRoutine(routine, context)).toList(),
         ),
       ),
     );
   }
 
-  Widget _buildRoutinesRow(Routine routine, BuildContext context) {
+  Widget _buildRoutine(Routine routine, BuildContext context) {
     final model = Provider.of<ChooseRoutineViewmodel>(context);
     return Stack(
       children: [
@@ -90,7 +90,10 @@ class ChooseRoutineRoute extends StatelessWidget {
         Positioned.fill(
           child: Material(
             color: AppColors.transparent,
-            child: InkWell(onTap: () => model.selectRoutine(routine)),
+            child: InkWell(
+              onTap: () => model.selectRoutine(routine),
+              onLongPress: () => model.editRoutine(routine),
+            ),
           ),
         ),
       ],

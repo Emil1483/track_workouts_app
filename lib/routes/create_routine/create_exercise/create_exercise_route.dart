@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
@@ -12,12 +13,17 @@ import 'package:track_workouts/utils/error_mixins.dart';
 class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
   static const String routeName = 'createExercise';
 
+  final Exercise exercise;
+
+  CreateExerciseRoute({@required this.exercise});
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return BaseWidget<CreateExerciseViewmodel>(
       model: CreateExerciseViewmodel(
         routinesService: Provider.of<RoutinesService>(context),
+        exercise: exercise,
         onError: onError,
       ),
       builder: (context, model, child) => Form(

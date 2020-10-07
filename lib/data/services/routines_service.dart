@@ -8,6 +8,18 @@ class RoutinesService {
   List<Exercise> get exercises => _exercises.copy();
   List<Routine> get routines => _routines.copy();
 
+  int _getExerciseIndex(String name) {
+    final index = _exercises.indexWhere((exercise) => exercise.name == name);
+    if (index == -1) throw StateError('could not find exercise with name $name');
+    return index;
+  }
+
+  int _getRoutineIndex(String name) {
+    final index = _routines.indexWhere((routine) => routine.name == name);
+    if (index == -1) throw StateError('could not find exercise with name $name');
+    return index;
+  }
+
   Future<void> addExercise(Exercise newExercise) async {
     _exercises.forEach((existingExercise) {
       if (existingExercise.name.toLowerCase() == newExercise.name.toLowerCase()) {
@@ -17,11 +29,20 @@ class RoutinesService {
     _exercises.insert(0, newExercise);
   }
 
-  void deleteExerciseWithName(String name) {
-    _exercises.removeWhere((exercise) => exercise.name == name);
+  Future<void> updateExercise(String oldName, Exercise exercise) async {
+    final index = _getExerciseIndex(oldName);
+    _exercises[index] = exercise;
   }
 
-  Exercise getExerciseBy(String name) => _exercises.firstWhere((exercise) => exercise.name == name);
+  void deleteExerciseWithName(String name) {
+    final index = _getExerciseIndex(name);
+    _exercises.removeAt(index);
+  }
+
+  Exercise getExerciseBy(String name) {
+    final index = _getExerciseIndex(name);
+    return _exercises[index];
+  }
 
   Future<void> addRoutine(Routine newRoutine) async {
     _routines.forEach((routine) {
@@ -33,6 +54,11 @@ class RoutinesService {
       }
     });
     _routines.add(newRoutine);
+  }
+
+  Future<void> updateRoutine(String oldName, Routine routine) async {
+    final index = _getRoutineIndex(oldName);
+    _routines[index] = routine;
   }
 
   void dispose() {

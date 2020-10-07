@@ -37,8 +37,9 @@
   - [ ] add build custom routine page
     - [x] hook up the save button
     - [x] use routine service in route
-    - [ ] add edit functionality
+    - [x] add edit functionality
     - [ ] add delete functionality
+    - [ ] add choose image
     - [ ] add automatic oneOf
     - [ ] add ability to reorder the exercises
     - [ ] save json

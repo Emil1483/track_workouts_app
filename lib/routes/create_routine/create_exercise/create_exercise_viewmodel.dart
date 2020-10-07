@@ -7,7 +7,6 @@ import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
 class CreateExerciseViewmodel extends BaseModel {
-  final TextEditingController exerciseNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final List<SelectableAttribute> _selectableAttributes;
 
@@ -15,14 +14,20 @@ class CreateExerciseViewmodel extends BaseModel {
 
   final RoutinesService routinesService;
   final void Function(String) onError;
+  final TextEditingController exerciseNameController;
+  final String _oldName;
 
-  CreateExerciseViewmodel({@required this.routinesService, @required this.onError})
+  CreateExerciseViewmodel({@required this.routinesService, @required this.onError, Exercise exercise})
       : _selectableAttributes = AttributeName.values
             .map((name) => SelectableAttribute(
                   name,
-                  selected: Exercise.defaultAttributes.contains(name),
+                  selected: (exercise?.attributes ?? Exercise.defaultAttributes).contains(name),
                 ))
-            .toList();
+            .toList(),
+        _oldName = exercise?.name,
+        exerciseNameController = TextEditingController(text: exercise?.name);
+
+  bool get _editing => _oldName != null;
 
   List<SelectableAttribute> get selectableAttributes => _selectableAttributes.copy();
 
@@ -53,10 +58,18 @@ class CreateExerciseViewmodel extends BaseModel {
     );
 
     await ErrorHandler.handleErrors(
-      run: () => routinesService.addExercise(exercise),
+      run: () => _saveExercise(exercise),
       onFailure: (failure) => onError(failure.message),
       onSuccess: (_) => Router.pop(exercise),
     );
+  }
+
+  Future<void> _saveExercise(Exercise exercise) async {
+    if (_editing) {
+      await routinesService.updateExercise(_oldName, exercise);
+    } else {
+      await routinesService.addExercise(exercise);
+    }
   }
 }
 

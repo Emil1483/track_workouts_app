@@ -34,9 +34,14 @@ class RoutinesService {
     _exercises[index] = exercise;
   }
 
-  void deleteExerciseWithName(String name) {
+  Future<void> deleteExerciseWithName(String name) async {
     final index = _getExerciseIndex(name);
     _exercises.removeAt(index);
+  }
+
+  Future<void> deleteRoutineWithName(String name) async {
+    final index = _getRoutineIndex(name);
+    _routines.removeAt(index);
   }
 
   Exercise getExerciseBy(String name) {

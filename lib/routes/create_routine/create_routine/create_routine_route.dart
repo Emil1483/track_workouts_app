@@ -6,6 +6,7 @@ import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_routine/create_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
+import 'package:track_workouts/ui_elements/confirm_dialog.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/text_field_app_bar.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
@@ -170,7 +171,10 @@ class _ExerciseWidget extends StatelessWidget {
         child: Icon(Icons.delete),
       ),
       direction: DismissDirection.endToStart,
-      confirmDismiss: (_) async => await showDialog(context: context, builder: _buildConfirmDialog),
+      confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
+        context,
+        'Are you sure you wish to delete the "${exercise.name}" exercise?',
+      ),
       child: InkWell(
         onTap: () => model.select(exercise),
         onLongPress: () => model.edit(exercise),
@@ -191,28 +195,6 @@ class _ExerciseWidget extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildConfirmDialog(BuildContext context) {
-    final buttonStyle = getTextStyle(TextStyles.button).copyWith(color: AppColors.accent);
-    return AlertDialog(
-      backgroundColor: AppColors.primary,
-      title: Text('Confirm', style: getTextStyle(TextStyles.h1)),
-      content: Text(
-        'Are you sure you wish to delete the "${exercise.name}" exercise?',
-        style: getTextStyle(TextStyles.body1),
-      ),
-      actions: [
-        FlatButton(
-          onPressed: () => Router.pop(true),
-          child: Text("DELETE", style: buttonStyle),
-        ),
-        FlatButton(
-          onPressed: () => Router.pop(false),
-          child: Text("CANCEL", style: buttonStyle),
-        ),
-      ],
     );
   }
 }

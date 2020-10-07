@@ -71,11 +71,16 @@ class CreateRoutineViewmodel extends BaseModel {
     notifyListeners();
   }
 
-  void delete(Exercise exercise) {
-    routinesService.deleteExerciseWithName(exercise.name);
-    final index = _getExerciseIndex(exercise);
-    _selectableExercises.removeAt(index);
-    notifyListeners();
+  Future<void> delete(Exercise exercise) async {
+    await ErrorHandler.handleErrors(
+      run: () => routinesService.deleteExerciseWithName(exercise.name),
+      onFailure: (failure) => onError(failure.message),
+      onSuccess: (_) {
+        final index = _getExerciseIndex(exercise);
+        _selectableExercises.removeAt(index);
+        notifyListeners();
+      },
+    );
   }
 
   Future<void> save() async {

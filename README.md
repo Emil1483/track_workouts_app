@@ -38,7 +38,7 @@
     - [x] hook up the save button
     - [x] use routine service in route
     - [x] add edit functionality
-    - [ ] add delete functionality
+    - [x] add delete functionality
     - [ ] add choose image
     - [ ] add automatic oneOf
     - [ ] add ability to reorder the exercises

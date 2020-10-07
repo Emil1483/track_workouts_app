@@ -7,8 +7,6 @@ import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 
 class CreateExerciseViewmodel extends BaseModel {
-  static const List<AttributeName> defaultAttributes = [AttributeName.reps, AttributeName.pre_break, AttributeName.weight];
-
   final TextEditingController exerciseNameController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final List<SelectableAttribute> _selectableAttributes;
@@ -22,7 +20,7 @@ class CreateExerciseViewmodel extends BaseModel {
       : _selectableAttributes = AttributeName.values
             .map((name) => SelectableAttribute(
                   name,
-                  selected: defaultAttributes.contains(name),
+                  selected: Exercise.defaultAttributes.contains(name),
                 ))
             .toList();
 

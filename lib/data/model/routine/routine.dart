@@ -24,6 +24,15 @@ class Routine {
 
   Map<String, List<ActiveSet>> get activeExercises => _activeExercises.copy();
 
+  bool hasSameExercises(Routine other) {
+    if (exercises.length != other.exercises.length) return false;
+    final exerciseNames = exercises.map((exercise) => exercise);
+    for (final exercise in other.exercises) {
+      if (!exerciseNames.contains(exercise.name)) return false;
+    }
+    return true;
+  }
+
   List<ActiveSet> getActiveSets(String exerciseName) {
     if (!_activeExercises.containsKey(exerciseName)) throw StateError('exercise name does not exist');
     return _activeExercises[exerciseName];

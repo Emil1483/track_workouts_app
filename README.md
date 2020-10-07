@@ -35,8 +35,11 @@
   - [x] push workout to database
   - [x] fetch todays workout and put it as current routine
   - [ ] add build custom routine page - [ ] hook up the save button
+    - [ ] add delete functionality
+    - [ ] use routine service in route
     - [ ] add automatic oneOf
     - [ ] add ability to reorder the exercises
+    - [ ] save json
   - [ ] add ability to add exercise to existing routine
   - [ ] add ability to switch routine
   - [x] redo choose routine page

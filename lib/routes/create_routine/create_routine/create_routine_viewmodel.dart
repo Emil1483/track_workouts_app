@@ -7,7 +7,11 @@ import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/create_routine/create_exercise/create_exercise_route.dart';
 
 class CreateRoutineViewmodel extends BaseModel {
+  static const List<String> images = ['default.png', 'bench_press.png', 'pull_up.png'];
+
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  String _selectedImage;
 
   final RoutinesService routinesService;
   final void Function(String) onError;
@@ -18,9 +22,34 @@ class CreateRoutineViewmodel extends BaseModel {
   CreateRoutineViewmodel({@required this.routinesService, @required this.onError, Routine routine})
       : _selectableExercises = SelectableExercise.list(routinesService.exercises)..selectAll(routine?.exercises),
         exerciseNameController = TextEditingController(text: routine?.name),
-        _oldName = routine?.name;
+        _oldName = routine?.name,
+        _selectedImage = routine?.image ?? images.first;
 
   bool get _editing => _oldName != null;
+
+  List<List<String>> getImageRows(int rowLength) {
+    List<List<String>> result = [];
+    for (int i = 0; i < images.length; i += rowLength) {
+      int end = i + rowLength;
+      int rest = 0;
+      if (end > images.length) {
+        rest = end - images.length;
+        end = images.length;
+      }
+      result.add([
+        ...images.sublist(i, end),
+        ...List.generate(rest, (_) => null),
+      ]);
+    }
+    return result;
+  }
+
+  String get selectedImage => _selectedImage;
+
+  void selectImage(String image) {
+    _selectedImage = image;
+    notifyListeners();
+  }
 
   bool get missingExercises {
     for (final exercise in _selectableExercises) {
@@ -101,7 +130,7 @@ class CreateRoutineViewmodel extends BaseModel {
     final routine = Routine(
       exercises: _selectableExercises.where((exercise) => exercise.selected).map((exercise) => exercise.exercise).toList(),
       name: exerciseNameController.text.trim(),
-      image: 'default.png',
+      image: _selectedImage
     );
     if (_editing) {
       routinesService.updateRoutine(_oldName, routine);

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
-import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_routine/create_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
@@ -51,8 +50,17 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
                 child: model.missingExercises
                     ? _MissingExercisesWidget()
                     : ListView(
-                        children:
-                            model.getExercisesBySelected(true).map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+                        children: [
+                          ...model.getExercisesBySelected(true).map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+                          SizedBox(height: 24.0),
+                          Text(
+                            'Select a Thumbnail',
+                            style: getTextStyle(TextStyles.h2),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 18.0),
+                          ...model.getImageRows(3).map((images) => _buildImageRow(context, images)).toList(),
+                        ],
                       ),
               ),
               MainButton(
@@ -63,6 +71,42 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildImageRow(BuildContext context, List<String> images) {
+    final borderRadius = BorderRadius.circular(16.0);
+
+    final model = Provider.of<CreateRoutineViewmodel>(context);
+    return Row(
+      children: images.map(
+        (image) {
+          final isSelected = model.selectedImage == image;
+          return Expanded(
+            child: image == null
+                ? Container()
+                : Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Material(
+                      color: AppColors.black500,
+                      borderRadius: borderRadius,
+                      elevation: 4.0,
+                      child: InkWell(
+                        borderRadius: borderRadius,
+                        onTap: () => model.selectImage(image),
+                        child: Padding(
+                          padding: EdgeInsets.all(6.0),
+                          child: Image.asset(
+                            'assets/images/$image',
+                            color: !isSelected ? null : AppColors.accent,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+          );
+        },
+      ).toList(),
     );
   }
 }

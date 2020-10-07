@@ -120,6 +120,10 @@ class Exercise {
   static const defaultAttributes = [AttributeName.pre_break, AttributeName.reps, AttributeName.weight];
 }
 
+extension Exercises on List<Exercise> {
+  List<Exercise> copy() => List.generate(length, (index) => this[index].copy());
+}
+
 class ActiveSet {
   bool _completed = false;
   bool _checked = false;

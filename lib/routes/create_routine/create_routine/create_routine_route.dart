@@ -47,11 +47,11 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
           body: Column(
             children: [
               Expanded(
-                child: model.missingExercises
+                child: model.noExercisesSelected
                     ? _MissingExercisesWidget()
                     : ListView(
                         children: [
-                          ...model.getExercisesBySelected(true).map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+                          ...model.selectedExercises.map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
                           SizedBox(height: 24.0),
                           Text(
                             'Select a Thumbnail',
@@ -192,7 +192,7 @@ class _AddExerciseSheet extends StatelessWidget {
     }
 
     return ListView(
-      children: model.getExercisesBySelected(false).map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+      children: model.notSelectedExercises.map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
     );
   }
 }
@@ -220,7 +220,7 @@ class _ExerciseWidget extends StatelessWidget {
         'Are you sure you wish to delete the "${exercise.name}" exercise?',
       ),
       child: InkWell(
-        onTap: () => model.select(exercise),
+        onTap: () => model.toggleSelected(exercise),
         onLongPress: () => model.edit(exercise),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

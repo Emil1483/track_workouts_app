@@ -70,7 +70,3 @@ class RoutinesService {
     //TODO: delete if not in use
   }
 }
-
-extension on List<Exercise> {
-  List<Exercise> copy() => List.generate(length, (index) => this[index].copy());
-}

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
+import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
@@ -13,7 +14,10 @@ class NewWorkoutRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseWidget<NewWorkoutViewmodel>(
-      model: NewWorkoutViewmodel(newWorkoutService: Provider.of<NewWorkoutService>(context)),
+      model: NewWorkoutViewmodel(
+        newWorkoutService: Provider.of<NewWorkoutService>(context),
+        routinesService: Provider.of<RoutinesService>(context),
+      ),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('New Workout')),
         body: ListView(

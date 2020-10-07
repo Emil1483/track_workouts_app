@@ -21,6 +21,8 @@ class RoutinesService {
     _exercises.removeWhere((exercise) => exercise.name == name);
   }
 
+  Exercise getExerciseBy(String name) => _exercises.firstWhere((exercise) => exercise.name == name);
+
   Future<void> addRoutine(Routine newRoutine) async {
     _routines.forEach((routine) {
       if (routine.name.toLowerCase() == newRoutine.name.toLowerCase()) {

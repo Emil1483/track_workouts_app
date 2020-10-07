@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
+import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
@@ -13,7 +14,10 @@ class ChooseRoutineRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseWidget<ChooseRoutineViewmodel>(
-      model: ChooseRoutineViewmodel(newWorkoutService: Provider.of<NewWorkoutService>(context)),
+      model: ChooseRoutineViewmodel(
+        newWorkoutService: Provider.of<NewWorkoutService>(context),
+        routinesService: Provider.of<RoutinesService>(context),
+      ),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('Choose Workout')),
         floatingActionButton: FloatingActionButton(
@@ -21,7 +25,7 @@ class ChooseRoutineRoute extends StatelessWidget {
           child: Icon(Icons.add),
         ),
         body: ListView(
-          children: ChooseRoutineViewmodel.routines.map((routine) => _buildRoutinesRow(routine, context)).toList(),
+          children: model.routines.map((routine) => _buildRoutinesRow(routine, context)).toList(),
         ),
       ),
     );

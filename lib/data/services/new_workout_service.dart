@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
+import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
-import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_viewmodel.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
 
 class NewWorkoutService {
   final WorkoutsRepository _workoutsRepository;
   final WorkoutsService _workoutsService;
+  final RoutinesService _routinesService;
 
   Routine _selectedRoutine;
   Workout _workout;
 
-  NewWorkoutService(this._workoutsRepository, this._workoutsService) {
+  NewWorkoutService(this._workoutsRepository, this._workoutsService, this._routinesService) {
     _workoutsService.addListener((id) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _workoutsService.disposeListener(id));
       final workout = _workoutsService.workouts.first;
@@ -25,20 +26,11 @@ class NewWorkoutService {
 
   Routine get selectedRoutine => _selectedRoutine?.copy();
 
-  Exercise findExercise(String exerciseName) {
-    for (final routine in ChooseRoutineViewmodel.routines) {
-      for (final exercise in routine.exercises) {
-        if (exercise.name == exerciseName) return exercise;
-      }
-    }
-    throw StateError('found no exercise with name \'$exerciseName\'');
-  }
-
   void selectRoutine(Routine routine) {
     final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exercises);
     if (_workout != null) {
       _workout.exercises.forEach((exerciseName, sets) {
-        final exercise = findExercise(exerciseName);
+        final exercise = _routinesService.getExerciseBy(exerciseName);
         activeExercises[exerciseName] = [
           ...sets.map(
             (mySet) => ActiveSet(

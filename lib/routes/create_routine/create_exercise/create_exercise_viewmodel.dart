@@ -47,7 +47,7 @@ class CreateExerciseViewmodel extends BaseModel {
     }
 
     final exercise = Exercise(
-      attributes: _selectableAttributes.map((attribute) => attribute.name).toList(),
+      attributes: _selectableAttributes.where((attribute) => attribute.selected).map((attribute) => attribute.name).toList(),
       name: exerciseNameController.text.trim(),
       numberOfSets: _numberOfSets,
     );

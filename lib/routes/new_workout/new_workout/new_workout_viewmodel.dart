@@ -9,13 +9,16 @@ import 'package:track_workouts/style/theme.dart';
 
 class NewWorkoutViewmodel extends BaseModel {
   final RoutinesService routinesService;
+  final NewWorkoutService newWorkoutService;
   final List<MapEntry<String, List<ActiveSet>>> _activeExercises;
 
-  NewWorkoutViewmodel({@required NewWorkoutService newWorkoutService, @required this.routinesService})
+  NewWorkoutViewmodel({@required this.newWorkoutService, @required this.routinesService})
       : _activeExercises = newWorkoutService.selectedRoutine.activeExercises.entries.toList(),
         assert(newWorkoutService.selectedRoutine != null);
 
   List<MapEntry<String, List<ActiveSet>>> get activeExercises => _activeExercises.copy();
+
+  String get routineName => newWorkoutService.selectedRoutine.name;
 
   Exercise getExerciseFrom(String exerciseName) => routinesService.getExerciseBy(exerciseName);
 

@@ -41,7 +41,7 @@
     - [x] add delete functionality
     - [x] add choose image
     - [x] update all routines on exercise change
-    - [ ] add automatic oneOf
+    - [x] add automatic oneOf
     - [ ] add ability to reorder the exercises
     - [ ] save json
   - [ ] add ability to add exercise to existing routine

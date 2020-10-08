@@ -108,14 +108,15 @@ class Exercise {
   final String name;
   final List<AttributeName> attributes;
   final int numberOfSets;
-  final List<AttributeName> oneOf;
 
-  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets, this.oneOf}) {
-    oneOf?.forEach((name) {
-      assert(attributes.contains(name));
-    });
+  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets});
+
+  List<AttributeName> get oneOf {
+    final result = attributes.where((attribute) => AttributeNameExtension.oneOf.contains(attribute)).toList();
+    return result.length <= 1 ? null : result;
   }
-  Exercise copy() => Exercise(attributes: attributes.copy(), name: name, numberOfSets: numberOfSets, oneOf: oneOf?.copy());
+
+  Exercise copy() => Exercise(attributes: attributes.copy(), name: name, numberOfSets: numberOfSets);
 
   static const defaultAttributes = [AttributeName.pre_break, AttributeName.reps, AttributeName.weight];
 }

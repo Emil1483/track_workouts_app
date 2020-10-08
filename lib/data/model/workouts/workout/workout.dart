@@ -41,6 +41,8 @@ extension AttributeNameExtension on AttributeName {
 
   static const List<AttributeName> repeatingAttributes = [AttributeName.body_mass];
 
+  static const List<AttributeName> oneOf = [AttributeName.weight, AttributeName.band_level];
+
   Unit get unit {
     switch (this) {
       case AttributeName.body_mass:

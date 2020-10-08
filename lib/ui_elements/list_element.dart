@@ -4,20 +4,22 @@ import 'package:track_workouts/style/theme.dart';
 class ListElement extends StatelessWidget {
   final Widget mainWidget;
   final Function onTap;
+  final Function onLongPress;
   final bool centered;
   final Color color;
   final bool draggable;
   final double dividerThickness;
-  final IconData icon;
+  final Widget icon;
 
   const ListElement({
     @required this.mainWidget,
     @required this.onTap,
+    this.onLongPress,
     this.centered = false,
     this.color = AppColors.transparent,
     this.draggable = false,
     this.dividerThickness = 0.4,
-    this.icon = Icons.chevron_right,
+    this.icon = const Icon(Icons.chevron_right),
     Key key,
   }) : super(key: key);
 
@@ -33,6 +35,7 @@ class ListElement extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: onTap,
+                  onLongPress: onLongPress,
                   borderRadius: draggable
                       ? BorderRadius.only(
                           topRight: Radius.circular(12.0),
@@ -48,7 +51,10 @@ class ListElement extends StatelessWidget {
                         Expanded(child: mainWidget),
                         Padding(
                           padding: EdgeInsets.symmetric(vertical: 6.0),
-                          child: draggable ? Container() : Icon(icon),
+                          child: Opacity(
+                            opacity: draggable ? 0.0 : 1.0,
+                            child: icon,
+                          ),
                         ),
                       ],
                     ),
@@ -58,7 +64,7 @@ class ListElement extends StatelessWidget {
               if (draggable)
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Icon(icon),
+                  child: icon,
                 ),
             ],
           ),

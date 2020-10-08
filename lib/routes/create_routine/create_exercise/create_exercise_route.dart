@@ -6,6 +6,7 @@ import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_exercise/create_exercise_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
+import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/text_field_app_bar.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
@@ -35,7 +36,23 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
               Expanded(
                 child: ReorderableListView(
                   onReorder: model.onReorderAttributes,
-                  children: [for (final attribute in model.selectableAttributes) _buildAttribute(context, attribute)],
+                  children: [
+                    for (final attribute in model.selectableAttributes)
+                      ListElement(
+                        key: ValueKey(attribute),
+                        color: AppColors.black900,
+                        dividerThickness: 0.6,
+                        onTap: () => model.select(attribute),
+                        centered: true,
+                        icon: attribute.selected
+                            ? Icon(Icons.check_box, color: AppColors.accent)
+                            : Icon(Icons.check_box_outline_blank),
+                        mainWidget: Text(
+                          attribute.name.formattedString,
+                          style: getTextStyle(TextStyles.h2),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               Container(
@@ -73,45 +90,6 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildAttribute(BuildContext context, SelectableAttribute attribute) {
-    final model = Provider.of<CreateExerciseViewmodel>(context);
-    final dividerThickness = 0.4;
-    return Column(
-      key: ValueKey(attribute),
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Divider(thickness: dividerThickness),
-        Material(
-          color: AppColors.black900,
-          child: InkWell(
-            onTap: () => model.select(attribute),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    attribute.name.formattedString,
-                    style: getTextStyle(TextStyles.h2),
-                  ),
-                  attribute.selected
-                      ? Icon(
-                          Icons.check_box,
-                          color: AppColors.accent,
-                        )
-                      : Icon(
-                          Icons.check_box_outline_blank,
-                        ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        Divider(thickness: dividerThickness),
-      ],
     );
   }
 }

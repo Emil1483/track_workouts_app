@@ -8,13 +8,14 @@ import 'package:track_workouts/routes/new_workout/new_workout_details/new_exerci
 import 'package:track_workouts/style/theme.dart';
 
 class NewWorkoutViewmodel extends BaseModel {
-  final NewWorkoutService newWorkoutService;
   final RoutinesService routinesService;
+  final List<MapEntry<String, List<ActiveSet>>> _activeExercises;
 
-  NewWorkoutViewmodel({@required this.newWorkoutService, @required this.routinesService})
-      : assert(newWorkoutService.selectedRoutine != null);
+  NewWorkoutViewmodel({@required NewWorkoutService newWorkoutService, @required this.routinesService})
+      : _activeExercises = newWorkoutService.selectedRoutine.activeExercises.entries.toList(),
+        assert(newWorkoutService.selectedRoutine != null);
 
-  Map<String, List<ActiveSet>> get activeExercises => newWorkoutService.selectedRoutine.activeExercises;
+  List<MapEntry<String, List<ActiveSet>>> get activeExercises => _activeExercises.copy();
 
   Exercise getExerciseFrom(String exerciseName) => routinesService.getExerciseBy(exerciseName);
 
@@ -22,6 +23,22 @@ class NewWorkoutViewmodel extends BaseModel {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);
     notifyListeners();
   }
+
+  void reorderExercises(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) newIndex--;
+
+    final exercise = _activeExercises.removeAt(oldIndex);
+    _activeExercises.insert(newIndex, exercise);
+
+    notifyListeners();
+  }
+}
+
+extension on List<MapEntry<String, List<ActiveSet>>> {
+  List<MapEntry<String, List<ActiveSet>>> copy() => List.generate(length, (index) {
+        final entry = this[index];
+        return MapEntry(entry.key, entry.value.copy());
+      });
 }
 
 enum Progress { not_started, started, completed }

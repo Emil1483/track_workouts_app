@@ -6,6 +6,7 @@ import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_routine/create_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/confirm_dialog.dart';
+import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/text_field_app_bar.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
@@ -52,7 +53,17 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
                     : ReorderableListView(
                         onReorder: model.onReorderExercises,
                         children: [
-                          for (final exercise in model.selectedExercises) _ExerciseWidget(exercise: exercise, draggable: true),
+                          for (final exercise in model.selectedExercises)
+                            ListElement(
+                              key: ValueKey(exercise),
+                              mainWidget: Text(exercise.name, style: getTextStyle(TextStyles.h2)),
+                              onTap: () => model.toggleSelected(exercise),
+                              onLongPress: () => model.edit(exercise),
+                              centered: true,
+                              color: AppColors.black900,
+                              draggable: true,
+                              icon: Icon(Icons.drag_handle),
+                            ),
                         ],
                         header: Column(
                           children: [
@@ -215,63 +226,12 @@ class _AddExerciseSheet extends StatelessWidget {
               context,
               'Are you sure you wish to delete the "${exercise.name}" exercise?',
             ),
-            child: _ExerciseWidget(exercise: exercise),
+            child: ListElement(
+              mainWidget: Text(exercise.name, style: getTextStyle(TextStyles.h2)),
+              onTap: () => model.toggleSelected(exercise),
+              centered: true,
+            ),
           ),
-      ],
-    );
-  }
-}
-
-class _ExerciseWidget extends StatelessWidget {
-  final Exercise exercise;
-  final bool draggable;
-
-  _ExerciseWidget({@required this.exercise, this.draggable = false}) : super(key: ValueKey(exercise.name));
-
-  @override
-  Widget build(BuildContext context) {
-    final model = Provider.of<CreateRoutineViewmodel>(context);
-    final dividerThickness = 0.4;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (draggable) Divider(thickness: dividerThickness),
-        Material(
-          color: draggable ? AppColors.black900 : AppColors.transparent,
-          child: Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () => model.toggleSelected(exercise),
-                  onLongPress: () => model.edit(exercise),
-                  borderRadius: draggable
-                      ? BorderRadius.only(
-                          topRight: Radius.circular(12.0),
-                          bottomRight: Radius.circular(12.0),
-                        )
-                      : null,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(exercise.name, style: getTextStyle(TextStyles.h2)),
-                        if (!draggable) Icon(Icons.chevron_right),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              if (draggable)
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Icon(Icons.drag_handle),
-                ),
-            ],
-          ),
-        ),
-        Divider(thickness: dividerThickness),
       ],
     );
   }

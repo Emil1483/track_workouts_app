@@ -40,7 +40,7 @@
     - [x] add edit functionality
     - [x] add delete functionality
     - [x] add choose image
-    - [ ] update all routines on exercise change
+    - [x] update all routines on exercise change
     - [ ] add automatic oneOf
     - [ ] add ability to reorder the exercises
     - [ ] save json

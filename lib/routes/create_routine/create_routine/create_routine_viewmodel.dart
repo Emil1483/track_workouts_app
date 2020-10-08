@@ -89,7 +89,11 @@ class CreateRoutineViewmodel extends BaseModel {
   }
 
   Future<void> createExercise() async {
-    await Router.pushNamed(CreateExerciseRoute.routeName);
+    final result = await Router.pushNamed(CreateExerciseRoute.routeName);
+    final updatedExercise = result as Exercise;
+    if (updatedExercise == null) return;
+
+    _selectedExercises.add(updatedExercise);
     notifyListeners();
   }
 

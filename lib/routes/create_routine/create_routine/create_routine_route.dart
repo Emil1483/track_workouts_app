@@ -49,18 +49,23 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
               Expanded(
                 child: model.noExercisesSelected
                     ? _MissingExercisesWidget()
-                    : ListView(
+                    : ReorderableListView(
+                        onReorder: model.onReorderExercises,
                         children: [
-                          ...model.selectedExercises.map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
-                          SizedBox(height: 24.0),
-                          Text(
-                            'Select a Thumbnail',
-                            style: getTextStyle(TextStyles.h2),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 18.0),
-                          ...model.getImageRows(3).map((images) => _buildImageRow(context, images)).toList(),
+                          for (final exercise in model.selectedExercises) _ExerciseWidget(exercise: exercise, draggable: true),
                         ],
+                        header: Column(
+                          children: [
+                            SizedBox(height: 24.0),
+                            Text(
+                              'Select a Thumbnail',
+                              style: getTextStyle(TextStyles.h2),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(height: 18.0),
+                            for (final row in model.getImageRows(3)) _buildImageRow(context, row),
+                          ],
+                        ),
                       ),
               ),
               MainButton(
@@ -144,7 +149,7 @@ class _AddExerciseSheet extends StatelessWidget {
       child: Stack(
         children: [
           Positioned.fill(
-            child: _buildContent(model),
+            child: _buildContent(context),
           ),
           Positioned(
             bottom: 16.0,
@@ -159,7 +164,9 @@ class _AddExerciseSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(CreateRoutineViewmodel model) {
+  Widget _buildContent(BuildContext context) {
+    final model = Provider.of<CreateRoutineViewmodel>(context);
+
     if (model.noExercisesMade) {
       return Stack(
         children: [
@@ -192,53 +199,80 @@ class _AddExerciseSheet extends StatelessWidget {
     }
 
     return ListView(
-      children: model.notSelectedExercises.map((exercise) => _ExerciseWidget(exercise: exercise)).toList(),
+      children: [
+        for (final exercise in model.notSelectedExercises)
+          Dismissible(
+            key: ValueKey(exercise),
+            onDismissed: (_) => model.delete(exercise),
+            background: Container(
+              padding: EdgeInsets.only(right: 12.0),
+              color: AppColors.accent900,
+              alignment: Alignment.centerRight,
+              child: Icon(Icons.delete),
+            ),
+            direction: DismissDirection.endToStart,
+            confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
+              context,
+              'Are you sure you wish to delete the "${exercise.name}" exercise?',
+            ),
+            child: _ExerciseWidget(exercise: exercise),
+          ),
+      ],
     );
   }
 }
 
 class _ExerciseWidget extends StatelessWidget {
   final Exercise exercise;
+  final bool draggable;
 
-  const _ExerciseWidget({@required this.exercise});
+  _ExerciseWidget({@required this.exercise, this.draggable = false}) : super(key: ValueKey(exercise.name));
 
   @override
   Widget build(BuildContext context) {
     final model = Provider.of<CreateRoutineViewmodel>(context);
-    return Dismissible(
-      key: ValueKey(exercise),
-      onDismissed: (_) => model.delete(exercise),
-      background: Container(
-        padding: EdgeInsets.only(right: 12.0),
-        color: AppColors.accent900,
-        alignment: Alignment.centerRight,
-        child: Icon(Icons.delete),
-      ),
-      direction: DismissDirection.endToStart,
-      confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
-        context,
-        'Are you sure you wish to delete the "${exercise.name}" exercise?',
-      ),
-      child: InkWell(
-        onTap: () => model.toggleSelected(exercise),
-        onLongPress: () => model.edit(exercise),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(exercise.name, style: getTextStyle(TextStyles.h2)),
-                  Icon(Icons.chevron_right),
-                ],
+    final dividerThickness = 0.4;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (draggable) Divider(thickness: dividerThickness),
+        Material(
+          color: draggable ? AppColors.black900 : AppColors.transparent,
+          child: Row(
+            children: [
+              Expanded(
+                child: InkWell(
+                  onTap: () => model.toggleSelected(exercise),
+                  onLongPress: () => model.edit(exercise),
+                  borderRadius: draggable
+                      ? BorderRadius.only(
+                          topRight: Radius.circular(12.0),
+                          bottomRight: Radius.circular(12.0),
+                        )
+                      : null,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(exercise.name, style: getTextStyle(TextStyles.h2)),
+                        if (!draggable) Icon(Icons.chevron_right),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-            Divider(),
-          ],
+              if (draggable)
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Icon(Icons.drag_handle),
+                ),
+            ],
+          ),
         ),
-      ),
+        Divider(thickness: dividerThickness),
+      ],
     );
   }
 }

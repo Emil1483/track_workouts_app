@@ -38,6 +38,15 @@ class CreateExerciseViewmodel extends BaseModel {
     notifyListeners();
   }
 
+  void onReorderAttributes(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final attribute = _selectableAttributes.removeAt(oldIndex);
+    _selectableAttributes.insert(newIndex, attribute);
+    notifyListeners();
+  }
+
   void select(SelectableAttribute selectedAttribute) {
     final attribute = _selectableAttributes.firstWhere((attribute) => attribute.name == selectedAttribute.name);
     attribute.toggleSelected();

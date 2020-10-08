@@ -44,7 +44,7 @@
     - [x] add automatic oneOf
     - [ ] add ability to reorder the exercises
     - [ ] save json
-  - [ ] add ability to add exercise to existing routine
   - [ ] add ability to switch routine
+  - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page
   - [ ] create time panel wrapper widget with time service that is used on more routes

@@ -33,8 +33,9 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
           body: Column(
             children: [
               Expanded(
-                child: ListView(
-                  children: model.selectableAttributes.map((attribute) => _buildAttribute(context, attribute)).toList(),
+                child: ReorderableListView(
+                  onReorder: model.onReorderAttributes,
+                  children: [for (final attribute in model.selectableAttributes) _buildAttribute(context, attribute)],
                 ),
               ),
               Container(
@@ -77,32 +78,39 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
 
   Widget _buildAttribute(BuildContext context, SelectableAttribute attribute) {
     final model = Provider.of<CreateExerciseViewmodel>(context);
+    final dividerThickness = 0.4;
     return Column(
+      key: ValueKey(attribute),
+      mainAxisSize: MainAxisSize.min,
       children: [
-        InkWell(
-          onTap: () => model.select(attribute),
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  attribute.name.formattedString,
-                  style: getTextStyle(TextStyles.h2),
-                ),
-                attribute.selected
-                    ? Icon(
-                        Icons.check_box,
-                        color: AppColors.accent,
-                      )
-                    : Icon(
-                        Icons.check_box_outline_blank,
-                      ),
-              ],
+        Divider(thickness: dividerThickness),
+        Material(
+          color: AppColors.black900,
+          child: InkWell(
+            onTap: () => model.select(attribute),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    attribute.name.formattedString,
+                    style: getTextStyle(TextStyles.h2),
+                  ),
+                  attribute.selected
+                      ? Icon(
+                          Icons.check_box,
+                          color: AppColors.accent,
+                        )
+                      : Icon(
+                          Icons.check_box_outline_blank,
+                        ),
+                ],
+              ),
             ),
           ),
         ),
-        Divider(),
+        Divider(thickness: dividerThickness),
       ],
     );
   }

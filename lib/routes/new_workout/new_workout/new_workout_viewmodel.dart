@@ -39,7 +39,7 @@ extension ProgressExtension on Progress {
   Color get color {
     switch (this) {
       case Progress.not_started:
-        return AppColors.transparent;
+        return AppColors.black900;
       case Progress.started:
         return AppColors.primary.withOpacity(.65);
       case Progress.completed:

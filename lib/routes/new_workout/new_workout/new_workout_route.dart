@@ -20,9 +20,15 @@ class NewWorkoutRoute extends StatelessWidget {
       ),
       builder: (context, model, child) => Scaffold(
         appBar: AppBar(title: Text('New Workout')),
-        body: ListView(
-          children: model.activeExercises.entries.map((exercise) => _buildExerciseWidget(context, exercise)).toList(),
+        body: ReorderableListView(
+          onReorder: (a, b) {},
+          children: [
+            for (final exercise in model.activeExercises.entries) _buildExerciseWidget(context, exercise),
+          ],
         ),
+        // body: ListView(
+        //   children: model.activeExercises.entries.map((exercise) => _buildExerciseWidget(context, exercise)).toList(),
+        // ),
       ),
     );
   }
@@ -33,9 +39,11 @@ class NewWorkoutRoute extends StatelessWidget {
     final progress = exerciseMapEntry.getProgress(exercise.numberOfSets);
 
     return ListElement(
+      key: ValueKey(exerciseMapEntry),
       onTap: () => model.goToDetails(exercise),
       centered: true,
       color: progress.color,
+      icon: Icons.drag_handle,
       mainWidget: AutoSizeText(
         exercise.name,
         style: progress.textStyle,

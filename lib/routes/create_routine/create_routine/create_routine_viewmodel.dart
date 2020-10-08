@@ -76,6 +76,15 @@ class CreateRoutineViewmodel extends BaseModel {
     notifyListeners();
   }
 
+  void onReorderExercises(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final exercise = _selectedExercises.removeAt(oldIndex);
+    _selectedExercises.insert(newIndex, exercise);
+    notifyListeners();
+  }
+
   Future<void> edit(Exercise exercise) async {
     final result = await Router.pushNamed(CreateExerciseRoute.routeName, arguments: [exercise]);
     final updatedExercise = result as Exercise;

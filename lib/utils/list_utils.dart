@@ -1,3 +1,5 @@
+import 'package:angel_serialize/angel_serialize.dart';
+
 extension ListUtils<U> on List<U> {
   String format(Function(U) toString, [String bindingWord = 'and']) {
     if (isEmpty) return '';
@@ -24,5 +26,13 @@ extension ListUtils<U> on List<U> {
       }
     }
     return foundOne;
+  }
+
+  Map<String, U> toMap() {
+    return Map.fromIterable(
+      IterableZip([List.generate(length, (i) => i.toString()), this]),
+      key: (zip) => zip[0],
+      value: (zip) => zip[1],
+    );
   }
 }

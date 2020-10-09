@@ -43,6 +43,10 @@ extension AttributeNameExtension on AttributeName {
 
   static const List<AttributeName> oneOf = [AttributeName.weight, AttributeName.band_level];
 
+  static AttributeName fromString(String string) {
+    return AttributeName.values.firstWhere((attributeName) => attributeName.toString() == string);
+  }
+
   Unit get unit {
     switch (this) {
       case AttributeName.body_mass:

@@ -44,6 +44,8 @@
     - [x] add automatic oneOf
     - [x] add ability to reorder the exercises
     - [ ] save json
+      - [ ] test
+      - [ ] use more elegant solution (refactor)
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page

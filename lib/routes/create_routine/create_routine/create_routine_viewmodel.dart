@@ -16,11 +16,11 @@ class CreateRoutineViewmodel extends BaseModel {
   final RoutinesService routinesService;
   final void Function(String) onError;
   final TextEditingController exerciseNameController;
-  final List<Exercise> _selectedExercises;
+  final List<String> _selectedExerciseIds;
   final _oldName;
 
   CreateRoutineViewmodel({@required this.routinesService, @required this.onError, Routine routine})
-      : _selectedExercises = routine?.exercises?.copy() ?? [],
+      : _selectedExerciseIds = routine?.exerciseIds?.copy() ?? [],
         exerciseNameController = TextEditingController(text: routine?.name),
         _oldName = routine?.name,
         _selectedImage = routine?.image ?? images.first;
@@ -51,27 +51,29 @@ class CreateRoutineViewmodel extends BaseModel {
     notifyListeners();
   }
 
-  List<Exercise> get selectedExercises => _selectedExercises.copy();
+  List<Exercise> get selectedExercises {
+    return _selectedExerciseIds.map((id) => routinesService.exercises.getExerciseFrom(id)).toList().copy();
+  }
 
   List<Exercise> get notSelectedExercises =>
-      routinesService.exercises.where((exercise) => !_selectedExercises.containsName(exercise.name)).toList();
+      routinesService.exercises.where((exercise) => !selectedExercises.containsName(exercise.name)).toList();
 
-  bool get noExercisesSelected => _selectedExercises.isEmpty;
+  bool get noExercisesSelected => selectedExercises.isEmpty;
 
-  bool get allExercisesSelected => routinesService.exercises.length == _selectedExercises.length;
+  bool get allExercisesSelected => routinesService.exercises.length == selectedExercises.length;
 
   bool get noExercisesMade => routinesService.exercises.isEmpty;
 
   int _getExerciseIndex(Exercise exercise) {
-    return _selectedExercises.indexWhere((selectedExercise) => selectedExercise.name == exercise.name);
+    return _selectedExerciseIds.indexWhere((id) => id == exercise.id);
   }
 
   void toggleSelected(Exercise exercise) {
     final index = _getExerciseIndex(exercise);
     if (index == -1) {
-      _selectedExercises.add(exercise);
+      _selectedExerciseIds.add(exercise.id);
     } else {
-      _selectedExercises.removeAt(index);
+      _selectedExerciseIds.removeAt(index);
     }
     notifyListeners();
   }
@@ -80,20 +82,13 @@ class CreateRoutineViewmodel extends BaseModel {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    final exercise = _selectedExercises.removeAt(oldIndex);
-    _selectedExercises.insert(newIndex, exercise);
+    final exerciseId = _selectedExerciseIds.removeAt(oldIndex);
+    _selectedExerciseIds.insert(newIndex, exerciseId);
     notifyListeners();
   }
 
   Future<void> edit(Exercise exercise) async {
-    final result = await Router.pushNamed(CreateExerciseRoute.routeName, arguments: [exercise]);
-    final updatedExercise = result as Exercise;
-    if (updatedExercise == null) return;
-
-    final index = _getExerciseIndex(exercise);
-    if (index != -1) {
-      _selectedExercises[index] = updatedExercise;
-    }
+    await Router.pushNamed(CreateExerciseRoute.routeName, arguments: [exercise]);
     notifyListeners();
   }
 
@@ -102,7 +97,7 @@ class CreateRoutineViewmodel extends BaseModel {
     final updatedExercise = result as Exercise;
     if (updatedExercise == null) return;
 
-    _selectedExercises.add(updatedExercise);
+    _selectedExerciseIds.add(updatedExercise.id);
     notifyListeners();
   }
 
@@ -112,7 +107,7 @@ class CreateRoutineViewmodel extends BaseModel {
       onFailure: (failure) => onError(failure.message),
       onSuccess: (_) {
         final index = _getExerciseIndex(exercise);
-        if (index != -1) _selectedExercises.removeAt(index);
+        if (index != -1) _selectedExerciseIds.removeAt(index);
         notifyListeners();
       },
     );
@@ -120,7 +115,7 @@ class CreateRoutineViewmodel extends BaseModel {
 
   Future<void> save() async {
     if (!formKey.currentState.validate()) return;
-    if (_selectedExercises.isEmpty) {
+    if (_selectedExerciseIds.isEmpty) {
       onError('Please add at least one exercise');
       return;
     }
@@ -133,7 +128,11 @@ class CreateRoutineViewmodel extends BaseModel {
   }
 
   Future<void> _saveRoutine() async {
-    final routine = Routine(exercises: _selectedExercises, name: exerciseNameController.text.trim(), image: _selectedImage);
+    final routine = Routine(
+      exerciseIds: _selectedExerciseIds,
+      name: exerciseNameController.text.trim(),
+      image: _selectedImage,
+    );
     if (_editing) {
       routinesService.updateRoutine(_oldName, routine);
     } else {

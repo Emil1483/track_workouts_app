@@ -27,10 +27,10 @@ class NewWorkoutService {
   Routine get selectedRoutine => _selectedRoutine?.copy();
 
   void selectRoutine(Routine routine) {
-    final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exercises);
+    final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
     if (_workout != null) {
       _workout.exercises.forEach((exerciseName, sets) {
-        final exercise = _routinesService.getExerciseBy(exerciseName);
+        final exercise = _routinesService.getExerciseByName(exerciseName);
         activeExercises[exerciseName] = [
           ...sets.map(
             (mySet) => ActiveSet(
@@ -50,7 +50,7 @@ class NewWorkoutService {
 
     _selectedRoutine = Routine(
       image: routine.image,
-      exercises: routine.exercises,
+      exerciseIds: routine.exerciseIds,
       name: routine.name,
       activeExercises: activeExercises,
     );
@@ -68,7 +68,7 @@ class NewWorkoutService {
     }
   }
 
-  void addActiveSet({@required String exerciseName}) => _selectedRoutine.addActiveSet(exerciseName);
+  void addActiveSet({@required String exerciseName}) => _selectedRoutine.addActiveSet(exerciseName, _routinesService.exercises);
 
   void changeActiveSetAttribute({@required String exerciseName, @required AttributeName attributeName, @required double value}) =>
       _selectedRoutine.changeActiveSetAttribute(exerciseName, attributeName, value);

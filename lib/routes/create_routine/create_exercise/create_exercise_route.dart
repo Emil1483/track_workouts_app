@@ -24,7 +24,7 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
     return BaseWidget<CreateExerciseViewmodel>(
       model: CreateExerciseViewmodel(
         routinesService: Provider.of<RoutinesService>(context),
-        exercise: exercise,
+        oldExercise: exercise,
         onError: onError,
       ),
       builder: (context, model, child) => Form(

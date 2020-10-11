@@ -3,32 +3,38 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 import 'package:track_workouts/utils/list_utils.dart';
+import 'package:uuid/uuid.dart';
 
 class Routine {
   final String name;
-  final List<Exercise> exercises;
+  final List<String> exerciseIds;
   final String image;
 
   final Map<String, List<ActiveSet>> _activeExercises;
 
-  Routine({@required this.name, @required this.exercises, @required this.image, Map<String, List<ActiveSet>> activeExercises})
-      : _activeExercises = activeExercises ?? buildActiveExercises(exercises);
+  Routine({
+    @required this.name,
+    @required this.exerciseIds,
+    @required this.image,
+    Map<String, List<ActiveSet>> activeExercises,
+  }) : _activeExercises = activeExercises ?? buildActiveExercises(exerciseIds);
 
-  static Map<String, List<ActiveSet>> buildActiveExercises(List<Exercise> exercises) {
+  static Map<String, List<ActiveSet>> buildActiveExercises(List<String> exerciseIds) {
     return Map.fromIterable(
-      exercises,
-      key: (exercise) => (exercise as Exercise).name,
+      exerciseIds,
+      key: (id) => id,
       value: (_) => [],
     );
   }
 
   Map<String, List<ActiveSet>> get activeExercises => _activeExercises.copy();
 
+  List<Exercise> getExercises(List<Exercise> allExercises) => exerciseIds.map((id) => allExercises.getExerciseFrom(id)).toList();
+
   bool hasSameExercises(Routine other) {
-    if (exercises.length != other.exercises.length) return false;
-    final exerciseNames = exercises.map((exercise) => exercise);
-    for (final exercise in other.exercises) {
-      if (!exerciseNames.contains(exercise.name)) return false;
+    if (exerciseIds.length != other.exerciseIds.length) return false;
+    for (final otherId in other.exerciseIds) {
+      if (!exerciseIds.contains(otherId)) return false;
     }
     return true;
   }
@@ -46,10 +52,10 @@ class Routine {
     return activeSets.firstWhere((activeSet) => !activeSet.completed);
   }
 
-  void addActiveSet(String exerciseName) {
+  void addActiveSet(String exerciseName, List<Exercise> allExercises) {
     final activeSets = getActiveSets(exerciseName);
 
-    final exercise = exercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exercise = allExercises.firstWhere((exercise) => exercise.name == exerciseName);
 
     final activeSet = ActiveSet(
       attributes: exercise.attributes.toMap(),
@@ -86,7 +92,7 @@ class Routine {
 
   Routine copy() => Routine(
         name: name,
-        exercises: exercises,
+        exerciseIds: exerciseIds.copy(),
         image: image,
         activeExercises: _activeExercises.copy(),
       );
@@ -105,23 +111,31 @@ extension Routines on List<Routine> {
 }
 
 class Exercise {
+  final String id;
   final String name;
   final List<AttributeName> attributes;
   final int numberOfSets;
 
-  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets});
+  Exercise({@required this.name, @required this.attributes, @required this.numberOfSets, String id})
+      : this.id = id ?? Uuid().v1();
 
   List<AttributeName> get oneOf {
     final result = attributes.where((attribute) => AttributeNameExtension.oneOf.contains(attribute)).toList();
     return result.length <= 1 ? null : result;
   }
 
-  Exercise copy() => Exercise(attributes: attributes.copy(), name: name, numberOfSets: numberOfSets);
+  Exercise copy() => Exercise(attributes: attributes.copy(), name: name, numberOfSets: numberOfSets, id: id);
 
   static const defaultAttributes = [AttributeName.pre_break, AttributeName.reps, AttributeName.weight];
 }
 
+extension ExerciseIds on List<String> {
+  List<String> copy() => List.from(this);
+}
+
 extension Exercises on List<Exercise> {
+  Exercise getExerciseFrom(String id) => firstWhere((exercise) => exercise.id == id);
+
   List<Exercise> copy() => List.generate(length, (index) => this[index].copy());
 }
 

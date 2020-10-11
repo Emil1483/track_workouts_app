@@ -15,19 +15,18 @@ class CreateExerciseViewmodel extends BaseModel {
   final RoutinesService routinesService;
   final void Function(String) onError;
   final TextEditingController exerciseNameController;
-  final String _oldName;
+  final Exercise oldExercise;
 
-  CreateExerciseViewmodel({@required this.routinesService, @required this.onError, Exercise exercise})
+  CreateExerciseViewmodel({@required this.routinesService, @required this.onError, this.oldExercise})
       : _selectableAttributes = AttributeName.values
             .map((name) => SelectableAttribute(
                   name,
-                  selected: (exercise?.attributes ?? Exercise.defaultAttributes).contains(name),
+                  selected: (oldExercise?.attributes ?? Exercise.defaultAttributes).contains(name),
                 ))
             .toList(),
-        _oldName = exercise?.name,
-        exerciseNameController = TextEditingController(text: exercise?.name);
+        exerciseNameController = TextEditingController(text: oldExercise?.name);
 
-  bool get _editing => _oldName != null;
+  bool get _editing => oldExercise != null;
 
   List<SelectableAttribute> get selectableAttributes => _selectableAttributes.copy();
 
@@ -64,6 +63,7 @@ class CreateExerciseViewmodel extends BaseModel {
       attributes: _selectableAttributes.where((attribute) => attribute.selected).map((attribute) => attribute.name).toList(),
       name: exerciseNameController.text.trim(),
       numberOfSets: _numberOfSets,
+      id: oldExercise?.id,
     );
 
     await ErrorHandler.handleErrors(
@@ -75,7 +75,7 @@ class CreateExerciseViewmodel extends BaseModel {
 
   Future<void> _saveExercise(Exercise exercise) async {
     if (_editing) {
-      await routinesService.updateExercise(_oldName, exercise);
+      await routinesService.updateExercise(oldExercise.name, exercise);
     } else {
       await routinesService.addExercise(exercise);
     }

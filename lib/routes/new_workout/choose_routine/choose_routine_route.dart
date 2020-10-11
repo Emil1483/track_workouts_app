@@ -45,7 +45,7 @@ class ChooseRoutineRoute extends StatelessWidget with ErrorStateless {
         children: [
           Text(routine.name, style: getTextStyle(TextStyles.subtitle1)),
           SizedBox(height: 6.0),
-          ...routine.exercises
+          ...routine.getExercises(model.allExercises)
               .map(
                 (exercise) => Padding(
                   padding: EdgeInsets.only(top: 2.0),

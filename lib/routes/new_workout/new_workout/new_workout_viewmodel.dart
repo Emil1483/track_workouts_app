@@ -20,7 +20,7 @@ class NewWorkoutViewmodel extends BaseModel {
 
   String get routineName => newWorkoutService.selectedRoutine.name;
 
-  Exercise getExerciseFrom(String exerciseName) => routinesService.getExerciseBy(exerciseName);
+  Exercise getExerciseFrom(String id) => routinesService.getExerciseById(id);
 
   Future<void> goToDetails(Exercise exercise) async {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);

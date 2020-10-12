@@ -46,7 +46,7 @@
     - [ ] save json
       - [ ] use more elegant solution (refactor)
       - [ ] test
-    - [ ] add delete set functionality
+  - [ ] add delete set functionality
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page

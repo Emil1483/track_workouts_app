@@ -77,9 +77,7 @@ class NewWorkoutService {
     final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
     activeSet.checkOk();
 
-    final workout = await _workoutsRepository.postWorkout(
-      _selectedRoutine.activeExercises.map((id, sets) => MapEntry(_routinesService.getExerciseById(id).name, sets)),
-    );
+    final workout = await _workoutsRepository.postWorkout(_selectedRoutine.activeExercisesWithNames(_routinesService.exercises));
 
     activeSet.setCompleted(true);
     _workoutsService.updateWorkout(workout);

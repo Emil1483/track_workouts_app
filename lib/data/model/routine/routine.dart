@@ -29,6 +29,10 @@ class Routine {
 
   Map<String, List<ActiveSet>> get activeExercises => _activeExercises.copy();
 
+  Map<String, List<ActiveSet>> activeExercisesWithNames(List<Exercise> allExercises) {
+    return _activeExercises.map((id, sets) => MapEntry(allExercises.getExerciseFrom(id).name, sets));
+  }
+
   List<Exercise> getExercises(List<Exercise> allExercises) => exerciseIds.map((id) => allExercises.getExerciseFrom(id)).toList();
 
   bool hasSameExercises(Routine other) {

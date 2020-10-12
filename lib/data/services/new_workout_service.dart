@@ -56,25 +56,25 @@ class NewWorkoutService {
     );
   }
 
-  List<ActiveSet> getActiveSets({@required String exerciseName}) => _selectedRoutine.getActiveSets(exerciseName);
+  List<ActiveSet> getActiveSets({@required String exerciseId}) => _selectedRoutine.getActiveSetsById(exerciseId);
 
-  ActiveSet getActiveSet({@required String exerciseName}) => _selectedRoutine.getActiveSet(exerciseName);
+  ActiveSet getActiveSet({@required String exerciseId}) => _selectedRoutine.getActiveSetById(exerciseId);
 
-  ActiveSet tryGetActiveSet({@required String exerciseName}) {
+  ActiveSet tryGetActiveSet({@required String exerciseId}) {
     try {
-      return _selectedRoutine.getActiveSet(exerciseName);
+      return _selectedRoutine.getActiveSetById(exerciseId);
     } on StateError catch (_) {
       return null;
     }
   }
 
-  void addActiveSet({@required String exerciseName}) => _selectedRoutine.addActiveSet(exerciseName, _routinesService.exercises);
+  void addActiveSet({@required String exerciseId}) => _selectedRoutine.addActiveSetWithId(exerciseId, _routinesService.exercises);
 
-  void changeActiveSetAttribute({@required String exerciseName, @required AttributeName attributeName, @required double value}) =>
-      _selectedRoutine.changeActiveSetAttribute(exerciseName, attributeName, value);
+  void changeActiveSetAttribute({@required String exerciseId, @required AttributeName attributeName, @required double value}) =>
+      _selectedRoutine.changeActiveSetAttributeWithId(exerciseId, attributeName, value);
 
-  Future<void> completeActiveSet({@required String exerciseName}) async {
-    final activeSet = _selectedRoutine.getActiveSet(exerciseName);
+  Future<void> completeActiveSet({@required String exerciseId}) async {
+    final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
     activeSet.checkOk();
 
     final workout = await _workoutsRepository.postWorkout(_selectedRoutine.activeExercises);
@@ -83,7 +83,7 @@ class NewWorkoutService {
     _workoutsService.updateWorkout(workout);
   }
 
-  void editActiveSet({@required String exerciseName, @required int index}) => _selectedRoutine.editActiveSet(exerciseName, index);
+  void editActiveSet({@required String exerciseId, @required int index}) => _selectedRoutine.editActiveSetWithId(exerciseId, index);
 
   void dispose() {
     _workoutsRepository.workoutsApiService.dispose();

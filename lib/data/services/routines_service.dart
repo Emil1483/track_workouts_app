@@ -133,10 +133,6 @@ class RoutinesService {
 
     await _saveData();
   }
-
-  void dispose() {
-    //TODO: delete if not in use
-  }
 }
 
 extension ExerciseSerializer on Exercise {

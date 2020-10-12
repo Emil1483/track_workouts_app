@@ -22,14 +22,14 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError});
 
-  List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseName: exercise.name);
+  List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id);
 
   TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
 
-  ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseName: exercise.name);
+  ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseId: exercise.id);
 
   Future<void> buildTextControllers() async {
-    final activeSet = newWorkoutService.tryGetActiveSet(exerciseName: exercise.name);
+    final activeSet = newWorkoutService.tryGetActiveSet(exerciseId: exercise.id);
     final prefs = await SharedPreferences.getInstance();
 
     _controllers = Map.fromIterable(
@@ -46,8 +46,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   }
 
   void initializeActiveSets() {
-    final activeSets = newWorkoutService.getActiveSets(exerciseName: exercise.name);
-    if (activeSets.isEmpty) newWorkoutService.addActiveSet(exerciseName: exercise.name);
+    final activeSets = newWorkoutService.getActiveSets(exerciseId: exercise.id);
+    if (activeSets.isEmpty) newWorkoutService.addActiveSet(exerciseId: exercise.id);
   }
 
   String validateAttribute(AttributeName name, String value) {
@@ -71,7 +71,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     if (pickedTime == null) return;
 
     newWorkoutService.changeActiveSetAttribute(
-      exerciseName: exercise.name,
+      exerciseId: exercise.id,
       attributeName: AttributeName.pre_break,
       value: pickedTime.inSeconds.toDouble(),
     );
@@ -79,14 +79,14 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   }
 
   bool modifyIfPossible(double value, AttributeName attributeName) {
-    final attributes = newWorkoutService.getActiveSet(exerciseName: exercise.name).attributes;
+    final attributes = newWorkoutService.getActiveSet(exerciseId: exercise.id).attributes;
     if (!attributes.containsKey(attributeName)) return false;
     if (attributes[attributeName] != null) {
       if (attributes[attributeName] > 0) return false;
     }
 
     newWorkoutService.changeActiveSetAttribute(
-      exerciseName: exercise.name,
+      exerciseId: exercise.id,
       attributeName: attributeName,
       value: value,
     );
@@ -103,7 +103,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     _controllers.forEach((attributeName, controller) {
       final value = double.tryParse(controller.text);
       newWorkoutService.changeActiveSetAttribute(
-        exerciseName: exercise.name,
+        exerciseId: exercise.id,
         attributeName: attributeName,
         value: value,
       );
@@ -112,7 +112,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     setLoading(true);
 
     await ErrorHandler.handleErrors(
-      run: () async => newWorkoutService.completeActiveSet(exerciseName: exercise.name),
+      run: () async => newWorkoutService.completeActiveSet(exerciseId: exercise.id),
       onFailure: (failure) => onError(failure.message),
       onSuccess: (_) async {
         final prefs = await SharedPreferences.getInstance();
@@ -123,7 +123,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
           await prefs.setDouble(name.string, double.parse(controller.text));
         });
 
-        newWorkoutService.addActiveSet(exerciseName: exercise.name);
+        newWorkoutService.addActiveSet(exerciseId: exercise.id);
       },
     );
 
@@ -131,8 +131,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   }
 
   void editSet(int index) {
-    newWorkoutService.editActiveSet(exerciseName: exercise.name, index: index);
-    final activeSet = newWorkoutService.getActiveSet(exerciseName: exercise.name);
+    newWorkoutService.editActiveSet(exerciseId: exercise.id, index: index);
+    final activeSet = newWorkoutService.getActiveSet(exerciseId: exercise.id);
     _controllers.forEach((attributeName, controller) {
       final value = activeSet.attributes[attributeName];
       if (value != null) {

@@ -16,7 +16,6 @@ List<SingleChildWidget> getProviders() {
     ),
     Provider<RoutinesService>(
       create: (_) => routinesService,
-      dispose: (_, service) => service.dispose(),
     ),
     Provider<NewWorkoutService>(
       create: (_) => NewWorkoutService(WorkoutsRepository(WorkoutsApiService.create()), workoutsService, routinesService),

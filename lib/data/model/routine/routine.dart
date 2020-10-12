@@ -39,23 +39,23 @@ class Routine {
     return true;
   }
 
-  List<ActiveSet> getActiveSets(String exerciseName) {
-    if (!_activeExercises.containsKey(exerciseName)) throw StateError('exercise name does not exist');
-    return _activeExercises[exerciseName];
+  List<ActiveSet> getActiveSetsById(String id) {
+    if (!_activeExercises.containsKey(id)) throw StateError('exercise with id $id does not exist');
+    return _activeExercises[id];
   }
 
-  ActiveSet getActiveSet(String exerciseName) {
-    final activeSets = getActiveSets(exerciseName);
+  ActiveSet getActiveSetById(String id) {
+    final activeSets = getActiveSetsById(id);
     if (!activeSets.onlyOneWhere((activeSet) => !activeSet.completed)) {
-      throw StateError('only one active set cannot be completed at a time');
+      throw StateError('only one active set can be completed at a time');
     }
     return activeSets.firstWhere((activeSet) => !activeSet.completed);
   }
 
-  void addActiveSet(String exerciseName, List<Exercise> allExercises) {
-    final activeSets = getActiveSets(exerciseName);
+  void addActiveSetWithId(String id, List<Exercise> allExercises) {
+    final activeSets = getActiveSetsById(id);
 
-    final exercise = allExercises.firstWhere((exercise) => exercise.name == exerciseName);
+    final exercise = allExercises.firstWhere((exercise) => exercise.id == id);
 
     final activeSet = ActiveSet(
       attributes: exercise.attributes.toMap(),
@@ -68,8 +68,8 @@ class Routine {
     activeSets.add(activeSet);
   }
 
-  void changeActiveSetAttribute(String exerciseName, AttributeName attributeName, double value) {
-    final activeSet = getActiveSet(exerciseName);
+  void changeActiveSetAttributeWithId(String id, AttributeName attributeName, double value) {
+    final activeSet = getActiveSetById(id);
 
     final attributes = activeSet.attributes;
     if (!attributes.containsKey(attributeName)) throw StateError('attribute name must exist in exercise');
@@ -77,9 +77,9 @@ class Routine {
     attributes[attributeName] = value;
   }
 
-  void editActiveSet(String exerciseName, int index) {
-    final activeSets = getActiveSets(exerciseName);
-    final activeSet = getActiveSet(exerciseName);
+  void editActiveSetWithId(String id, int index) {
+    final activeSets = getActiveSetsById(id);
+    final activeSet = getActiveSetById(id);
 
     if (activeSet.checked) {
       activeSet.setCompleted(true);

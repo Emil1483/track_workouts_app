@@ -8,14 +8,12 @@ import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
 import 'package:track_workouts/style/theme.dart';
-import 'package:track_workouts/ui_elements/colored_container.dart';
 import 'package:track_workouts/ui_elements/confirm_dialog.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/main_text_field.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/panel_header.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
-import 'package:track_workouts/utils/duration_utils.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
 import 'package:track_workouts/utils/map_utils.dart';
 import 'package:track_workouts/utils/num_utils.dart';
@@ -121,12 +119,9 @@ class _ActiveSetWidget extends StatelessWidget {
       final duration = formattedAttributes[AttributeName.pre_break].toDurationFromSeconds();
       formattedAttributes.remove(AttributeName.pre_break);
 
-      final breakText = duration == null ? 'Set Break' : duration.breakText;
-
-      breakWidget = ColoredContainer(
-        fill: false,
+      breakWidget = BreakWidget(
+        duration: duration,
         onTap: () => model.pickPreBreak(context),
-        child: Text(breakText, style: getTextStyle(TextStyles.caption)),
       );
     }
 
@@ -136,14 +131,13 @@ class _ActiveSetWidget extends StatelessWidget {
       children: [
         breakWidget ?? Container(),
         Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.0),
+          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: SetWidget.verticalPadding),
           decoration: BoxDecoration(
             color: AppColors.black500,
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: Column(
             children: [
-              SizedBox(height: 8.0),
               _AttributesTextFields(formattedAttributes: formattedAttributes),
               MainButton(
                 onTaps: [() => model.saveSets()],

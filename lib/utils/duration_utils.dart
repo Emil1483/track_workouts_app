@@ -15,6 +15,7 @@ extension DurationUtils on Duration {
   }
 
   String get breakText {
+    
     final minuteSeconds = formatMinuteSeconds;
     if (minuteSeconds == null) return 'no break';
     return '$minuteSeconds break';

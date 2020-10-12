@@ -7,6 +7,8 @@ import 'package:track_workouts/utils/map_utils.dart';
 import 'package:track_workouts/utils/duration_utils.dart';
 
 class SetWidget extends StatelessWidget {
+  static const double verticalPadding = 8.0;
+
   final Map<AttributeName, double> attributes;
   final int index;
   final Function onLongPress;
@@ -20,7 +22,7 @@ class SetWidget extends StatelessWidget {
       ..removeWhere((name, value) {
         if (name == AttributeName.pre_break) {
           if (value > 0) {
-            breakWidget = _BreakWidget(duration: Duration(seconds: value.round()));
+            breakWidget = BreakWidget(duration: Duration(seconds: value.round()));
           } else {
             breakWidget = SizedBox(height: 12.0);
           }
@@ -33,7 +35,7 @@ class SetWidget extends StatelessWidget {
       children: [
         breakWidget ?? Container(),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
+          padding: EdgeInsets.symmetric(vertical: verticalPadding),
           child: Material(
             color: AppColors.black500,
             borderRadius: borderRadius,
@@ -85,16 +87,19 @@ class SetWidget extends StatelessWidget {
   }
 }
 
-class _BreakWidget extends StatelessWidget {
+class BreakWidget extends StatelessWidget {
   final Duration duration;
+  final Function onTap;
 
-  const _BreakWidget({@required this.duration});
+  const BreakWidget({@required this.duration, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return ColoredContainer(
+      fill: onTap == null,
+      onTap: onTap,
       child: AutoSizeText(
-        duration.breakText,
+        duration?.breakText ?? 'Set Break',
         maxLines: 1,
         style: getTextStyle(TextStyles.h3),
       ),

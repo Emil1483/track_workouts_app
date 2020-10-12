@@ -44,7 +44,7 @@
     - [x] add automatic oneOf
     - [x] add ability to reorder the exercises
     - [ ] save json
-      - [ ] use more elegant solution (refactor)
+      - [x] use more elegant solution (refactor)
       - [ ] test
   - [ ] add delete set functionality
   - [ ] add ability to switch routine

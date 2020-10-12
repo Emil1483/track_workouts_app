@@ -101,9 +101,13 @@ class RoutinesService {
     await _saveData();
   }
 
-  Exercise getExerciseByName(String name) {
-    final index = _getExerciseIndex(name);
-    return _exercises[index].copy();
+  Exercise tryGetExerciseByName(String name) {
+    try {
+      final index = _getExerciseIndex(name);
+      return _exercises[index].copy();
+    } on StateError catch (_) {
+      return null;
+    }
   }
 
   Exercise getExerciseById(String id) => _exercises.getExerciseFrom(id);

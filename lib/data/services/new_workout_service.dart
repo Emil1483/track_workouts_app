@@ -30,7 +30,9 @@ class NewWorkoutService {
     final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
     if (_workout != null) {
       _workout.exercises.forEach((exerciseName, sets) {
-        final exercise = _routinesService.getExerciseByName(exerciseName);
+        final exercise = _routinesService.tryGetExerciseByName(exerciseName);
+        if (exercise == null) return;
+
         activeExercises[exercise.id] = [
           ...sets.map(
             (mySet) => ActiveSet(

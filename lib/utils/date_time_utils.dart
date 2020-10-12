@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeUtils on DateTime {
-  static DateTime get today => DateTime.now().ignoreTimeZone.flooredToDay;
+  static DateTime get today => DateTime.now().flooredToDay;
 
   DateTime get flooredToDay => DateTime.utc(year, month, day);
 
@@ -15,8 +15,6 @@ extension DateTimeUtils on DateTime {
   }
 
   String get formatDayMonthDate => DateFormat('EEEE, MMM. d').format(this) + dateSuperScript;
-
-  DateTime get ignoreTimeZone => add(timeZoneOffset);
 
   String get dateSuperScript {
     final dateString = DateFormat('d').format(this);

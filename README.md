@@ -43,10 +43,10 @@
     - [x] update all routines on exercise change
     - [x] add automatic oneOf
     - [x] add ability to reorder the exercises
-    - [ ] save json
+    - [x] save json
       - [x] use more elegant solution (refactor)
-      - [ ] test
-  - [ ] add delete set functionality
+      - [x] test
+  - [x] add delete set functionality
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page

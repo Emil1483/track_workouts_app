@@ -42,11 +42,6 @@ class RoutinesService {
   }
 
   Future<void> loadData() async {
-    // _exercises = [];
-    // _routines = [];
-    // await _saveData();
-    // return;
-
     final exercises = await _jsonStore.getItem('exercises');
     if (exercises == null) {
       _exercises = [];

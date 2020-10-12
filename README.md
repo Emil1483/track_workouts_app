@@ -47,6 +47,7 @@
       - [x] use more elegant solution (refactor)
       - [x] test
   - [x] add delete set functionality
+  - [ ] fix number of sets not updating
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page

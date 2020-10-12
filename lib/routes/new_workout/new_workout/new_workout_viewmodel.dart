@@ -24,6 +24,10 @@ class NewWorkoutViewmodel extends BaseModel {
 
   Future<void> goToDetails(Exercise exercise) async {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);
+
+    final index = _activeExercises.indexWhere((activeExercise) => activeExercise.key == exercise.id);
+    _activeExercises[index] = _activeExercises[index].copyWithSets(newWorkoutService.getActiveSets(exerciseId: exercise.id));
+    
     notifyListeners();
   }
 
@@ -42,6 +46,12 @@ extension on List<MapEntry<String, List<ActiveSet>>> {
         final entry = this[index];
         return MapEntry(entry.key, entry.value.copy());
       });
+}
+
+extension on MapEntry<String, List<ActiveSet>> {
+  MapEntry<String, List<ActiveSet>> copyWithSets(List<ActiveSet> sets) {
+    return MapEntry(key, sets);
+  }
 }
 
 enum Progress { not_started, started, completed }

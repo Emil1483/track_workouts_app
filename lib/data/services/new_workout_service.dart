@@ -31,7 +31,7 @@ class NewWorkoutService {
     if (_workout != null) {
       _workout.exercises.forEach((exerciseName, sets) {
         final exercise = _routinesService.getExerciseByName(exerciseName);
-        activeExercises[exerciseName] = [
+        activeExercises[exercise.id] = [
           ...sets.map(
             (mySet) => ActiveSet(
               checked: true,
@@ -77,13 +77,16 @@ class NewWorkoutService {
     final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
     activeSet.checkOk();
 
-    final workout = await _workoutsRepository.postWorkout(_selectedRoutine.activeExercises);
+    final workout = await _workoutsRepository.postWorkout(
+      _selectedRoutine.activeExercises.map((id, sets) => MapEntry(_routinesService.getExerciseById(id).name, sets)),
+    );
 
     activeSet.setCompleted(true);
     _workoutsService.updateWorkout(workout);
   }
 
-  void editActiveSet({@required String exerciseId, @required int index}) => _selectedRoutine.editActiveSetWithId(exerciseId, index);
+  void editActiveSet({@required String exerciseId, @required int index}) =>
+      _selectedRoutine.editActiveSetWithId(exerciseId, index);
 
   void dispose() {
     _workoutsRepository.workoutsApiService.dispose();

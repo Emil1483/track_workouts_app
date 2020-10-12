@@ -9,6 +9,7 @@ import 'package:track_workouts/routes/new_workout/new_workout_details/new_exerci
 import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
+import 'package:track_workouts/ui_elements/confirm_dialog.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/main_text_field.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
@@ -45,10 +46,28 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
           final activeSet = model.activeSets[i];
           if (activeSet.completed) {
             setWidgets.add(
-              SetWidget(
-                attributes: activeSet.attributes,
-                index: i,
-                onLongPress: () => model.editSet(i),
+              Dismissible(
+                key: ValueKey(activeSet),
+                onDismissed: (_) => model.deleteSet(i),
+                background: Container(
+                  padding: EdgeInsets.only(right: 12.0),
+                  color: AppColors.accent900,
+                  alignment: Alignment.centerRight,
+                  child: Icon(Icons.delete),
+                ),
+                direction: DismissDirection.endToStart,
+                confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
+                  context,
+                  'Are you sure you wish to delete set #$i?',
+                ),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: SetWidget(
+                    attributes: activeSet.attributes,
+                    index: i,
+                    onLongPress: () => model.editSet(i),
+                  ),
+                ),
               ),
             );
           } else {
@@ -74,7 +93,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             body: Padding(
               padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
               child: ListView(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: EdgeInsets.symmetric(vertical: 8.0),
                 children: setWidgets,
               ),
             ),
@@ -117,12 +136,14 @@ class _ActiveSetWidget extends StatelessWidget {
       children: [
         breakWidget ?? Container(),
         Container(
+          margin: EdgeInsets.symmetric(horizontal: 16.0),
           decoration: BoxDecoration(
             color: AppColors.black500,
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           child: Column(
             children: [
+              SizedBox(height: 8.0),
               _AttributesTextFields(formattedAttributes: formattedAttributes),
               MainButton(
                 onTaps: [() => model.saveSets()],

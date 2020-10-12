@@ -22,7 +22,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError});
 
-  List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id);
+  List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id).copy();
 
   TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
 
@@ -140,5 +140,21 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       }
     });
     notifyListeners();
+  }
+
+  void deleteSet(int index) {
+    final activeSet = newWorkoutService.deleteActiveSet(exerciseId: exercise.id, index: index);
+    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ErrorHandler.handleErrors(
+        run: () => newWorkoutService.postWorkout(),
+        onFailure: (failure) {
+          onError(failure.message);
+          newWorkoutService.insertActiveSet(exerciseId: exercise.id, index: index, activeSet: activeSet);
+          notifyListeners();
+        },
+        onSuccess: (_) {},
+      );
+    });
   }
 }

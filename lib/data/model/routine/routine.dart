@@ -56,42 +56,9 @@ class Routine {
     return activeSets.firstWhere((activeSet) => !activeSet.completed);
   }
 
-  void addActiveSetWithId(String id, List<Exercise> allExercises) {
+  void insertActiveSetWithId(String id, int index, ActiveSet activeSet) {
     final activeSets = getActiveSetsById(id);
-
-    final exercise = allExercises.firstWhere((exercise) => exercise.id == id);
-
-    final activeSet = ActiveSet(
-      attributes: exercise.attributes.toMap(),
-      exercise: exercise,
-    );
-    if (activeSets.isEmpty) {
-      activeSet.removeAttribute(AttributeName.pre_break);
-    }
-
-    activeSets.add(activeSet);
-  }
-
-  void changeActiveSetAttributeWithId(String id, AttributeName attributeName, double value) {
-    final activeSet = getActiveSetById(id);
-
-    final attributes = activeSet.attributes;
-    if (!attributes.containsKey(attributeName)) throw StateError('attribute name must exist in exercise');
-
-    attributes[attributeName] = value;
-  }
-
-  void editActiveSetWithId(String id, int index) {
-    final activeSets = getActiveSetsById(id);
-    final activeSet = getActiveSetById(id);
-
-    if (activeSet.checked) {
-      activeSet.setCompleted(true);
-    } else {
-      activeSets.removeLast();
-    }
-
-    activeSets[index].setCompleted(false);
+    activeSets.insert(index, activeSet);
   }
 
   Routine copy() => Routine(

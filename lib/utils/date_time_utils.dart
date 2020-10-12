@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeUtils on DateTime {
-  static get today => DateTime.now().ignoreTimeZone.flooredToDay;
+  static DateTime get today => DateTime.now().ignoreTimeZone.flooredToDay;
 
   DateTime get flooredToDay => DateTime.utc(year, month, day);
 

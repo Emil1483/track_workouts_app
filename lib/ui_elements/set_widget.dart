@@ -33,7 +33,7 @@ class SetWidget extends StatelessWidget {
       children: [
         breakWidget ?? Container(),
         Padding(
-          padding: EdgeInsets.only(top: 8.0),
+          padding: EdgeInsets.symmetric(vertical: 8.0),
           child: Material(
             color: AppColors.black500,
             borderRadius: borderRadius,
@@ -92,14 +92,11 @@ class _BreakWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: 8.0),
-      child: ColoredContainer(
-        child: AutoSizeText(
-          duration.breakText,
-          maxLines: 1,
-          style: getTextStyle(TextStyles.h3),
-        ),
+    return ColoredContainer(
+      child: AutoSizeText(
+        duration.breakText,
+        maxLines: 1,
+        style: getTextStyle(TextStyles.h3),
       ),
     );
   }

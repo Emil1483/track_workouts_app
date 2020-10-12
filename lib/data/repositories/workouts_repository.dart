@@ -5,6 +5,7 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/model/workouts/workouts_data/workouts_data.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/utils/string_utils.dart';
+import 'package:track_workouts/utils/date_time_utils.dart';
 
 class WorkoutsRepository {
   final WorkoutsApiService workoutsApiService;
@@ -20,13 +21,13 @@ class WorkoutsRepository {
 
   Future<WorkoutsData> getWorkoutsData({DateTime toDate}) async {
     return await ErrorHandler.catchCommonErrors(() async {
-      final to = toDate ?? DateTime.now();
+      final to = toDate ?? DateTimeUtils.today;
       final response = await workoutsApiService.getWorkoutsData(to.toIso8601String());
       return WorkoutsDataSerializer.fromMap(response.body);
     });
   }
 
-  Future<Workout> postWorkout(Map<String, List<ActiveSet>> activeExercises) async {
+  Future<Workout> postWorkout(Map<String, List<ActiveSet>> activeExercises, DateTime date) async {
     return await ErrorHandler.catchCommonErrors(() async {
       final List<Map<String, dynamic>> exercises = [];
 
@@ -51,11 +52,13 @@ class WorkoutsRepository {
 
       final response = await workoutsApiService.postWorkout({
         'password': ApiInfo.API_PASSWORD,
-        'date': DateTime.now().toIso8601String(),
+        'date': date.toIso8601String(),
         'exercises': exercises,
       });
 
-      return WorkoutSerializer.fromMap((response.body as Map)['workout']);
+      final body = response.body as Map;
+      if (body['workout'] == null) return null;
+      return WorkoutSerializer.fromMap(body['workout']);
     });
   }
 }

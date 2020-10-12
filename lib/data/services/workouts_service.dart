@@ -83,6 +83,11 @@ class WorkoutsService {
     _notifyListeners();
   }
 
+  void deleteWorkout(DateTime date) {
+    _workouts.removeWhere((workout) => workout.date.isAtSameMomentAs(date));
+    _notifyListeners();
+  }
+
   bool workoutsContains(Week week) {
     if (_workouts == null) return false;
     if (_workouts.isEmpty) return false;

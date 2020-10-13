@@ -36,6 +36,11 @@ class NewWorkoutViewmodel extends BaseModel {
     newWorkoutService.reorderExercises(oldIndex, newIndex);
     notifyListeners();
   }
+
+  void removeExercise(String id) {
+    newWorkoutService.removeExercise(id);
+    notifyListeners();
+  }
 }
 
 enum Progress { not_started, started, completed }

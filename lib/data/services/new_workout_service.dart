@@ -11,6 +11,7 @@ class NewWorkoutService {
   final WorkoutsService _workoutsService;
   final RoutinesService _routinesService;
 
+  final List<String> _removedIds = [];
   Routine _selectedRoutine;
   Workout _workout;
 
@@ -31,10 +32,15 @@ class NewWorkoutService {
 
     final updatedExercises = Routine.buildActiveExercises(routine.exerciseIds);
 
-    _selectedRoutine = routine.copyWith(activeExercises: _selectedRoutine.activeExercises.merge(updatedExercises));
+    _selectedRoutine = routine.copyWith(
+      activeExercises: _selectedRoutine.activeExercises.merge(updatedExercises)
+        ..removeWhere((id, sets) => _removedIds.contains(id)),
+    );
   }
 
   void selectRoutine(String id) {
+    _removedIds.clear();
+
     final routine = _routinesService.getRoutineBy(id);
 
     final activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
@@ -78,6 +84,17 @@ class NewWorkoutService {
         value: (exercise) => (exercise as MapEntry<String, List<ActiveSet>>).value,
       ),
     );
+  }
+
+  void removeExercise(String id) {
+    final exercises = _selectedRoutine.activeExercises;
+
+    final result = exercises.remove(id);
+    if (result == null) throw StateError('could not find exercise with id $id');
+
+    _selectedRoutine = _selectedRoutine.copyWith(activeExercises: exercises);
+
+    _removedIds.add(id);
   }
 
   List<ActiveSet> getActiveSets({@required String exerciseId}) => _selectedRoutine.getActiveSetsById(exerciseId);

@@ -6,6 +6,7 @@ import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_routine/create_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/confirm_dialog.dart';
+import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/text_field_app_bar.dart';
@@ -215,12 +216,7 @@ class _AddExerciseSheet extends StatelessWidget {
           Dismissible(
             key: ValueKey(exercise),
             onDismissed: (_) => model.delete(exercise),
-            background: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              color: AppColors.accent900,
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.delete),
-            ),
+            background: DismissBackground(rightPadding: 12.0),
             direction: DismissDirection.endToStart,
             confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
               context,

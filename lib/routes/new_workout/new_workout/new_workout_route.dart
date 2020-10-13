@@ -6,6 +6,7 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
+import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 
 class NewWorkoutRoute extends StatelessWidget {
@@ -44,7 +45,7 @@ class NewWorkoutRoute extends StatelessWidget {
     final exercise = model.getExerciseFrom(exerciseMapEntry.key);
     final progress = exerciseMapEntry.getProgress(exercise.numberOfSets);
 
-    return ListElement(
+    Widget exerciseWidget = ListElement(
       key: ValueKey(exerciseMapEntry),
       onTap: () => model.goToDetails(exercise),
       centered: true,
@@ -56,5 +57,17 @@ class NewWorkoutRoute extends StatelessWidget {
         maxLines: 1,
       ),
     );
+
+    if (exerciseMapEntry.value.whereChecked.isEmpty) {
+      exerciseWidget = Dismissible(
+        key: ValueKey(exerciseMapEntry),
+        onDismissed: (_) => model.removeExercise(exerciseMapEntry.key),
+        direction: DismissDirection.endToStart,
+        background: DismissBackground(rightPadding: 24.0),
+        child: exerciseWidget,
+      );
+    }
+
+    return exerciseWidget;
   }
 }

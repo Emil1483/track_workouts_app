@@ -9,6 +9,7 @@ import 'package:track_workouts/routes/new_workout/new_workout_details/new_exerci
 import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/confirm_dialog.dart';
+import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/main_text_field.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
@@ -47,12 +48,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
               Dismissible(
                 key: ValueKey(activeSet),
                 onDismissed: (_) => model.deleteSet(i),
-                background: Container(
-                  padding: EdgeInsets.only(right: 12.0),
-                  color: AppColors.accent900,
-                  alignment: Alignment.centerRight,
-                  child: Icon(Icons.delete),
-                ),
+                background: DismissBackground(rightPadding: 12.0),
                 direction: DismissDirection.endToStart,
                 confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
                   context,

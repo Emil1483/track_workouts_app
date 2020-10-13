@@ -8,6 +8,7 @@ import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/confirm_dialog.dart';
+import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
 
 class ChooseRoutineRoute extends StatelessWidget with ErrorStateless {
@@ -66,12 +67,7 @@ class ChooseRoutineRoute extends StatelessWidget with ErrorStateless {
     return Dismissible(
       key: ValueKey(routine),
       onDismissed: (_) => model.delete(routine),
-      background: Container(
-        padding: EdgeInsets.only(right: 24.0),
-        color: AppColors.accent900,
-        alignment: Alignment.centerRight,
-        child: Icon(Icons.delete),
-      ),
+      background: DismissBackground(rightPadding: 24.0),
       direction: DismissDirection.endToStart,
       confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
         context,

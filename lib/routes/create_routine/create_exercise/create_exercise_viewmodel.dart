@@ -10,7 +10,7 @@ class CreateExerciseViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final List<SelectableAttribute> _selectableAttributes;
 
-  int _numberOfSets = 4;
+  int _numberOfSets;
 
   final RoutinesService routinesService;
   final void Function(String) onError;
@@ -24,7 +24,8 @@ class CreateExerciseViewmodel extends BaseModel {
                   selected: (oldExercise?.attributes ?? Exercise.defaultAttributes).contains(name),
                 ))
             .toList(),
-        exerciseNameController = TextEditingController(text: oldExercise?.name);
+        exerciseNameController = TextEditingController(text: oldExercise?.name),
+        _numberOfSets = oldExercise?.numberOfSets ?? 4;
 
   bool get _editing => oldExercise != null;
 

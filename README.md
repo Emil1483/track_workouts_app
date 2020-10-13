@@ -48,7 +48,7 @@
       - [x] test
   - [x] add delete set functionality
   - [x] fix bad date
-  - [ ] fix number of sets not updating
+  - [x] fix number of sets not updating
   - [ ] fix attributes in wrong order
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine

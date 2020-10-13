@@ -41,8 +41,8 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
               exercises: () => model.notSelectedExercises,
               createNewExercise: model.createExercise,
               onExerciseTapped: model.toggleSelected,
-              noExercisesMade: () => model.noExercisesMade,
-              allExercisesSelected: () => model.allExercisesSelected,
+              noExercises: () => model.noExercisesMade,
+              deleteExercise: model.delete
             ),
             child: Icon(Icons.add),
           ),

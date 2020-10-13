@@ -6,6 +6,7 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
+import 'package:track_workouts/ui_elements/add_exercise_sheet.dart';
 import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 
@@ -29,6 +30,17 @@ class NewWorkoutRoute extends StatelessWidget {
             ),
             SizedBox(width: 12.0),
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => AddExerciseSheet.showModal(
+            context,
+            model,
+            exercises: () => model.notIncludedExercises,
+            createNewExercise: model.createNewExercise,
+            onExerciseTapped: model.addExercise,
+            noExercises: () => false,
+          ),
+          child: Icon(Icons.add),
         ),
         body: ReorderableListView(
           onReorder: model.reorderExercises,

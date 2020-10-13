@@ -36,6 +36,8 @@ class Routine {
     return _activeExercises.map((id, sets) => MapEntry(allExercises.getExerciseFrom(id).name, sets));
   }
 
+  void addExerciseToActiveExercises(Exercise exercise) => _activeExercises[exercise.id] = [];
+
   List<Exercise> getExercises(List<Exercise> allExercises) => exerciseIds.map((id) => allExercises.getExerciseFrom(id)).toList();
 
   bool hasSameExercises(Routine other) {

@@ -14,8 +14,7 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
     @required void Function() createNewExercise,
     void Function(Exercise) deleteExercise,
     @required Function(Exercise) onExerciseTapped,
-    @required bool Function() noExercisesMade,
-    @required bool Function() allExercisesSelected,
+    @required bool Function() noExercises,
   }) {
     showModalBottomSheet(
       context: context,
@@ -23,11 +22,10 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
         value: model,
         builder: (context, child) => Consumer<U>(
           builder: (context, model, child) => AddExerciseSheet<U>(
-            allExercisesSelected: allExercisesSelected,
             createNewExercise: createNewExercise,
             deleteExercise: deleteExercise,
             exercises: exercises,
-            noExercisesMade: noExercisesMade,
+            noExercises: noExercises,
             onExerciseTapped: onExerciseTapped,
           ),
         ),
@@ -39,16 +37,14 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
   final void Function() createNewExercise;
   final void Function(Exercise) deleteExercise;
   final void Function(Exercise) onExerciseTapped;
-  final bool Function() noExercisesMade;
-  final bool Function() allExercisesSelected;
+  final bool Function() noExercises;
 
   const AddExerciseSheet({
     @required this.exercises,
     @required this.createNewExercise,
     @required this.deleteExercise,
     @required this.onExerciseTapped,
-    @required this.noExercisesMade,
-    @required this.allExercisesSelected,
+    @required this.noExercises,
   });
 
   @override
@@ -72,7 +68,7 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    if (noExercisesMade()) {
+    if (noExercises()) {
       return Stack(
         children: [
           Align(
@@ -92,7 +88,9 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
       );
     }
 
-    if (allExercisesSelected()) {
+    final selectableExercises = exercises();
+
+    if (selectableExercises.isEmpty) {
       return Align(
         alignment: Alignment(0, -.6),
         child: Text(
@@ -105,7 +103,7 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
 
     return ListView(
       children: [
-        for (final exercise in exercises()) _buildExerciseWidget(context, exercise),
+        for (final exercise in selectableExercises) _buildExerciseWidget(context, exercise),
       ],
     );
   }
@@ -121,7 +119,7 @@ class AddExerciseSheet<U extends ChangeNotifier> extends StatelessWidget {
       exerciseWidget = Dismissible(
         key: ValueKey(exercise),
         onDismissed: (_) => deleteExercise(exercise),
-        background: DismissBackground(rightPadding: 12.0),
+        background: DismissBackground(rightPadding: 24.0),
         direction: DismissDirection.endToStart,
         confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
           context,

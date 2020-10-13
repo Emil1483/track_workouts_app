@@ -59,8 +59,6 @@ class CreateRoutineViewmodel extends BaseModel {
 
   bool get noExercisesSelected => selectedExercises.isEmpty;
 
-  bool get allExercisesSelected => routinesService.exercises.length == selectedExercises.length;
-
   bool get noExercisesMade => routinesService.exercises.isEmpty;
 
   int _getExerciseIndex(Exercise exercise) {

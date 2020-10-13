@@ -27,6 +27,15 @@ class NewWorkoutService {
 
   Routine get selectedRoutine => _selectedRoutine?.copyWith();
 
+  List<Exercise> get notActiveExercises {
+    final activeExerciseIds = _selectedRoutine.activeExercises.keys;
+    return _routinesService.exercises.where((exercise) => !activeExerciseIds.contains(exercise.id)).toList();
+  }
+
+  void addExerciseToActiveExercises(Exercise exercise) {
+    _selectedRoutine.addExerciseToActiveExercises(exercise);
+  }
+
   void updateCurrentRoutine() {
     final routine = _routinesService.getRoutineBy(_selectedRoutine.id);
 

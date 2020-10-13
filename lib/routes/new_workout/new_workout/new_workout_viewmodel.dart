@@ -4,6 +4,7 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/routes/create_routine/create_exercise/create_exercise_route.dart';
 import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_route.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_route.dart';
 import 'package:track_workouts/style/theme.dart';
@@ -23,6 +24,15 @@ class NewWorkoutViewmodel extends BaseModel {
   String get routineName => newWorkoutService.selectedRoutine.name;
 
   Exercise getExerciseFrom(String id) => routinesService.getExerciseById(id);
+
+  List<Exercise> get notIncludedExercises => newWorkoutService.notActiveExercises;
+
+  void createNewExercise() => Router.pushNamed(CreateExerciseRoute.routeName);
+
+  void addExercise(Exercise exercise) {
+    newWorkoutService.addExerciseToActiveExercises(exercise);
+    notifyListeners();
+  }
 
   Future<void> goToDetails(Exercise exercise) async {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);

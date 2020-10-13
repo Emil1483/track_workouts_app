@@ -23,7 +23,16 @@ class CreateExerciseViewmodel extends BaseModel {
                   name,
                   selected: (oldExercise?.attributes ?? Exercise.defaultAttributes).contains(name),
                 ))
-            .toList(),
+            .toList()
+              ..sort((a, b) {
+                int indexA = oldExercise.attributes.indexOf(a.name);
+                int indexB = oldExercise.attributes.indexOf(b.name);
+
+                if (indexA == -1) indexA = AttributeName.values.length;
+                if (indexB == -1) indexB = AttributeName.values.length;
+
+                return indexA - indexB;
+              }),
         exerciseNameController = TextEditingController(text: oldExercise?.name),
         _numberOfSets = oldExercise?.numberOfSets ?? 4;
 

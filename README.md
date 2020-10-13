@@ -49,7 +49,7 @@
   - [x] add delete set functionality
   - [x] fix bad date
   - [x] fix number of sets not updating
-  - [ ] fix attributes in wrong order
+  - [x] fix attributes in wrong order
   - [ ] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page

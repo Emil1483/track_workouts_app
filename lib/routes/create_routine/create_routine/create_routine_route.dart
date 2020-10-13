@@ -5,8 +5,7 @@ import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/create_routine/create_routine/create_routine_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
-import 'package:track_workouts/ui_elements/confirm_dialog.dart';
-import 'package:track_workouts/ui_elements/dismiss_background.dart';
+import 'package:track_workouts/ui_elements/add_exercise_sheet.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/text_field_app_bar.dart';
@@ -36,13 +35,14 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
             controller: model.exerciseNameController,
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () => showModalBottomSheet(
-              context: context,
-              builder: (_) => ChangeNotifierProvider.value(
-                value: model,
-                child: _AddExerciseSheet(),
-              ),
-              backgroundColor: AppColors.primary,
+            onPressed: () => AddExerciseSheet.showModal(
+              context,
+              model,
+              exercises: () => model.notSelectedExercises,
+              createNewExercise: model.createExercise,
+              onExerciseTapped: model.toggleSelected,
+              noExercisesMade: () => model.noExercisesMade,
+              allExercisesSelected: () => model.allExercisesSelected,
             ),
             child: Icon(Icons.add),
           ),
@@ -147,88 +147,6 @@ class _MissingExercisesWidget extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _AddExerciseSheet extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final model = Provider.of<CreateRoutineViewmodel>(context);
-
-    return Material(
-      color: AppColors.primary,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: _buildContent(context),
-          ),
-          Positioned(
-            bottom: 16.0,
-            right: 16.0,
-            child: FloatingActionButton(
-              onPressed: model.createExercise,
-              child: Icon(Icons.add),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildContent(BuildContext context) {
-    final model = Provider.of<CreateRoutineViewmodel>(context);
-
-    if (model.noExercisesMade) {
-      return Stack(
-        children: [
-          Align(
-            alignment: Alignment(0, -.6),
-            child: Text(
-              '😫\n\nThere are no exercises',
-              style: getTextStyle(TextStyles.caption),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Positioned(
-            bottom: 12.0,
-            right: 82.0,
-            child: Icon(Icons.arrow_forward, size: 64.0),
-          ),
-        ],
-      );
-    }
-
-    if (model.allExercisesSelected) {
-      return Align(
-        alignment: Alignment(0, -.6),
-        child: Text(
-          '🙃\n\nYou have selected all the exercises',
-          style: getTextStyle(TextStyles.caption),
-          textAlign: TextAlign.center,
-        ),
-      );
-    }
-
-    return ListView(
-      children: [
-        for (final exercise in model.notSelectedExercises)
-          Dismissible(
-            key: ValueKey(exercise),
-            onDismissed: (_) => model.delete(exercise),
-            background: DismissBackground(rightPadding: 12.0),
-            direction: DismissDirection.endToStart,
-            confirmDismiss: (_) => ConfirmDialog.showConfirmDialog(
-              context,
-              'Are you sure you wish to delete the "${exercise.name}" exercise?',
-            ),
-            child: ListElement(
-              mainWidget: Text(exercise.name, style: getTextStyle(TextStyles.h2)),
-              onTap: () => model.toggleSelected(exercise),
-              centered: true,
-            ),
-          ),
-      ],
     );
   }
 }

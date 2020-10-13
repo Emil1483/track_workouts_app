@@ -39,10 +39,13 @@ class CreateExerciseRoute extends StatelessWidget with ErrorStateless {
                   children: [
                     for (final attribute in model.selectableAttributes)
                       ListElement(
-                        key: ValueKey(attribute),
+                        key: ValueKey(attribute.name),
                         color: AppColors.black900,
                         dividerThickness: 0.6,
-                        onTap: () => model.select(attribute),
+                        onTap: () {
+                          Feedback.forLongPress(context);
+                          model.select(attribute);
+                        },
                         centered: true,
                         icon: attribute.selected
                             ? Icon(Icons.check_box, color: AppColors.accent)

@@ -25,7 +25,7 @@ class CreateRoutine extends StatelessWidget with ErrorStateless {
       model: CreateRoutineViewmodel(
         routinesService: Provider.of<RoutinesService>(context),
         onError: onError,
-        routine: routine,
+        oldRoutine: routine,
       ),
       builder: (context, model, child) => Form(
         key: model.formKey,

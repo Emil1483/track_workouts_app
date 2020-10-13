@@ -20,7 +20,7 @@ class ChooseRoutineViewmodel extends BaseModel {
   List<Exercise> get allExercises => routinesService.exercises;
 
   void selectRoutine(Routine routine) {
-    newWorkoutService.selectRoutine(routine);
+    newWorkoutService.selectRoutine(routine.id);
     Router.pushReplacementNamed(NewWorkoutRoute.routeName);
   }
 

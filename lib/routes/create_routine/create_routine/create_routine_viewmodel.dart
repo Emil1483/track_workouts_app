@@ -17,15 +17,14 @@ class CreateRoutineViewmodel extends BaseModel {
   final void Function(String) onError;
   final TextEditingController exerciseNameController;
   final List<String> _selectedExerciseIds;
-  final _oldName;
+  final Routine oldRoutine;
 
-  CreateRoutineViewmodel({@required this.routinesService, @required this.onError, Routine routine})
-      : _selectedExerciseIds = routine?.exerciseIds?.copy() ?? [],
-        exerciseNameController = TextEditingController(text: routine?.name),
-        _oldName = routine?.name,
-        _selectedImage = routine?.image ?? images.first;
+  CreateRoutineViewmodel({@required this.routinesService, @required this.onError, this.oldRoutine})
+      : _selectedExerciseIds = oldRoutine?.exerciseIds?.copy() ?? [],
+        exerciseNameController = TextEditingController(text: oldRoutine?.name),
+        _selectedImage = oldRoutine?.image ?? images.first;
 
-  bool get _editing => _oldName != null;
+  bool get _editing => oldRoutine != null;
 
   List<List<String>> getImageRows(int rowLength) {
     List<List<String>> result = [];
@@ -129,12 +128,13 @@ class CreateRoutineViewmodel extends BaseModel {
 
   Future<void> _saveRoutine() async {
     final routine = Routine(
+      id: oldRoutine?.id,
       exerciseIds: _selectedExerciseIds,
       name: exerciseNameController.text.trim(),
       image: _selectedImage,
     );
     if (_editing) {
-      routinesService.updateRoutine(_oldName, routine);
+      routinesService.updateRoutine(oldRoutine.name, routine);
     } else {
       routinesService.addRoutine(routine);
     }

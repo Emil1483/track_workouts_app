@@ -17,6 +17,8 @@ class RoutinesService {
     loadData();
   }
 
+  Routine getRoutineBy(String id) => _routines.firstWhere((routine) => routine.id == id);
+
   int _getExerciseIndex(String name) {
     final index = _exercises.indexWhere((exercise) => exercise.name == name);
     if (index == -1) throw StateError('could not find exercise with name $name');
@@ -121,14 +123,14 @@ class RoutinesService {
         throw Failure('A workout with these exercises already exists');
       }
     });
-    _routines.add(newRoutine.copy());
+    _routines.add(newRoutine.copyWith());
 
     await _saveData();
   }
 
   Future<void> updateRoutine(String oldName, Routine routine) async {
     final index = _getRoutineIndex(oldName);
-    _routines[index] = routine.copy();
+    _routines[index] = routine.copyWith();
 
     await _saveData();
   }
@@ -157,6 +159,7 @@ extension ExerciseSerializer on Exercise {
 extension RoutineSerializer on Routine {
   static Routine fromMap(Map<String, dynamic> map) {
     return Routine(
+      id: map['id'],
       exerciseIds: (map['exerciseIds'] as List).map((id) => id as String).toList(),
       image: map['image'],
       name: map['name'],
@@ -165,6 +168,7 @@ extension RoutineSerializer on Routine {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'name': name,
       'image': image,
       'exerciseIds': exerciseIds,

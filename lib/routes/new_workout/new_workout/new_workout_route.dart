@@ -19,7 +19,16 @@ class NewWorkoutRoute extends StatelessWidget {
         routinesService: Provider.of<RoutinesService>(context),
       ),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(title: Text(model.routineName)),
+        appBar: AppBar(
+          title: Text(model.routineName),
+          actions: [
+            IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: model.switchWorkout,
+            ),
+            SizedBox(width: 12.0),
+          ],
+        ),
         body: ReorderableListView(
           onReorder: model.reorderExercises,
           children: [

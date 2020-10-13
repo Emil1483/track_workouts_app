@@ -24,10 +24,20 @@ class NewWorkoutService {
     });
   }
 
-  Routine get selectedRoutine => _selectedRoutine?.copy();
+  Routine get selectedRoutine => _selectedRoutine?.copyWith();
 
-  void selectRoutine(Routine routine) {
-    final Map<String, List<ActiveSet>> activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
+  void updateCurrentRoutine() {
+    final routine = _routinesService.getRoutineBy(_selectedRoutine.id);
+
+    final updatedExercises = Routine.buildActiveExercises(routine.exerciseIds);
+
+    _selectedRoutine = routine.copyWith(activeExercises: _selectedRoutine.activeExercises.merge(updatedExercises));
+  }
+
+  void selectRoutine(String id) {
+    final routine = _routinesService.getRoutineBy(id);
+
+    final activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
     if (_workout != null) {
       _workout.exercises.forEach((exerciseName, sets) {
         final exercise = _routinesService.tryGetExerciseByName(exerciseName);
@@ -50,11 +60,23 @@ class NewWorkoutService {
       });
     }
 
-    _selectedRoutine = Routine(
-      image: routine.image,
-      exerciseIds: routine.exerciseIds,
-      name: routine.name,
-      activeExercises: activeExercises,
+    _selectedRoutine = routine.copyWith(activeExercises: activeExercises);
+  }
+
+  void reorderExercises(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) newIndex--;
+
+    final exercises = _selectedRoutine.activeExercises.entries.toList();
+
+    final exercise = exercises.removeAt(oldIndex);
+    exercises.insert(newIndex, exercise);
+
+    _selectedRoutine = _selectedRoutine.copyWith(
+      activeExercises: Map.fromIterable(
+        exercises,
+        key: (exercise) => (exercise as MapEntry<String, List<ActiveSet>>).key,
+        value: (exercise) => (exercise as MapEntry<String, List<ActiveSet>>).value,
+      ),
     );
   }
 

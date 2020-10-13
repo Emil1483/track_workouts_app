@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
@@ -25,6 +26,8 @@ class CreateExerciseViewmodel extends BaseModel {
                 ))
             .toList()
               ..sort((a, b) {
+                if (oldExercise == null) return 0;
+
                 int indexA = oldExercise.attributes.indexOf(a.name);
                 int indexB = oldExercise.attributes.indexOf(b.name);
 

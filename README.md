@@ -50,7 +50,7 @@
   - [x] fix bad date
   - [x] fix number of sets not updating
   - [x] fix attributes in wrong order
-  - [ ] add ability to switch routine
+  - [x] add ability to switch routine
   - [ ] add ability to add exercise to existing routine
   - [x] redo choose routine page
   - [ ] create time panel wrapper widget with time service that is used on more routes

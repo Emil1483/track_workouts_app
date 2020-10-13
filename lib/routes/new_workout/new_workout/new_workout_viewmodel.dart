@@ -4,19 +4,21 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/handlers/router.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
+import 'package:track_workouts/routes/new_workout/choose_routine/choose_routine_route.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_route.dart';
 import 'package:track_workouts/style/theme.dart';
 
 class NewWorkoutViewmodel extends BaseModel {
   final RoutinesService routinesService;
   final NewWorkoutService newWorkoutService;
-  final List<MapEntry<String, List<ActiveSet>>> _activeExercises;
 
   NewWorkoutViewmodel({@required this.newWorkoutService, @required this.routinesService})
-      : _activeExercises = newWorkoutService.selectedRoutine.activeExercises.entries.toList(),
-        assert(newWorkoutService.selectedRoutine != null);
+      : assert(newWorkoutService.selectedRoutine != null) {
+    newWorkoutService.updateCurrentRoutine();
+  }
 
-  List<MapEntry<String, List<ActiveSet>>> get activeExercises => _activeExercises.copy();
+  List<MapEntry<String, List<ActiveSet>>> get activeExercises =>
+      newWorkoutService.selectedRoutine.activeExercises.entries.toList();
 
   String get routineName => newWorkoutService.selectedRoutine.name;
 
@@ -25,32 +27,14 @@ class NewWorkoutViewmodel extends BaseModel {
   Future<void> goToDetails(Exercise exercise) async {
     await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);
 
-    final index = _activeExercises.indexWhere((activeExercise) => activeExercise.key == exercise.id);
-    _activeExercises[index] = _activeExercises[index].copyWithSets(newWorkoutService.getActiveSets(exerciseId: exercise.id));
-    
     notifyListeners();
   }
+
+  void switchWorkout() => Router.pushReplacementNamed(ChooseRoutineRoute.routeName);
 
   void reorderExercises(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) newIndex--;
-
-    final exercise = _activeExercises.removeAt(oldIndex);
-    _activeExercises.insert(newIndex, exercise);
-
+    newWorkoutService.reorderExercises(oldIndex, newIndex);
     notifyListeners();
-  }
-}
-
-extension on List<MapEntry<String, List<ActiveSet>>> {
-  List<MapEntry<String, List<ActiveSet>>> copy() => List.generate(length, (index) {
-        final entry = this[index];
-        return MapEntry(entry.key, entry.value.copy());
-      });
-}
-
-extension on MapEntry<String, List<ActiveSet>> {
-  MapEntry<String, List<ActiveSet>> copyWithSets(List<ActiveSet> sets) {
-    return MapEntry(key, sets);
   }
 }
 
@@ -58,7 +42,7 @@ enum Progress { not_started, started, completed }
 
 extension ExerciseMapEntry on MapEntry<String, List<ActiveSet>> {
   Progress getProgress(int maxSets) {
-    final activeSets = value.where((activeSet) => activeSet.checked);
+    final activeSets = value.whereChecked;
     if (activeSets.isEmpty) return Progress.not_started;
     if (activeSets.length >= maxSets) return Progress.completed;
     return Progress.started;

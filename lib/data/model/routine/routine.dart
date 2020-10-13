@@ -6,6 +6,7 @@ import 'package:track_workouts/utils/list_utils.dart';
 import 'package:uuid/uuid.dart';
 
 class Routine {
+  final String id;
   final String name;
   final List<String> exerciseIds;
   final String image;
@@ -13,11 +14,13 @@ class Routine {
   final Map<String, List<ActiveSet>> _activeExercises;
 
   Routine({
+    @required String id,
     @required this.name,
     @required this.exerciseIds,
     @required this.image,
     Map<String, List<ActiveSet>> activeExercises,
-  }) : _activeExercises = activeExercises ?? buildActiveExercises(exerciseIds);
+  })  : _activeExercises = activeExercises ?? buildActiveExercises(exerciseIds),
+        id = id ?? Uuid().v1();
 
   static Map<String, List<ActiveSet>> buildActiveExercises(List<String> exerciseIds) {
     return Map.fromIterable(
@@ -61,11 +64,12 @@ class Routine {
     activeSets.insert(index, activeSet);
   }
 
-  Routine copy() => Routine(
-        name: name,
-        exerciseIds: exerciseIds.copy(),
-        image: image,
-        activeExercises: _activeExercises.copy(),
+  Routine copyWith({String name, List<String> exerciseIds, Map<String, List<ActiveSet>> activeExercises, String id}) => Routine(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        exerciseIds: exerciseIds ?? this.exerciseIds.copy(),
+        image: image ?? this.image,
+        activeExercises: activeExercises ?? _activeExercises.copy(),
       );
 }
 
@@ -75,10 +79,26 @@ extension ActiveExercises on Map<String, List<ActiveSet>> {
         key: (entry) => (entry as MapEntry<String, List<ActiveSet>>).key,
         value: (entry) => (entry as MapEntry<String, List<ActiveSet>>).value.copy(),
       );
+
+  Map<String, List<ActiveSet>> merge(Map<String, List<ActiveSet>> other) {
+    final result = this.copy();
+
+    other.forEach((key, value) {
+      if (result.containsKey(key)) return;
+      result[key] = value;
+    });
+
+    forEach((key, value) {
+      if (other.containsKey(key)) return;
+      if (result[key].whereChecked.isEmpty) result.remove(key);
+    });
+
+    return result;
+  }
 }
 
 extension Routines on List<Routine> {
-  List<Routine> copy() => List.generate(length, (i) => this[i].copy());
+  List<Routine> copy() => List.generate(length, (i) => this[i].copyWith());
 }
 
 class Exercise {
@@ -153,6 +173,8 @@ class ActiveSet {
 
 extension ActiveSets on List<ActiveSet> {
   List<ActiveSet> copy() => List.generate(length, (index) => this[index].copy());
+
+  List<ActiveSet> get whereChecked => this.where((activeSet) => activeSet._checked).toList();
 }
 
 extension AttributesExtension on Map<AttributeName, double> {

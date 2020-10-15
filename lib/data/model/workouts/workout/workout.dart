@@ -1,5 +1,6 @@
 import 'package:angel_serialize/angel_serialize.dart';
 import 'package:track_workouts/utils/string_utils.dart';
+import 'package:track_workouts/utils/num_utils.dart';
 
 part 'workout.g.dart';
 
@@ -71,7 +72,7 @@ extension Attribute on MapEntry<AttributeName, double> {
   String get valueString {
     switch (key.unit) {
       case Unit.kg:
-        return value.toStringAsFixed(1);
+        return value.withMaxTwoDecimals;
       case Unit.s:
         return value.round().toString();
     }

@@ -9,6 +9,7 @@ import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_dialog.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
+import 'package:track_workouts/utils/num_utils.dart';
 
 class NewExerciseDetailsViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey();
@@ -39,7 +40,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         final attributes = activeSet?.attributes;
         final attribute = attributes == null ? null : attributes[attributeName];
         final value = attribute ?? prefs.getDouble(attributeName.string);
-        return TextEditingController(text: value?.toString());
+        return TextEditingController(text: value?.withMaxTwoDecimals);
       },
     );
 
@@ -137,7 +138,9 @@ class NewExerciseDetailsViewmodel extends BaseModel {
     _controllers.forEach((attributeName, controller) {
       final value = activeSet.attributes[attributeName];
       if (value != null) {
-        controller.text = activeSet.attributes[attributeName].toString();
+        controller.text = value.withMaxTwoDecimals;
+      } else {
+        controller.clear();
       }
     });
     notifyListeners();

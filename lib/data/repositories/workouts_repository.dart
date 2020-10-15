@@ -37,7 +37,9 @@ class WorkoutsRepository {
         activeSets.forEach((activeSet) {
           final mySet = activeSet.attributes.map((name, value) => MapEntry(name.string.underscoreToCamelcase, value));
 
-          mySet.removeWhere((name, value) => value == null);
+          mySet.removeWhere(
+            (name, value) => value == null || name == AttributeName.pre_break.string.underscoreToCamelcase && value == 0,
+          );
 
           if (mySet.isNotEmpty) sets.add(mySet);
         });

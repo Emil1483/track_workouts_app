@@ -6,18 +6,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/time_panel_service.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 
 class TimerViewmodel extends BaseModel {
-  final NewExerciseDetailsViewmodel model;
+  final TimePanelService timePanelService;
+  final NewExerciseDetailsViewmodel newExerciseDetailsViewmodel;
 
   Duration _currentTime = Duration();
   Timer _timer;
   DateTime _timerStart;
 
-  TimerViewmodel(BuildContext context) : model = Provider.of<NewExerciseDetailsViewmodel>(context, listen: false);
+  TimerViewmodel(BuildContext context)
+      : timePanelService = Provider.of<TimePanelService>(context, listen: false),
+        newExerciseDetailsViewmodel = Provider.of<NewExerciseDetailsViewmodel>(context, listen: false);
 
   PickedTime get currentTime => PickedTime.fromDuration(_currentTime);
 
@@ -50,8 +54,8 @@ class TimerViewmodel extends BaseModel {
   }
 
   void cancelTimer() {
-    if (model.modifyIfPossible(currentTime.inSeconds.toDouble(), AttributeName.time)) {
-      model.panelController.close();
+    if (newExerciseDetailsViewmodel.modifyIfPossible(currentTime.inSeconds.toDouble(), AttributeName.time)) {
+      timePanelService.panelController.close();
     }
     _currentTime = Duration();
     _timer?.cancel();

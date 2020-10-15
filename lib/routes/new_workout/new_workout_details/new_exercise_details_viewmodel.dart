@@ -6,14 +6,12 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
-import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_dialog.dart';
 import 'package:track_workouts/utils/validation_utils.dart';
 import 'package:track_workouts/utils/num_utils.dart';
 
 class NewExerciseDetailsViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey();
-  final PanelController panelController = PanelController();
 
   final NewWorkoutService newWorkoutService;
   final Exercise exercise;

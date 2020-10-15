@@ -4,12 +4,16 @@ import 'package:track_workouts/data/api/workouts_api_service.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
+import 'package:track_workouts/data/services/time_panel_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 
 List<SingleChildWidget> getProviders() {
   final workoutsService = WorkoutsService(WorkoutsRepository(WorkoutsApiService.create()));
   final routinesService = RoutinesService();
   return [
+    Provider<TimePanelService>(
+      create: (_) => TimePanelService(),
+    ),
     Provider<WorkoutsService>(
       create: (_) => workoutsService,
       dispose: (_, service) => service.dispose(),

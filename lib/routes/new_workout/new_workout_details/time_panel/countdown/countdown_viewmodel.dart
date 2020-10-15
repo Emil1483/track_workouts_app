@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
+import 'package:track_workouts/data/services/time_panel_service.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/ui_elements/time_picker/time_picker_viewmodel.dart';
@@ -12,13 +13,18 @@ class CountdownViewmodel extends BaseModel {
   final AudioCache _player = AudioCache(prefix: 'assets/sounds/');
 
   final TimePickerViewmodel timePickerModel;
+  final TimePanelService timePanelService;
+  final NewExerciseDetailsViewmodel newExerciseDetailsViewmodel;
 
   AnimationController _controller;
 
   PickedTime _pickedTime;
   double _timePickerHeight;
 
-  CountdownViewmodel({@required double timePickerHeight}) : timePickerModel = TimePickerViewmodel(height: timePickerHeight);
+  CountdownViewmodel(BuildContext context, {@required double timePickerHeight})
+      : timePanelService = Provider.of<TimePanelService>(context),
+        timePickerModel = TimePickerViewmodel(height: timePickerHeight),
+        newExerciseDetailsViewmodel = Provider.of<NewExerciseDetailsViewmodel>(context);
 
   PickedTime get pickedTime => _pickedTime?.copy();
 
@@ -35,12 +41,12 @@ class CountdownViewmodel extends BaseModel {
   void addSpinnerListener() => timePickerModel.addListener(notifyListeners);
 
   void buildAnimationController(BuildContext context, {@required TickerProvider vsync}) {
-    final model = Provider.of<NewExerciseDetailsViewmodel>(context, listen: false);
     _controller = AnimationController(vsync: vsync);
+
     _controller.addListener(() async {
       if (_controller.value == 1) {
-        if (model.modifyIfPossible(_pickedTime.inSeconds.toDouble(), AttributeName.pre_break)) {
-          model.panelController.close();
+        if (newExerciseDetailsViewmodel.modifyIfPossible(_pickedTime.inSeconds.toDouble(), AttributeName.pre_break)) {
+          timePanelService.panelController.close();
         }
 
         await _player.play('done.mp3');

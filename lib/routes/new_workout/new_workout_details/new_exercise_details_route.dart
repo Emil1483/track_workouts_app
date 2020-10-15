@@ -12,8 +12,6 @@ import 'package:track_workouts/ui_elements/confirm_dialog.dart';
 import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 import 'package:track_workouts/ui_elements/main_text_field.dart';
-import 'package:track_workouts/ui_elements/panel.dart';
-import 'package:track_workouts/ui_elements/panel_header.dart';
 import 'package:track_workouts/ui_elements/set_widget.dart';
 import 'package:track_workouts/utils/error_mixins.dart';
 import 'package:track_workouts/utils/map_utils.dart';
@@ -70,28 +68,13 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
         }
         setWidgets.add(SizedBox(height: 64.0));
 
-        final panelHeight = 52.0;
-        final borderRadius = 18.0;
-
         return Scaffold(
           appBar: AppBar(title: AutoSizeText(exercise.name, maxLines: 1)),
-          body: SlidingUpPanel(
-            controller: model.panelController,
-            color: AppColors.black950,
-            minHeight: panelHeight,
-            parallaxEnabled: true,
-            backdropTapClosesPanel: true,
-            backdropEnabled: true,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(borderRadius)),
-            header: PanelHeader(),
-            body: Padding(
-              padding: EdgeInsets.only(bottom: panelHeight - borderRadius),
-              child: ListView(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
-                children: setWidgets,
-              ),
+          body: TimePanelWrapper(
+            child: ListView(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              children: setWidgets,
             ),
-            panel: TimePanel(),
           ),
         );
       },

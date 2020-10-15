@@ -23,7 +23,10 @@ class _CountdownTabState extends State<CountdownTab> with SingleTickerProviderSt
   Widget build(BuildContext context) {
     super.build(context);
     return BaseWidget<CountdownViewmodel>(
-      model: CountdownViewmodel(timePickerHeight: TimePicker.defaultHeight),
+      model: CountdownViewmodel(
+        context,
+        timePickerHeight: TimePicker.defaultHeight,
+      ),
       onModelReady: (model) {
         model.buildAnimationController(context, vsync: this);
         model.addSpinnerListener();

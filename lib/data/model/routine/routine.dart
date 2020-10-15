@@ -112,8 +112,8 @@ class Exercise {
   Exercise({@required this.name, @required this.attributes, @required this.numberOfSets, String id})
       : this.id = id ?? Uuid().v1();
 
-  List<AttributeName> get oneOf {
-    final result = attributes.where((attribute) => AttributeNameExtension.oneOf.contains(attribute)).toList();
+  List<AttributeName> get optionalOneOf {
+    final result = attributes.where((attribute) => AttributeNameExtension.optionalOneOf.contains(attribute)).toList();
     return result.length <= 1 ? null : result;
   }
 
@@ -155,17 +155,15 @@ class ActiveSet {
   }
 
   void checkOk() {
-    final oneOf = exercise.oneOf;
+    final oneOf = exercise.optionalOneOf;
+
+    if (!attributes.maxOneOf(oneOf)) {
+      throw Failure('${oneOf.format((name) => name.formattedString)} cannot be submitted together');
+    }
+
     attributes.forEach((name, value) {
-      if (oneOf?.contains(name) ?? false) {
-        if (attributes.allAreNull(oneOf)) {
-          throw Failure('You must also submit either ${oneOf.format((name) => name.formattedString, 'or')}');
-        }
-        if (!attributes.onlyOneOf(oneOf)) {
-          throw Failure('${oneOf.format((name) => name.formattedString)} cannot be submitted together');
-        }
-        return;
-      }
+      if (oneOf?.contains(name) ?? false) return;
+
       if (value == null) throw Failure('${name.formattedString} is required');
     });
   }
@@ -179,13 +177,6 @@ extension ActiveSets on List<ActiveSet> {
   List<ActiveSet> get whereChecked => this.where((activeSet) => activeSet._checked).toList();
 }
 
-extension AttributesExtension on Map<AttributeName, double> {
-  bool allAreNull(List<AttributeName> names) {
-    for (final name in names) {
-      if (this[name] != null) return false;
-    }
-    return true;
-  }
-
-  bool onlyOneOf(List<AttributeName> names) => names.onlyOneWhere((name) => this[name] != null);
+extension on Map<AttributeName, double> {
+  bool maxOneOf(List<AttributeName> names) => names.oneOrLessWhere((name) => this[name] != null);
 }

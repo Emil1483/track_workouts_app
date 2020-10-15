@@ -57,7 +57,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       if (numberValidation != null) return Validation.mustBeNumber(value);
     }
 
-    if (!(exercise.oneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
+    if (!(exercise.optionalOneOf?.contains(name) ?? false)) return Validation.mustBeNumber(value);
 
     return null;
   }

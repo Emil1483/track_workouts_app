@@ -17,7 +17,7 @@ extension ListUtils<U> on List<U> {
     return result;
   }
 
-  bool onlyOneWhere(bool Function(U) predicate) {
+  bool _onlyOneWhere(bool Function(U) predicate, {bool orLess = false}) {
     bool foundOne = false;
     for (final element in this) {
       if (predicate(element)) {
@@ -25,8 +25,12 @@ extension ListUtils<U> on List<U> {
         foundOne = true;
       }
     }
-    return foundOne;
+    return orLess ? true : foundOne;
   }
+
+  bool onlyOneWhere(bool Function(U) predicate) => _onlyOneWhere(predicate);
+
+  bool oneOrLessWhere(bool Function(U) predicate) => _onlyOneWhere(predicate, orLess: true);
 
   Map<String, U> toMap() {
     return Map.fromIterable(

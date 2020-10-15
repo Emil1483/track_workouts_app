@@ -30,7 +30,7 @@ AttributeName _getAttributeEnum(String string) {
   return AttributeName.values.firstWhere((name) => name.string == formattedString);
 }
 
-enum AttributeName { reps, weight, pre_break, body_mass, band_level, time }
+enum AttributeName { pre_break, reps, weight, band_level, time, body_mass }
 
 enum Unit { kg, s }
 
@@ -41,7 +41,7 @@ extension AttributeNameExtension on AttributeName {
 
   static const List<AttributeName> repeatingAttributes = [AttributeName.body_mass];
 
-  static const List<AttributeName> oneOf = [AttributeName.weight, AttributeName.band_level];
+  static const List<AttributeName> optionalOneOf = [AttributeName.weight, AttributeName.band_level];
 
   static AttributeName fromString(String string) {
     return AttributeName.values.firstWhere((attributeName) => attributeName.toString() == string);

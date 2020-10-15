@@ -37,7 +37,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
       value: (name) {
         final attributeName = name as AttributeName;
         final attributes = activeSet?.attributes;
-        final value = attributes == null ? prefs.getDouble(attributeName.string) : attributes[attributeName];
+        final attribute = attributes == null ? null : attributes[attributeName];
+        final value = attribute ?? prefs.getDouble(attributeName.string);
         return TextEditingController(text: value?.toString());
       },
     );

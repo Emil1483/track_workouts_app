@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
+import 'package:track_workouts/data/services/time_panel_service.dart';
 import 'package:track_workouts/handlers/error/error_handler.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/routes/base/base_model.dart';
@@ -14,18 +16,29 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   final GlobalKey<FormState> formKey = GlobalKey();
 
   final NewWorkoutService newWorkoutService;
+  final TimePanelService timePanelService;
   final Exercise exercise;
   final void Function(String) onError;
 
   Map<AttributeName, TextEditingController> _controllers;
 
-  NewExerciseDetailsViewmodel({@required this.newWorkoutService, @required this.exercise, @required this.onError});
+  NewExerciseDetailsViewmodel(BuildContext context, {@required this.exercise, @required this.onError})
+      : newWorkoutService = Provider.of<NewWorkoutService>(context),
+        timePanelService = Provider.of<TimePanelService>(context) {
+    timePanelService.addListener(_updatePreBreak);
+  }
 
   List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id).copy();
 
   TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
 
   ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseId: exercise.id);
+
+  void _updatePreBreak() {
+    if (modifyIfPossible(timePanelService.countdownTime.inSeconds.toDouble(), AttributeName.pre_break)) {
+      timePanelService.panelController.close();
+    }
+  }
 
   Future<void> buildTextControllers() async {
     final activeSet = newWorkoutService.tryGetActiveSet(exerciseId: exercise.id);
@@ -158,5 +171,11 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         onSuccess: (_) {},
       );
     });
+  }
+
+  @override
+  void dispose() {
+    timePanelService.removeListener(_updatePreBreak);
+    super.dispose();
   }
 }

@@ -3,7 +3,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
-import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
@@ -29,14 +28,15 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
     super.build(context);
     return BaseWidget<NewExerciseDetailsViewmodel>(
       model: NewExerciseDetailsViewmodel(
+        context,
         exercise: exercise,
         onError: onError,
-        newWorkoutService: Provider.of<NewWorkoutService>(context),
       ),
       onModelReady: (model) async {
         model.initializeActiveSets();
         await model.buildTextControllers();
       },
+      onDispose: (model) => model.dispose(),
       builder: (context, model, child) {
         final List<Widget> setWidgets = [];
         for (int i = 0; i < model.activeSets.length; i++) {

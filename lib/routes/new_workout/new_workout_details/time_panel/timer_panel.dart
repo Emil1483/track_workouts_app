@@ -14,8 +14,14 @@ class TimePanel extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                CountdownTab(),
-                Timer(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 52.0),
+                  child: CountdownTab(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 52.0),
+                  child: Timer(),
+                ),
               ],
             ),
           ),

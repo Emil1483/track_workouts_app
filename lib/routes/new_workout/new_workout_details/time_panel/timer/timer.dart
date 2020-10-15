@@ -21,39 +21,34 @@ class _TimerState extends State<Timer> with AutomaticKeepAliveClientMixin {
     return BaseWidget<TimerViewmodel>(
       model: TimerViewmodel(context),
       onDispose: (model) => model.dispose(),
-      builder: (context, model, child) => Center(
-        child: SizedBox(
-          width: 256.0,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: 196.0,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(top: _radius),
-                  border: Border.all(
-                    color: model.borderColor,
-                    width: model.borderWidth,
-                  ),
-                  color: AppColors.black900,
-                ),
-                child: Text(model.currentTime.toString(), style: getTextStyle(TextStyles.h0)),
+      builder: (context, model, child) => Column(
+        children: <Widget>[
+          Container(
+            height: 196.0,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(top: _radius),
+              border: Border.all(
+                color: model.borderColor,
+                width: model.borderWidth,
               ),
-              MainButton(
-                texts: [
-                  model.isTiming ? 'Stop' : 'Start',
-                  if (model.hasStarted) 'Cancel',
-                ],
-                onTaps: [
-                  model.startStopTimer,
-                  if (model.hasStarted) model.cancelTimer,
-                ],
-                borderRadius: BorderRadius.vertical(bottom: _radius),
-                primaryColor: model.hasStarted,
-              ),
-            ],
+              color: AppColors.black900,
+            ),
+            child: Text(model.currentTime.toString(), style: getTextStyle(TextStyles.h0)),
           ),
-        ),
+          MainButton(
+            texts: [
+              model.isTiming ? 'Stop' : 'Start',
+              if (model.hasStarted) 'Cancel',
+            ],
+            onTaps: [
+              model.startStopTimer,
+              if (model.hasStarted) model.cancelTimer,
+            ],
+            borderRadius: BorderRadius.vertical(bottom: _radius),
+            primaryColor: model.hasStarted,
+          ),
+        ],
       ),
     );
   }

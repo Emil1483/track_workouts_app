@@ -34,7 +34,7 @@
     - [x] add auto fill
   - [x] push workout to database
   - [x] fetch todays workout and put it as current routine
-  - [ ] add build custom routine page
+  - [x] add build custom routine page
     - [x] hook up the save button
     - [x] use routine service in route
     - [x] add edit functionality

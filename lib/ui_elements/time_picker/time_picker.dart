@@ -53,12 +53,10 @@ class TimePicker extends StatelessWidget {
 
   final TimePickerViewmodel model;
   final double height;
-  final double width;
 
   TimePicker({
     @required this.model,
     this.height = defaultHeight,
-    this.width = 256.0,
   });
 
   @override
@@ -67,7 +65,6 @@ class TimePicker extends StatelessWidget {
       model: model,
       builder: (context, model, child) => Container(
         height: height,
-        width: width,
         padding: EdgeInsets.symmetric(horizontal: 32.0),
         child: Row(
           children: [

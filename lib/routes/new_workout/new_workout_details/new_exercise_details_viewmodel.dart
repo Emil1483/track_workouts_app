@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
@@ -25,7 +26,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   NewExerciseDetailsViewmodel(BuildContext context, {@required this.exercise, @required this.onError})
       : newWorkoutService = Provider.of<NewWorkoutService>(context),
         timePanelService = Provider.of<TimePanelService>(context) {
-    timePanelService.addListener(_updatePreBreak);
+    timePanelService.addCountdownListener(_updatePreBreak);
+    timePanelService.addTimerListener(_updateTime);
   }
 
   List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id).copy();
@@ -34,8 +36,14 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseId: exercise.id);
 
-  void _updatePreBreak() {
-    if (modifyIfPossible(timePanelService.countdownTime.inSeconds.toDouble(), AttributeName.pre_break)) {
+  void _updatePreBreak(PickedTime pickedTime) {
+    if (modifyIfPossible(pickedTime.inSeconds.toDouble(), AttributeName.pre_break)) {
+      timePanelService.panelController.close();
+    }
+  }
+
+  void _updateTime(Duration duration) {
+    if (modifyIfPossible(duration.inSeconds.toDouble(), AttributeName.time)) {
       timePanelService.panelController.close();
     }
   }
@@ -175,7 +183,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   @override
   void dispose() {
-    timePanelService.removeListener(_updatePreBreak);
+    timePanelService.removeCountdownListener(_updatePreBreak);
+    timePanelService.removeTimerListener(_updateTime);
     super.dispose();
   }
 }

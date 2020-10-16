@@ -39,7 +39,7 @@ class _TimerState extends State<Timer> with AutomaticKeepAliveClientMixin {
           MainButton(
             texts: [
               model.isTiming ? 'Stop' : 'Start',
-              if (model.hasStarted) 'Cancel',
+              if (model.hasStarted) 'Done',
             ],
             onTaps: [
               model.startStopTimer,

@@ -11,7 +11,7 @@ List<SingleChildWidget> getProviders() {
   final workoutsService = WorkoutsService(WorkoutsRepository(WorkoutsApiService.create()));
   final routinesService = RoutinesService();
   return [
-    ChangeNotifierProvider<TimePanelService>(
+    Provider<TimePanelService>(
       create: (_) => TimePanelService(),
     ),
     Provider<WorkoutsService>(

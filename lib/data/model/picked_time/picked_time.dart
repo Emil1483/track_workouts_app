@@ -17,6 +17,8 @@ class PickedTime {
 
   int get inSeconds => minutes * 60 + seconds;
 
+  int get inMilliseconds => inSeconds * 1000;
+
   Duration get toDuration => Duration(minutes: minutes, seconds: seconds);
 
   PickedTime operator *(double value) {

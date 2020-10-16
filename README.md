@@ -53,5 +53,5 @@
   - [x] add ability to switch routine
   - [x] add ability to add exercise to existing routine
   - [x] redo choose routine page
-  - [ ] create time panel wrapper widget with time service that is used on more routes
+  - [x] create time panel service that keeps continuity
   - [ ] add suggested weight header

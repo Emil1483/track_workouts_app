@@ -33,9 +33,11 @@ class TimerViewmodel extends BaseModel {
 
   double get borderWidth => lerpDouble(1, 4, _periodicValue);
 
+  Duration get _perfectCurrentTime => DateTime.now().difference(_timerStart);
+
   void startStopTimer() {
     if (isTiming) {
-      _currentTime = DateTime.now().difference(_timerStart);
+      _currentTime = _perfectCurrentTime;
       _timer.cancel();
       _timer = null;
     } else {
@@ -49,7 +51,7 @@ class TimerViewmodel extends BaseModel {
   }
 
   void cancelTimer() {
-    timePanelService.notifyListeners();
+    timePanelService.onTimerCancelled(_perfectCurrentTime);
     _currentTime = Duration();
     _timer?.cancel();
     _timer = null;

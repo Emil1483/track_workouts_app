@@ -1,3 +1,5 @@
+import 'package:track_workouts/data/model/picked_time/picked_time.dart';
+
 extension DurationUtils on Duration {
   String get formatMinuteSeconds {
     if (inSeconds == 0) return null;
@@ -15,9 +17,12 @@ extension DurationUtils on Duration {
   }
 
   String get breakText {
-    
     final minuteSeconds = formatMinuteSeconds;
     if (minuteSeconds == null) return 'no break';
     return '$minuteSeconds break';
   }
+
+  double operator /(PickedTime pickedTime) => inMilliseconds / pickedTime.inMilliseconds;
+
+  Duration copy() => Duration(microseconds: inMicroseconds);
 }

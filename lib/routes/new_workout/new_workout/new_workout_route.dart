@@ -6,7 +6,6 @@ import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout/new_workout_viewmodel.dart';
-import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer_panel.dart';
 import 'package:track_workouts/ui_elements/add_exercise_sheet.dart';
 import 'package:track_workouts/ui_elements/dismiss_background.dart';
 import 'package:track_workouts/ui_elements/list_element.dart';
@@ -43,13 +42,11 @@ class NewWorkoutRoute extends StatelessWidget {
           ),
           child: Icon(Icons.add),
         ),
-        body: TimePanelWrapper(
-          child: ReorderableListView(
-            onReorder: model.reorderExercises,
-            children: [
-              for (final exercise in model.activeExercises) _buildExerciseWidget(context, exercise),
-            ],
-          ),
+        body: ReorderableListView(
+          onReorder: model.reorderExercises,
+          children: [
+            for (final exercise in model.activeExercises) _buildExerciseWidget(context, exercise),
+          ],
         ),
       ),
     );

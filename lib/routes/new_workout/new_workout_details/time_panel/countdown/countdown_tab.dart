@@ -29,49 +29,47 @@ class _CountdownTabState extends State<CountdownTab> with SingleTickerProviderSt
       ),
       onModelReady: (model) {
         model.addSpinnerListener();
+        model.buildAnimationController(vsync: this);
       },
       onDispose: (model) => model.dispose(),
-      builder: (context, model, child) {
-        model.buildAnimationController(vsync: this);
-        return Column(
-          children: [
-            Stack(
-              children: [
-                Opacity(
-                  opacity: model.selectingTime ? 1.0 : 0.0,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(top: _radius),
-                      border: Border.all(color: AppColors.accent),
-                      color: AppColors.black900,
-                    ),
-                    child: TimePicker(model: model.timePickerModel),
+      builder: (context, model, child) => Column(
+        children: [
+          Stack(
+            children: [
+              Opacity(
+                opacity: model.selectingTime ? 1.0 : 0.0,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.vertical(top: _radius),
+                    border: Border.all(color: AppColors.accent),
+                    color: AppColors.black900,
                   ),
+                  child: TimePicker(model: model.timePickerModel),
                 ),
-                if (!model.selectingTime)
-                  Positioned.fill(
-                    child: AnimatedBuilder(
-                      animation: model.controller,
-                      builder: (context, child) => CustomPaint(
-                        painter: _CountdownPainter(value: 1 - model.countdownValue),
-                        child: Center(
-                          child: Text((model.pickedTime * model.countdownValue).toString(), style: getTextStyle(TextStyles.h0)),
-                        ),
+              ),
+              if (!model.selectingTime)
+                Positioned.fill(
+                  child: AnimatedBuilder(
+                    animation: model.controller,
+                    builder: (context, child) => CustomPaint(
+                      painter: _CountdownPainter(value: 1 - model.countdownValue),
+                      child: Center(
+                        child: Text((model.pickedTime * model.countdownValue).toString(), style: getTextStyle(TextStyles.h0)),
                       ),
                     ),
                   ),
-              ],
-            ),
-            MainButton(
-              texts: model.selectingTime ? ['Start'] : [model.isCountingDown ? 'Stop' : 'Continue', 'Cancel'],
-              onTaps: model.selectingTime ? [model.startCountdown] : [model.startStopCountdown, model.cancelCountdown],
-              primaryColor: !model.selectingTime,
-              borderRadius: BorderRadius.vertical(bottom: _radius),
-              disabled: model.pickedTimeNotSelected,
-            ),
-          ],
-        );
-      },
+                ),
+            ],
+          ),
+          MainButton(
+            texts: model.selectingTime ? ['Start'] : [model.isCountingDown ? 'Stop' : 'Continue', 'Cancel'],
+            onTaps: model.selectingTime ? [model.startCountdown] : [model.startStopCountdown, model.cancelCountdown],
+            primaryColor: !model.selectingTime,
+            borderRadius: BorderRadius.vertical(bottom: _radius),
+            disabled: model.pickedTimeNotSelected,
+          ),
+        ],
+      ),
     );
   }
 }

@@ -27,7 +27,10 @@ class NewWorkoutViewmodel extends BaseModel {
 
   List<Exercise> get notIncludedExercises => newWorkoutService.notActiveExercises;
 
-  void createNewExercise() => Router.pushNamed(CreateExerciseRoute.routeName);
+  Future<void> createNewExercise() async {
+    Router.pushNamed(CreateExerciseRoute.routeName);
+    notifyListeners();
+  }
 
   void addExercise(Exercise exercise) {
     newWorkoutService.addExerciseToActiveExercises(exercise);

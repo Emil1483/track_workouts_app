@@ -31,6 +31,8 @@ class CountdownViewmodel extends BaseModel {
   void addSpinnerListener() => timePickerModel.addListener(notifyListeners);
 
   void buildAnimationController({@required TickerProvider vsync}) {
+    timePanelService.cancelAlarm();
+
     if (_controller != null) return;
     _controller = AnimationController(vsync: vsync);
 
@@ -61,7 +63,7 @@ class CountdownViewmodel extends BaseModel {
         timePanelService.countdownTime = null;
         notifyListeners();
 
-        await timePanelService.player.play('done.mp3');
+        await timePanelService.playDoneSound();
       }
     });
   }
@@ -95,16 +97,23 @@ class CountdownViewmodel extends BaseModel {
   void dispose() {
     final countdownTime = timePanelService.countdownTime;
     if (countdownTime != null) {
+      final leftOfCountdown = countdownTime.toDuration * countdownValue;
+      final stopped = !_controller.isAnimating;
+
+      if (!stopped) timePanelService.setAlarm(leftOfCountdown);
+
       timePanelService.saveCountdown(
         SavedCountdown(
           countdownTime: countdownTime,
-          leftOfCountdown: countdownTime.toDuration * countdownValue,
+          leftOfCountdown: leftOfCountdown,
           countdownDisposedAt: DateTime.now(),
-          stopped: !_controller.isAnimating,
+          stopped: stopped,
         ),
       );
     }
+
     _controller.dispose();
+
     super.dispose();
   }
 }

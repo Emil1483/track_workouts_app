@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
@@ -37,6 +39,11 @@ class TimePanelService {
 
   SavedCountdown _savedCountdown;
   PickedTime _countdownTime;
+  Timer _timer;
+
+  Future<void> playDoneSound() async {
+    await player.play('done.mp3');
+  }
 
   void addCountdownListener(void Function(PickedTime) listener) {
     _countdownListeners.add(listener);
@@ -75,4 +82,14 @@ class TimePanelService {
   void saveCountdown(SavedCountdown countdown) => _savedCountdown = countdown;
 
   void deleteSavedCountdown() => _savedCountdown = null;
+
+  void setAlarm(Duration duration) {
+    _timer = Timer(duration, () async {
+      await playDoneSound();
+    });
+  }
+
+  void cancelAlarm() {
+    _timer?.cancel();
+  }
 }

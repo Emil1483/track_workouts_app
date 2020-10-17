@@ -32,6 +32,8 @@ class WorkoutsService {
     return id;
   }
 
+  List<Workout> getWorkoutsDuring(Week week) => workouts.where((workout) => week.contains(workout.date)).toList();
+
   void disposeListener(String id) => _listeners.removeWhere((listener) => listener.id == id);
 
   void _notifyListeners() => _listeners.forEach((listener) => listener.listener(listener.id));

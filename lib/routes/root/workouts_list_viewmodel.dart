@@ -17,10 +17,9 @@ class WorkoutsListViewmodel extends BaseModel {
     @required this.week,
   });
 
-  List<FormattedWorkout> get workouts => workoutsService.workouts
-      .where((workout) => week.contains(workout.date))
-      .map((workout) => FormattedWorkout.from(workout))
-      .toList();
+  List<FormattedWorkout> get workouts =>
+      workoutsService.getWorkoutsDuring(week).map((workout) => FormattedWorkout.from(workout)).toList();
+
   Failure get error => _failure.copy();
   bool get hasError => _failure != null;
 

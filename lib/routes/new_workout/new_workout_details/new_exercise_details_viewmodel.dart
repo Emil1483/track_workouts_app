@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:track_workouts/data/model/picked_time/picked_time.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
+import 'package:track_workouts/data/model/suggested_weight/suggested_weight.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/services/new_workout_service.dart';
 import 'package:track_workouts/data/services/time_panel_service.dart';
@@ -22,6 +23,7 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   final void Function(String) onError;
 
   Map<AttributeName, TextEditingController> _controllers;
+  SuggestedWeight _suggestedWeight;
 
   NewExerciseDetailsViewmodel(BuildContext context, {@required this.exercise, @required this.onError})
       : newWorkoutService = Provider.of<NewWorkoutService>(context),
@@ -35,6 +37,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
 
   ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseId: exercise.id);
+
+  SuggestedWeight get suggestedWeight => _suggestedWeight?.copy();
 
   void _updatePreBreak(PickedTime pickedTime) {
     if (modifyIfPossible(pickedTime.inSeconds.toDouble(), AttributeName.pre_break)) {
@@ -69,6 +73,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   void initializeActiveSets() {
     final activeSets = newWorkoutService.getActiveSets(exerciseId: exercise.id);
     if (activeSets.isEmpty) newWorkoutService.addActiveSet(exerciseId: exercise.id);
+  }
+
+  void getSuggestedWeight() {
+    _suggestedWeight = newWorkoutService.getSuggestedWeightFor(exerciseName: exercise.name);
   }
 
   String validateAttribute(AttributeName name, String value) {

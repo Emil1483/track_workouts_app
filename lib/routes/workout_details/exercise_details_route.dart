@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
@@ -21,9 +22,14 @@ class ExerciseDetailsRoute extends StatelessWidget {
       builder: (context, model, child) {
         final List<Widget> setWidgets = [];
         model.forEachFormattedSet((formattedSet, index) => setWidgets.add(SetWidget(attributes: formattedSet, index: index)));
-
         return Scaffold(
-          appBar: AppBar(title: Text(model.exercise.name)),
+          appBar: AppBar(
+            title: AutoSizeText(
+              model.exercise.name,
+              maxLines: 1,
+              minFontSize: 16.0,
+            ),
+          ),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             children: [

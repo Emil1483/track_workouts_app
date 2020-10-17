@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
+import 'package:track_workouts/data/model/suggested_weight/suggested_weight.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
+import 'package:track_workouts/utils/models/week.dart';
 
 class NewWorkoutService {
   final WorkoutsRepository _workoutsRepository;
@@ -30,6 +32,46 @@ class NewWorkoutService {
   List<Exercise> get notActiveExercises {
     final activeExerciseIds = _selectedRoutine.activeExercises.keys;
     return _routinesService.exercises.where((exercise) => !activeExerciseIds.contains(exercise.id)).toList();
+  }
+
+  SuggestedWeight getSuggestedWeightFor({@required String exerciseName}) {
+    final currentWeek = Week(DateTime.now());
+    final currentWeekWorkouts = _workoutsService.getWorkoutsDuring(currentWeek).reversed;
+
+    final previousWeek = Week(DateTime.now().subtract(Duration(days: 7)));
+    final previousWeekWorkouts = _workoutsService.getWorkoutsDuring(previousWeek).reversed;
+
+    int currentExerciseIndex = 0;
+    currentWeekWorkouts.forEach((workout) {
+      if (workout.date.isAtSameMomentAs(DateTime.now().flooredToDay)) return;
+
+      if (!workout.exercises.containsKey(exerciseName)) return;
+
+      currentExerciseIndex++;
+    });
+
+    int previousExerciseIndex = 0;
+    for (final workout in previousWeekWorkouts) {
+      if (workout.exercises.containsKey(exerciseName)) {
+        if (previousExerciseIndex >= currentExerciseIndex) {
+          return SuggestedWeight(workout.exercises[exerciseName].first[AttributeName.weight]);
+        }
+        previousExerciseIndex++;
+      }
+    }
+
+    int index = 0;
+    for (final workout in currentWeekWorkouts) {
+      if (!workout.exercises.containsKey(exerciseName)) continue;
+
+      if (index >= currentExerciseIndex - 1) {
+        return SuggestedWeight(workout.exercises[exerciseName].first[AttributeName.weight], isTooMuch: true);
+      }
+
+      index++;
+    }
+
+    return null;
   }
 
   void addExerciseToActiveExercises(Exercise exercise) {

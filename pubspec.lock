@@ -65,7 +65,7 @@ packages:
     source: hosted
     version: "0.16.1"
   auto_size_text:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: auto_size_text
       url: "https://pub.dartlang.org"
@@ -254,7 +254,7 @@ packages:
     source: hosted
     version: "0.3.4"
   easy_rich_text:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: easy_rich_text
       url: "https://pub.dartlang.org"
@@ -360,7 +360,7 @@ packages:
     source: hosted
     version: "3.1.4"
   intl:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: intl
       url: "https://pub.dartlang.org"

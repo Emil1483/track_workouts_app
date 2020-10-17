@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
+import 'package:track_workouts/data/model/suggested_weight/suggested_weight.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/new_exercise_details_viewmodel.dart';
@@ -34,6 +35,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
       ),
       onModelReady: (model) async {
         model.initializeActiveSets();
+        model.getSuggestedWeight();
         await model.buildTextControllers();
       },
       onDispose: (model) => model.dispose(),
@@ -73,12 +75,55 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
           body: TimePanelWrapper(
             child: ListView(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              children: setWidgets,
+              children: [
+                if (model.suggestedWeight != null) _SuggestedWeight(model.suggestedWeight),
+                ...setWidgets,
+              ],
             ),
           ),
         );
       },
     );
+  }
+}
+
+class _SuggestedWeight extends StatelessWidget {
+  final SuggestedWeight suggestedWeight;
+
+  const _SuggestedWeight(this.suggestedWeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+      child: Column(
+        children: [
+          Text(
+            'Suggested weight',
+            style: getTextStyle(TextStyles.subtitle1),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 6.0),
+          Text(
+            _weightSuggestion,
+            style: getTextStyle(TextStyles.caption),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 18.0),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 52.0),
+            child: Divider(thickness: 0.6),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String get _weightSuggestion {
+    String result = suggestedWeight.isTooMuch ? 'less than ' : '';
+    result += suggestedWeight.value.withMaxTwoDecimals;
+    result += ' kg';
+    return result;
   }
 }
 

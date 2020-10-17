@@ -11,14 +11,15 @@ class CountdownViewmodel extends BaseModel {
   final TimePanelService timePanelService;
 
   AnimationController _controller;
+  PickedTime _pickedTime;
 
   CountdownViewmodel(BuildContext context, {@required double timePickerHeight})
       : timePanelService = Provider.of<TimePanelService>(context, listen: false),
         timePickerModel = TimePickerViewmodel(height: timePickerHeight);
 
-  PickedTime get pickedTime => timePanelService.countdownTime;
+  PickedTime get pickedTime => _pickedTime?.copy();
 
-  bool get selectingTime => pickedTime == null;
+  bool get selectingTime => _pickedTime == null;
 
   bool get pickedTimeNotSelected => selectingTime && timePickerModel.selectedTime.isZero;
 
@@ -47,9 +48,11 @@ class CountdownViewmodel extends BaseModel {
       if (notStopped) timeLeft -= timeDifference;
 
       if (timeLeft.isNegative) {
-        timePanelService.countdownTime = null;
+        _pickedTime = null;
         return;
       }
+
+      _pickedTime = countdownData.countdownTime;
 
       _controller.value = 1 - timeLeft / countdownData.countdownTime;
 
@@ -58,9 +61,9 @@ class CountdownViewmodel extends BaseModel {
 
     _controller.addListener(() async {
       if (_controller.value == 1) {
-        timePanelService.onCountdownDone(timePanelService.countdownTime);
+        timePanelService.onCountdownDone(_pickedTime);
 
-        timePanelService.countdownTime = null;
+        _pickedTime = null;
         notifyListeners();
 
         await timePanelService.playDoneSound();
@@ -70,7 +73,7 @@ class CountdownViewmodel extends BaseModel {
 
   void startCountdown() {
     final time = timePickerModel.selectedTime.copy();
-    timePanelService.countdownTime = time;
+    _pickedTime = time;
     _controller.value = 0;
     _controller.animateTo(1, duration: time.toDuration);
 
@@ -81,30 +84,29 @@ class CountdownViewmodel extends BaseModel {
     if (_controller.isAnimating) {
       _controller.stop();
     } else {
-      _controller.animateTo(1, duration: timePanelService.countdownTime.toDuration * countdownValue);
+      _controller.animateTo(1, duration: _pickedTime.toDuration * countdownValue);
     }
 
     notifyListeners();
   }
 
   void cancelCountdown() {
-    timePanelService.countdownTime = null;
+    _pickedTime = null;
     _controller.stop();
     notifyListeners();
   }
 
   @override
   void dispose() {
-    final countdownTime = timePanelService.countdownTime;
-    if (countdownTime != null) {
-      final leftOfCountdown = countdownTime.toDuration * countdownValue;
+    if (_pickedTime != null) {
+      final leftOfCountdown = _pickedTime.toDuration * countdownValue;
       final stopped = !_controller.isAnimating;
 
       if (!stopped) timePanelService.setAlarm(leftOfCountdown);
 
       timePanelService.saveCountdown(
         SavedCountdown(
-          countdownTime: countdownTime,
+          countdownTime: _pickedTime,
           leftOfCountdown: leftOfCountdown,
           countdownDisposedAt: DateTime.now(),
           stopped: stopped,

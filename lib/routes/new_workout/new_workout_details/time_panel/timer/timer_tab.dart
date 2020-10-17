@@ -4,12 +4,12 @@ import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/main_button.dart';
 
-class Timer extends StatefulWidget {
+class TimerTab extends StatefulWidget {
   @override
   _TimerState createState() => _TimerState();
 }
 
-class _TimerState extends State<Timer> with AutomaticKeepAliveClientMixin {
+class _TimerState extends State<TimerTab> with AutomaticKeepAliveClientMixin {
   static const _radius = Radius.circular(12.0);
 
   @override
@@ -20,6 +20,7 @@ class _TimerState extends State<Timer> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return BaseWidget<TimerViewmodel>(
       model: TimerViewmodel(context),
+      onModelReady: (model) => model.loadTimer(),
       onDispose: (model) => model.dispose(),
       builder: (context, model, child) => Column(
         children: <Widget>[

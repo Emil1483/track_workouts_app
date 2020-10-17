@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:track_workouts/data/services/time_panel_service.dart';
 import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/countdown/countdown_tab.dart';
-import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer/timer.dart';
+import 'package:track_workouts/routes/new_workout/new_workout_details/time_panel/timer/timer_tab.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/panel.dart';
 import 'package:track_workouts/ui_elements/panel_header.dart';
@@ -56,7 +56,7 @@ class TimePanel extends StatelessWidget {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 52.0),
-                  child: Timer(),
+                  child: TimerTab(),
                 ),
               ],
             ),

@@ -157,7 +157,7 @@ class ActiveSet {
   void checkOk() {
     final oneOf = exercise.optionalOneOf;
 
-    if (!attributes.maxOneOf(oneOf)) {
+    if (oneOf != null && !attributes.maxOneOf(oneOf)) {
       throw Failure('${oneOf.format((name) => name.formattedString)} cannot be submitted together');
     }
 

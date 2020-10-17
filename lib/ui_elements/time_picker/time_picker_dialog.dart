@@ -17,7 +17,10 @@ class TimePickerDialog {
         titleTextStyle: getTextStyle(TextStyles.h1),
         contentPadding: EdgeInsets.only(top: 16.0),
         children: [
-          TimePicker(model: timePickerModel),
+          SizedBox(
+            width: 0.0,
+            child: TimePicker(model: timePickerModel),
+          ),
           MainButton(
             onTaps: [() => Router.pop(timePickerModel.selectedTime)],
             texts: ['Save Break Time'],

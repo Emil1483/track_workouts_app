@@ -30,6 +30,26 @@ class SavedCountdown {
   }
 }
 
+class SavedTimer {
+  final DateTime timerDisposedAt;
+  final Duration timerWhenDisposed;
+  final bool stopped;
+
+  SavedTimer({
+    @required this.timerDisposedAt,
+    @required this.timerWhenDisposed,
+    @required this.stopped,
+  });
+
+  SavedTimer copy() {
+    return SavedTimer(
+      timerDisposedAt: timerDisposedAt.copy(),
+      timerWhenDisposed: timerWhenDisposed.copy(),
+      stopped: stopped,
+    );
+  }
+}
+
 class TimePanelService {
   final PanelController panelController = PanelController();
   final AudioCache player = AudioCache(prefix: 'assets/sounds/');
@@ -38,8 +58,9 @@ class TimePanelService {
   final List<void Function(Duration)> _timerListeners = [];
 
   SavedCountdown _savedCountdown;
-  PickedTime _countdownTime;
   Timer _timer;
+
+  SavedTimer _savedTimer;
 
   Future<void> playDoneSound() async {
     await player.play('done.mp3');
@@ -75,13 +96,15 @@ class TimePanelService {
 
   SavedCountdown get savedCountdown => _savedCountdown?.copy();
 
-  PickedTime get countdownTime => _countdownTime?.copy();
-
-  set countdownTime(PickedTime pickedTime) => _countdownTime = pickedTime;
-
   void saveCountdown(SavedCountdown countdown) => _savedCountdown = countdown;
 
   void deleteSavedCountdown() => _savedCountdown = null;
+
+  SavedTimer get savedTimer => _savedTimer?.copy();
+
+  void saveTimer(SavedTimer timer) => _savedTimer = timer;
+
+  void deleteSavedTimer() => _savedTimer = null;
 
   void setAlarm(Duration duration) {
     _timer = Timer(duration, () async {

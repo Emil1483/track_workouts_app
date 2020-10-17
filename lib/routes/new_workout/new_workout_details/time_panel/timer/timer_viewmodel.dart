@@ -33,7 +33,29 @@ class TimerViewmodel extends BaseModel {
 
   double get borderWidth => lerpDouble(1, 4, _periodicValue);
 
-  Duration get _perfectCurrentTime => DateTime.now().difference(_timerStart);
+  Duration get _perfectCurrentTime => !isTiming ? _currentTime : DateTime.now().difference(_timerStart);
+
+  void loadTimer() {
+    final savedTimer = timePanelService.savedTimer;
+    if (savedTimer == null) return;
+    timePanelService.deleteSavedTimer();
+
+    _currentTime = savedTimer.timerWhenDisposed;
+
+    if (!savedTimer.stopped) {
+      final timeDifference = DateTime.now().difference(savedTimer.timerDisposedAt);
+      _currentTime += timeDifference;
+      _startTimer();
+    }
+  }
+
+  void _startTimer() {
+    _timerStart = DateTime.now().subtract(_currentTime);
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      _currentTime += Duration(seconds: 1);
+      notifyListeners();
+    });
+  }
 
   void startStopTimer() {
     if (isTiming) {
@@ -41,11 +63,7 @@ class TimerViewmodel extends BaseModel {
       _timer.cancel();
       _timer = null;
     } else {
-      _timerStart = DateTime.now().subtract(_currentTime);
-      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-        _currentTime += Duration(seconds: 1);
-        notifyListeners();
-      });
+      _startTimer();
     }
     notifyListeners();
   }
@@ -60,6 +78,15 @@ class TimerViewmodel extends BaseModel {
 
   @override
   void dispose() {
+    if (hasStarted) {
+      timePanelService.saveTimer(
+        SavedTimer(
+          stopped: !isTiming,
+          timerDisposedAt: DateTime.now(),
+          timerWhenDisposed: _perfectCurrentTime,
+        ),
+      );
+    }
     _timer?.cancel();
     super.dispose();
   }

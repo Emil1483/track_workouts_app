@@ -17,7 +17,7 @@
 
 - [x] refactor by adding .copy()
 
-- [ ] add 'new workout' route
+- [x] add 'new workout' route
   - [x] add bottom navigation button
   - [x] add list of current exercises
   - [x] add new exercise page
@@ -54,4 +54,4 @@
   - [x] add ability to add exercise to existing routine
   - [x] redo choose routine page
   - [x] create time panel service that keeps continuity
-  - [ ] add suggested weight header
+  - [x] add suggested weight header

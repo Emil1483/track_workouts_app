@@ -31,6 +31,14 @@ dev_dependencies:
   chopper_generator: ^3.0.3
   build_runner:
   angel_serialize_generator: ^2.5.0
+  flutter_launcher_icons: ^0.8.1
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+  adaptive_icon_background: "#0a1a2a"
+  adaptive_icon_foreground: "assets/images/icon_adaptive.png"
 
 flutter:
   uses-material-design: true

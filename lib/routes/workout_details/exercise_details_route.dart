@@ -3,6 +3,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/routes/base/base_widget.dart';
 import 'package:track_workouts/routes/root/root_viewmodel.dart';
+import 'package:track_workouts/routes/workout_details/exercise_details_app_bar.dart';
 import 'package:track_workouts/routes/workout_details/exercise_details_viewmodel.dart';
 import 'package:track_workouts/style/theme.dart';
 import 'package:track_workouts/ui_elements/colored_container.dart';
@@ -23,13 +24,7 @@ class ExerciseDetailsRoute extends StatelessWidget {
         final List<Widget> setWidgets = [];
         model.forEachFormattedSet((formattedSet, index) => setWidgets.add(SetWidget(attributes: formattedSet, index: index)));
         return Scaffold(
-          appBar: AppBar(
-            title: AutoSizeText(
-              model.exercise.name,
-              maxLines: 1,
-              minFontSize: 16.0,
-            ),
-          ),
+          appBar: ExerciseDetailsAppBar(exerciseName: model.exercise.name),
           body: ListView(
             padding: EdgeInsets.symmetric(horizontal: 8.0),
             children: [

@@ -33,6 +33,8 @@ class RootViewmodel extends BaseModel {
 
   bool get hasChosenWorkout => newWorkoutService.selectedRoutine != null;
 
+  bool get canChooseWorkout => workoutsService.workouts != null;
+
   Future<void> loadInitialWorkouts() async {
     setLoading(true);
     await ErrorHandler.handleErrors<void>(

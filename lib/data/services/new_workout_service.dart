@@ -20,7 +20,10 @@ class NewWorkoutService {
   NewWorkoutService(this._workoutsRepository, this._workoutsService, this._routinesService) {
     _workoutsService.addListener((id) {
       WidgetsBinding.instance.addPostFrameCallback((_) => _workoutsService.disposeListener(id));
-      final workout = _workoutsService.workouts.first;
+      final workouts = _workoutsService.workouts;
+      if (workouts.isEmpty) return;
+
+      final workout = workouts.first;
       if (workout.date.isAtSameMomentAs(DateTimeUtils.today)) {
         _workout = workout;
       }

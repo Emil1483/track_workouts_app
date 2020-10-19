@@ -24,7 +24,7 @@ class WorkoutsService {
 
   bool get loadedAll => _loadedAll;
 
-  List<Workout> get workouts => _workouts == null ? null : _workouts.copy();
+  List<Workout> get workouts => _workouts?.copy();
 
   String addListener(Function(String) listener) {
     final id = Uuid().v1();
@@ -48,17 +48,14 @@ class WorkoutsService {
 
   Future<void> loadInitialWorkouts() async {
     final workoutsData = await _workoutsRepository.getWorkoutsData();
-    await Future.delayed(Duration(seconds: 1));
     _addWorkouts(workoutsData);
     _notifyListeners();
   }
 
   Future<void> expandWorkoutsToInclude(Week week) async {
-    if (_workouts == null) _workouts = [];
-
     bool addedToWorkouts = false;
     while (!workoutsContains(week)) {
-      final toDate = _workouts.isEmpty ? null : _workouts.last.date.subtract(Duration(days: 1));
+      final toDate = _workouts == null || _workouts.isEmpty ? null : _workouts.last.date.subtract(Duration(days: 1));
       final workoutsData = await _workoutsRepository.getWorkoutsData(toDate: toDate);
       _addWorkouts(workoutsData);
 

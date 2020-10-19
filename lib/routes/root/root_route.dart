@@ -41,10 +41,11 @@ class RootRoute extends StatelessWidget {
                       itemBuilder: (context, index) => _WorkoutsList(week: model.getWeekFromIndex(index)),
                     ),
                   ),
-                  MainButton(
-                    onTaps: [model.navigateToNewWorkout],
-                    texts: [model.hasChosenWorkout ? 'Continue Workout' : 'New Workout'],
-                  ),
+                  if (model.canChooseWorkout)
+                    MainButton(
+                      onTaps: [model.navigateToNewWorkout],
+                      texts: [model.hasChosenWorkout ? 'Continue Workout' : 'New Workout'],
+                    ),
                 ],
               ),
       ),

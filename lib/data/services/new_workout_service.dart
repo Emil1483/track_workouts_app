@@ -15,20 +15,8 @@ class NewWorkoutService {
 
   final List<String> _removedIds = [];
   Routine _selectedRoutine;
-  Workout _workout;
 
-  NewWorkoutService(this._workoutsRepository, this._workoutsService, this._routinesService) {
-    _workoutsService.addListener((id) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => _workoutsService.disposeListener(id));
-      final workouts = _workoutsService.workouts;
-      if (workouts.isEmpty) return;
-
-      final workout = workouts.first;
-      if (workout.date.isAtSameMomentAs(DateTimeUtils.today)) {
-        _workout = workout;
-      }
-    });
-  }
+  NewWorkoutService(this._workoutsRepository, this._workoutsService, this._routinesService);
 
   Routine get selectedRoutine => _selectedRoutine?.copyWith();
 
@@ -97,9 +85,13 @@ class NewWorkoutService {
 
     final routine = _routinesService.getRoutineBy(id);
 
+    final workouts = _workoutsService.workouts;
+    final workout = workouts?.isEmpty ?? true ? null : workouts.first;
+    final isTodaysWorkout = workouts != null && workout.date.isAtSameMomentAs(DateTimeUtils.today);
+
     final activeExercises = Routine.buildActiveExercises(routine.exerciseIds);
-    if (_workout != null) {
-      _workout.exercises.forEach((exerciseName, sets) {
+    if (isTodaysWorkout) {
+      workout.exercises.forEach((exerciseName, sets) {
         final exercise = _routinesService.tryGetExerciseByName(exerciseName);
         if (exercise == null) return;
 

@@ -132,9 +132,9 @@ class CreateRoutineViewmodel extends BaseModel {
       image: _selectedImage,
     );
     if (_editing) {
-      routinesService.updateRoutine(oldRoutine.name, routine);
+      await routinesService.updateRoutine(oldRoutine.name, routine);
     } else {
-      routinesService.addRoutine(routine);
+      await routinesService.addRoutine(routine);
     }
   }
 }

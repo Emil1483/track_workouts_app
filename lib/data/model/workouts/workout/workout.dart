@@ -69,19 +69,8 @@ extension UnitExtension on Unit {
 }
 
 extension Attribute on MapEntry<AttributeName, double> {
-  String get valueString {
-    switch (key.unit) {
-      case Unit.kg:
-        return value.withMaxTwoDecimals;
-      case Unit.s:
-        return value.round().toString();
-    }
-
-    return value.round().toString();
-  }
-
   String get formattedValueString {
-    String result = valueString;
+    String result = value.withMaxTwoDecimals;
     Unit unit = key.unit;
     if (unit != null) result += ' ${unit.string}';
     return result;

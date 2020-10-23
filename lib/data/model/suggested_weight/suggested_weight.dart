@@ -7,5 +7,10 @@ class SuggestedWeight {
     this.isTooMuch = false,
   });
 
+  factory SuggestedWeight.from(double maxWeight, {bool isTooMuch = false}) {
+    if (maxWeight == null) return null;
+    return SuggestedWeight(maxWeight, isTooMuch: isTooMuch);
+  }
+
   SuggestedWeight copy() => SuggestedWeight(value, isTooMuch: isTooMuch);
 }

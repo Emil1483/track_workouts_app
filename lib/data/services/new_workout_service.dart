@@ -45,7 +45,7 @@ class NewWorkoutService {
     for (final workout in previousWeekWorkouts) {
       if (workout.exercises.containsKey(exerciseName)) {
         if (previousExerciseIndex >= currentExerciseIndex) {
-          return SuggestedWeight(workout.exercises[exerciseName].maxWeight);
+          return SuggestedWeight.from(workout.exercises[exerciseName].maxWeight);
         }
         previousExerciseIndex++;
       }
@@ -56,7 +56,7 @@ class NewWorkoutService {
       if (!workout.exercises.containsKey(exerciseName)) continue;
 
       if (index >= currentExerciseIndex - 1) {
-        return SuggestedWeight(workout.exercises[exerciseName].maxWeight, isTooMuch: true);
+        return SuggestedWeight.from(workout.exercises[exerciseName].maxWeight, isTooMuch: true);
       }
 
       index++;
@@ -244,10 +244,11 @@ class NewWorkoutService {
 
 extension on List<Map<AttributeName, double>> {
   double get maxWeight {
-    double result = 0;
+    double result;
     forEach((mySet) {
       final value = mySet[AttributeName.weight];
-      if (value > result) result = value;
+      if (value == null) return;
+      if (value > result ?? 0) result = value;
     });
     return result;
   }

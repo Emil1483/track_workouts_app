@@ -248,7 +248,7 @@ extension on List<Map<AttributeName, double>> {
     forEach((mySet) {
       final value = mySet[AttributeName.weight];
       if (value == null) return;
-      if (value > result ?? 0) result = value;
+      if (value > (result ?? 0)) result = value;
     });
     return result;
   }

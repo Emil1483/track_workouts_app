@@ -76,7 +76,7 @@ class NewExerciseDetailsRoute extends StatelessWidget with ErrorStateless {
             child: ListView(
               padding: EdgeInsets.symmetric(vertical: 8.0),
               children: [
-                if (model.suggestedWeight != null) _SuggestedWeight(model.suggestedWeight),
+                if (model.suggestedWeight.isNotEmpty) _SuggestedWeight(model.suggestedWeight),
                 ...setWidgets,
               ],
             ),
@@ -120,10 +120,22 @@ class _SuggestedWeight extends StatelessWidget {
   }
 
   String get _weightSuggestion {
-    String result = suggestedWeight.isTooMuch ? 'less than ' : '';
-    result += suggestedWeight.value.withMaxTwoDecimals;
-    result += ' kg';
-    return result;
+    final from = suggestedWeight.min;
+    final to = suggestedWeight.max;
+
+    if (from == null) return 'less than $to kg';
+
+    if (to == null) return 'more than $from kg';
+
+    if (from > to) return '$from kg';
+
+    if (from == to) return '$from kg';
+
+    return 'from $from to $to kg';
+    // String result = suggestedWeight.isTooMuch ? 'less than ' : '';
+    // result += suggestedWeight.value.withMaxTwoDecimals;
+    // result += ' kg';
+    // return result;
   }
 }
 

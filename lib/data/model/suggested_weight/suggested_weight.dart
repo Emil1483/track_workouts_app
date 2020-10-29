@@ -1,16 +1,15 @@
-class SuggestedWeight {
-  final double value;
-  final bool isTooMuch;
+import 'package:flutter/cupertino.dart';
 
-  SuggestedWeight(
-    this.value, {
-    this.isTooMuch = false,
+class SuggestedWeight {
+  final double min;
+  final double max;
+
+  SuggestedWeight({
+    @required this.min,
+    @required this.max,
   });
 
-  factory SuggestedWeight.from(double maxWeight, {bool isTooMuch = false}) {
-    if (maxWeight == null) return null;
-    return SuggestedWeight(maxWeight, isTooMuch: isTooMuch);
-  }
+  bool get isNotEmpty => min != null || max != null;
 
-  SuggestedWeight copy() => SuggestedWeight(value, isTooMuch: isTooMuch);
+  SuggestedWeight copy() => SuggestedWeight(min: min, max: max);
 }

@@ -41,14 +41,19 @@ class NewWorkoutService {
       currentExerciseIndex++;
     });
 
+    double min;
+    double max;
+
     int previousExerciseIndex = 0;
     for (final workout in previousWeekWorkouts) {
-      if (workout.exercises.containsKey(exerciseName)) {
-        if (previousExerciseIndex >= currentExerciseIndex) {
-          return SuggestedWeight.from(workout.exercises[exerciseName].maxWeight);
-        }
-        previousExerciseIndex++;
+      if (!workout.exercises.containsKey(exerciseName)) continue;
+
+      if (previousExerciseIndex >= currentExerciseIndex) {
+        min = workout.exercises[exerciseName].maxWeight;
+        break;
       }
+
+      previousExerciseIndex++;
     }
 
     int index = 0;
@@ -56,13 +61,14 @@ class NewWorkoutService {
       if (!workout.exercises.containsKey(exerciseName)) continue;
 
       if (index >= currentExerciseIndex - 1) {
-        return SuggestedWeight.from(workout.exercises[exerciseName].maxWeight, isTooMuch: true);
+        max = workout.exercises[exerciseName].maxWeight;
+        break;
       }
 
       index++;
     }
 
-    return null;
+    return SuggestedWeight(min: min, max: max);
   }
 
   void addExerciseToActiveExercises(Exercise exercise) {

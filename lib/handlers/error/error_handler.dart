@@ -14,7 +14,8 @@ class ErrorHandler {
   static const String couldNotConnect = 'could not connect to the server';
 
   static Future catchCommonErrors(Function function, {bool checkInternet = true}) async {
-    if (checkInternet && !await DataConnectionChecker().hasConnection) throw Failure(ErrorHandler.noInternet);
+    if (checkInternet && !await DataConnectionChecker().hasConnection)
+      throw Failure(ErrorHandler.noInternet);
     try {
       return await function();
     } on Failure catch (failure) {
@@ -33,9 +34,14 @@ class ErrorHandler {
     @required Function(Failure) onFailure,
     @required Function(T) onSuccess,
   }) async {
+    T result;
     await Task(run).attempt().mapLeftToFailure().run().then((either) async {
-      await either.fold((failure) async => await onFailure(failure), (success) async => await onSuccess(success));
+      await either.fold((failure) async => await onFailure(failure), (success) async {
+        await onSuccess(success);
+        result = success;
+      });
     });
+    return result;
   }
 
   static Future<Either<Failure, dynamic>> getEither<T>(Future<T> Function() run) =>

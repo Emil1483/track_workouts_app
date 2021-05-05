@@ -7,6 +7,7 @@ import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
 import 'package:track_workouts/handlers/error/failure.dart';
+import 'package:track_workouts/handlers/error/must_handle_errors.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
@@ -203,23 +204,20 @@ class NewWorkoutService {
     attributes[attributeName] = value;
   }
 
-  Future<dartz.Either<Failure, dartz.Unit>> completeActiveSet({@required String exerciseId}) async {
-    try {
-      //! Don't worry about this. It just posts the
-      //! workout to the server and updates some local data
+  MustHandleErrors1<String, dartz.Unit> get completeActiveSet =>
+      MustHandleErrors1((exerciseId) async {
+        //! Don't worry about this. It just posts the
+        //! workout to the server and updates some local data
 
-      final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
-      activeSet.checkOk();
+        final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
+        activeSet.checkOk();
 
-      await postWorkout();
+        await postWorkout();
 
-      activeSet.setCompleted(true);
+        activeSet.setCompleted(true);
 
-      return dartz.right(dartz.unit);
-    } on Failure catch (e) {
-      return dartz.left(e);
-    }
-  }
+        return dartz.unit;
+      });
 
   void editActiveSet({@required String exerciseId, @required int index}) {
     final activeSets = _selectedRoutine.getActiveSetsById(exerciseId);

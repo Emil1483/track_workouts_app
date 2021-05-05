@@ -142,14 +142,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
     setLoading(true);
 
-    final completeSetOrFailure = await newWorkoutService.completeActiveSet(exerciseId: exercise.id);
-
-    completeSetOrFailure.fold(
-      (failure) {
-        onError(failure.message);
-        setLoading(false);
-      },
-      (success) async {
+    await newWorkoutService.completeActiveSet(
+      exercise.id,
+      onFailure: (failure) => onError(failure.message),
+      onSuccess: (_) async {
         //! Don't worry about this either
 
         final prefs = await SharedPreferences.getInstance();
@@ -161,10 +157,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         });
 
         newWorkoutService.addActiveSet(exerciseId: exercise.id);
-
-        setLoading(false);
       },
     );
+
+    setLoading(false);
   }
 
   void editSet(int index) {

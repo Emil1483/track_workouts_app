@@ -21,16 +21,16 @@ class ChooseRoutineViewmodel extends BaseModel {
 
   void selectRoutine(Routine routine) {
     newWorkoutService.selectRoutine(routine.id);
-    Router.pushReplacementNamed(NewWorkoutRoute.routeName);
+    MRouter.pushReplacementNamed(NewWorkoutRoute.routeName);
   }
 
   Future<void> createRoutine() async {
-    await Router.pushNamed(CreateRoutine.routeName);
+    await MRouter.pushNamed(CreateRoutine.routeName);
     notifyListeners();
   }
 
   Future<void> editRoutine(Routine routine) async {
-    await Router.pushNamed(CreateRoutine.routeName, arguments: [routine]);
+    await MRouter.pushNamed(CreateRoutine.routeName, arguments: [routine]);
     notifyListeners();
   }
 

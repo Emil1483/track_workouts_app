@@ -23,7 +23,7 @@ class ExerciseDetailsAppBar extends StatelessWidget implements PreferredSizeWidg
               SizedBox(width: 4.0),
               IconButton(
                 icon: Icon(Icons.arrow_back),
-                onPressed: () => Router.pop(),
+                onPressed: () => MRouter.pop(),
               ),
               SizedBox(width: 12.0),
               Expanded(

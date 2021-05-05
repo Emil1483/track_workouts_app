@@ -25,7 +25,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
   Map<AttributeName, TextEditingController> _controllers;
   SuggestedWeight _suggestedWeight;
 
-  NewExerciseDetailsViewmodel(BuildContext context, {@required this.exercise, @required this.onError})
+  NewExerciseDetailsViewmodel(BuildContext context,
+      {@required this.exercise, @required this.onError})
       : newWorkoutService = Provider.of<NewWorkoutService>(context),
         timePanelService = Provider.of<TimePanelService>(context) {
     timePanelService.addCountdownListener(_updatePreBreak);
@@ -34,7 +35,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
   List<ActiveSet> get activeSets => newWorkoutService.getActiveSets(exerciseId: exercise.id).copy();
 
-  TextEditingController getControllerFrom(AttributeName name) => _controllers == null ? null : _controllers[name];
+  TextEditingController getControllerFrom(AttributeName name) =>
+      _controllers == null ? null : _controllers[name];
 
   ActiveSet get _activeSet => newWorkoutService.getActiveSet(exerciseId: exercise.id);
 
@@ -140,10 +142,16 @@ class NewExerciseDetailsViewmodel extends BaseModel {
 
     setLoading(true);
 
-    await ErrorHandler.handleErrors(
-      run: () async => newWorkoutService.completeActiveSet(exerciseId: exercise.id),
-      onFailure: (failure) => onError(failure.message),
-      onSuccess: (_) async {
+    final completeSetOrFailure = await newWorkoutService.completeActiveSet(exerciseId: exercise.id);
+
+    completeSetOrFailure.fold(
+      (failure) {
+        onError(failure.message);
+        setLoading(false);
+      },
+      (success) async {
+        //! Don't worry about this either
+
         final prefs = await SharedPreferences.getInstance();
 
         _controllers.forEach((name, controller) async {
@@ -153,10 +161,10 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         });
 
         newWorkoutService.addActiveSet(exerciseId: exercise.id);
+
+        setLoading(false);
       },
     );
-
-    setLoading(false);
   }
 
   void editSet(int index) {
@@ -181,7 +189,8 @@ class NewExerciseDetailsViewmodel extends BaseModel {
         run: () => newWorkoutService.postWorkout(),
         onFailure: (failure) {
           onError(failure.message);
-          newWorkoutService.insertActiveSet(exerciseId: exercise.id, index: index, activeSet: activeSet);
+          newWorkoutService.insertActiveSet(
+              exerciseId: exercise.id, index: index, activeSet: activeSet);
           notifyListeners();
         },
         onSuccess: (_) {},

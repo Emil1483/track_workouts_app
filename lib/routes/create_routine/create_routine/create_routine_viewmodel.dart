@@ -85,12 +85,12 @@ class CreateRoutineViewmodel extends BaseModel {
   }
 
   Future<void> edit(Exercise exercise) async {
-    await Router.pushNamed(CreateExerciseRoute.routeName, arguments: [exercise]);
+    await MRouter.pushNamed(CreateExerciseRoute.routeName, arguments: [exercise]);
     notifyListeners();
   }
 
   Future<void> createExercise() async {
-    final result = await Router.pushNamed(CreateExerciseRoute.routeName);
+    final result = await MRouter.pushNamed(CreateExerciseRoute.routeName);
     final updatedExercise = result as Exercise;
     if (updatedExercise == null) return;
 
@@ -120,7 +120,7 @@ class CreateRoutineViewmodel extends BaseModel {
     await ErrorHandler.handleErrors(
       run: _saveRoutine,
       onFailure: (failure) => onError(failure.message),
-      onSuccess: (_) => Router.pop(),
+      onSuccess: (_) => MRouter.pop(),
     );
   }
 

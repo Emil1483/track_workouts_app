@@ -82,7 +82,7 @@ class CreateExerciseViewmodel extends BaseModel {
     await ErrorHandler.handleErrors(
       run: () => _saveExercise(exercise),
       onFailure: (failure) => onError(failure.message),
-      onSuccess: (_) => Router.pop(exercise),
+      onSuccess: (_) => MRouter.pop(exercise),
     );
   }
 

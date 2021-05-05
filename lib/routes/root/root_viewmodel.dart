@@ -53,7 +53,7 @@ class RootViewmodel extends BaseModel {
   }
 
   Future<void> navigateToNewWorkout() async {
-    await Router.pushNamed(
+    await MRouter.pushNamed(
       hasChosenWorkout ? NewWorkoutRoute.routeName : ChooseRoutineRoute.routeName,
     );
     notifyListeners();

@@ -20,11 +20,11 @@ class ConfirmDialog extends StatelessWidget {
       content: Text(contentText, style: getTextStyle(TextStyles.body1)),
       actions: [
         FlatButton(
-          onPressed: () => Router.pop(true),
+          onPressed: () => MRouter.pop(true),
           child: Text("DELETE", style: buttonStyle),
         ),
         FlatButton(
-          onPressed: () => Router.pop(false),
+          onPressed: () => MRouter.pop(false),
           child: Text("CANCEL", style: buttonStyle),
         ),
       ],

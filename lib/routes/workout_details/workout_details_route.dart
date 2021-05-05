@@ -30,7 +30,7 @@ class WorkoutDetailsRoute extends StatelessWidget {
 
   Widget _buildExercise(FormattedExercise exercise) {
     return ListElement(
-      onTap: () => Router.pushNamed(ExerciseDetailsRoute.routeName, arguments: [exercise]),
+      onTap: () => MRouter.pushNamed(ExerciseDetailsRoute.routeName, arguments: [exercise]),
       centered: true,
       mainWidget: Text(
         exercise.name,

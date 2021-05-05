@@ -28,7 +28,7 @@ class NewWorkoutViewmodel extends BaseModel {
   List<Exercise> get notIncludedExercises => newWorkoutService.notActiveExercises;
 
   Future<void> createNewExercise() async {
-    Router.pushNamed(CreateExerciseRoute.routeName);
+    MRouter.pushNamed(CreateExerciseRoute.routeName);
     notifyListeners();
   }
 
@@ -38,12 +38,12 @@ class NewWorkoutViewmodel extends BaseModel {
   }
 
   Future<void> goToDetails(Exercise exercise) async {
-    await Router.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);
+    await MRouter.pushNamed(NewExerciseDetailsRoute.routeName, arguments: [exercise]);
 
     notifyListeners();
   }
 
-  void switchWorkout() => Router.pushReplacementNamed(ChooseRoutineRoute.routeName);
+  void switchWorkout() => MRouter.pushReplacementNamed(ChooseRoutineRoute.routeName);
 
   void reorderExercises(int oldIndex, int newIndex) {
     newWorkoutService.reorderExercises(oldIndex, newIndex);

@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:track_workouts/data/model/routine/routine.dart';
 import 'package:track_workouts/data/model/suggested_weight/suggested_weight.dart';
@@ -5,6 +6,7 @@ import 'package:track_workouts/data/model/workouts/workout/workout.dart';
 import 'package:track_workouts/data/repositories/workouts_repository.dart';
 import 'package:track_workouts/data/services/routines_service.dart';
 import 'package:track_workouts/data/services/workouts_service.dart';
+import 'package:track_workouts/handlers/error/failure.dart';
 import 'package:track_workouts/utils/date_time_utils.dart';
 import 'package:track_workouts/utils/models/week.dart';
 
@@ -22,7 +24,9 @@ class NewWorkoutService {
 
   List<Exercise> get notActiveExercises {
     final activeExerciseIds = _selectedRoutine.activeExercises.keys;
-    return _routinesService.exercises.where((exercise) => !activeExerciseIds.contains(exercise.id)).toList();
+    return _routinesService.exercises
+        .where((exercise) => !activeExerciseIds.contains(exercise.id))
+        .toList();
   }
 
   SuggestedWeight getSuggestedWeightFor({@required String exerciseName}) {
@@ -149,9 +153,11 @@ class NewWorkoutService {
     _removedIds.add(id);
   }
 
-  List<ActiveSet> getActiveSets({@required String exerciseId}) => _selectedRoutine.getActiveSetsById(exerciseId);
+  List<ActiveSet> getActiveSets({@required String exerciseId}) =>
+      _selectedRoutine.getActiveSetsById(exerciseId);
 
-  ActiveSet getActiveSet({@required String exerciseId}) => _selectedRoutine.getActiveSetById(exerciseId);
+  ActiveSet getActiveSet({@required String exerciseId}) =>
+      _selectedRoutine.getActiveSetById(exerciseId);
 
   ActiveSet tryGetActiveSet({@required String exerciseId}) {
     try {
@@ -184,22 +190,35 @@ class NewWorkoutService {
     _removePreBreakFromFirst(exerciseId);
   }
 
-  void changeActiveSetAttribute({@required String exerciseId, @required AttributeName attributeName, @required double value}) {
+  void changeActiveSetAttribute(
+      {@required String exerciseId,
+      @required AttributeName attributeName,
+      @required double value}) {
     final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
 
     final attributes = activeSet.attributes;
-    if (!attributes.containsKey(attributeName)) throw StateError('attribute name must exist in exercise');
+    if (!attributes.containsKey(attributeName))
+      throw StateError('attribute name must exist in exercise');
 
     attributes[attributeName] = value;
   }
 
-  Future<void> completeActiveSet({@required String exerciseId}) async {
-    final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
-    activeSet.checkOk();
+  Future<dartz.Either<Failure, dartz.Unit>> completeActiveSet({@required String exerciseId}) async {
+    try {
+      //! Don't worry about this. It just posts the
+      //! workout to the server and updates some local data
 
-    await postWorkout();
+      final activeSet = _selectedRoutine.getActiveSetById(exerciseId);
+      activeSet.checkOk();
 
-    activeSet.setCompleted(true);
+      await postWorkout();
+
+      activeSet.setCompleted(true);
+
+      return dartz.right(dartz.unit);
+    } on Failure catch (e) {
+      return dartz.left(e);
+    }
   }
 
   void editActiveSet({@required String exerciseId, @required int index}) {
@@ -238,7 +257,8 @@ class NewWorkoutService {
     }
   }
 
-  void insertActiveSet({@required String exerciseId, @required int index, @required ActiveSet activeSet}) {
+  void insertActiveSet(
+      {@required String exerciseId, @required int index, @required ActiveSet activeSet}) {
     final activeSets = _selectedRoutine.getActiveSetsById(exerciseId);
     activeSets.insert(index, activeSet);
   }

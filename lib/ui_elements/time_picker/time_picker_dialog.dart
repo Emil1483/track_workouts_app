@@ -22,7 +22,7 @@ class TimePickerDialog {
             child: TimePicker(model: timePickerModel),
           ),
           MainButton(
-            onTaps: [() => Router.pop(timePickerModel.selectedTime)],
+            onTaps: [() => MRouter.pop(timePickerModel.selectedTime)],
             texts: ['Save Break Time'],
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(4.0),

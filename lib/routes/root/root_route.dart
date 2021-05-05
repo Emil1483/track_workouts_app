@@ -101,7 +101,7 @@ class _WorkoutsList extends StatelessWidget {
 
   Widget _buildWorkoutWidget(FormattedWorkout workout) {
     return ListElement(
-      onTap: () => Router.pushNamed(WorkoutDetailsRoute.routeName, arguments: [workout]),
+      onTap: () => MRouter.pushNamed(WorkoutDetailsRoute.routeName, arguments: [workout]),
       mainWidget: Row(
         children: [
           Text('●  ', style: getTextStyle(TextStyles.subtitle1).copyWith(color: ColorUtils.getColorFrom(workout))),

@@ -27,10 +27,10 @@ class MyApp extends StatelessWidget {
       providers: getProviders(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        navigatorKey: Router.navigatorKey,
+        navigatorKey: MRouter.navigatorKey,
         theme: appTheme,
         initialRoute: RootRoute.routeName,
-        onGenerateRoute: Router.generateRoute,
+        onGenerateRoute: MRouter.generateRoute,
       ),
     );
   }

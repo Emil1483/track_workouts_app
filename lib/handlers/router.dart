@@ -10,7 +10,7 @@ import 'package:track_workouts/routes/root/root_viewmodel.dart';
 import 'package:track_workouts/routes/workout_details/exercise_details_route.dart';
 import 'package:track_workouts/routes/workout_details/workout_details_route.dart';
 
-class Router {
+class MRouter {
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey(debugLabel: 'Main Navigator');
 
   static Future<T> pushNamedAndRemoveUntil<T>(String pushRoute, {String untilRoute, List arguments}) {
